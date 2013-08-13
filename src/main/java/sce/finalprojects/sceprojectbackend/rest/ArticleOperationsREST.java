@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service;
 
 import sce.finalprojects.sceprojectbackend.datatypes.ArticleSetupRequestDO;
 
+
+/*
+ * This REST exposes operations that can be performed on given article.
+ * Will mostly kick off the initial setup of the article within the system
+ */
 @Service("articleSetupRest")
 @Path("/article")
 @Produces("application/json")
@@ -25,6 +30,10 @@ public class ArticleOperationsREST {
 		}
 	 */
 	
+	/*
+	 * Kicks off article lifecycle within the sytem. Receives an object, with all information required for the setup
+	 * This is the article's entry point into the system
+	 */
 	@POST
 	@Path("/setup")
 	public Response setupArticle(ArticleSetupRequestDO request){

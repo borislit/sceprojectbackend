@@ -9,14 +9,22 @@ import javax.ws.rs.core.Response;
 
 import org.springframework.stereotype.Service;
 
+/*
+ * This REST exposes operations that can be performed on comments of the given cluster
+ */
 @Service("commentsRest")
 @Path("/comments")
 @Produces("application/json")
 @Consumes("application/json")
 public class CommentsOperationsREST {
 	/*
+	 * This method is used to retrieve batch of comment for specifc cluster. The From and To input are used
+	 * to define boundaries for comments to be retrieved
 	 * Input:
 	 * comments/more?clusterid=foocluster&level=3&from=1&to=10
+	 * 
+	 * Output:
+	 * 	 {"markup":"<div>comment</div>"}
 	 */
 	@GET
 	@Path("/more")
