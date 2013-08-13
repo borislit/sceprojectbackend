@@ -30,5 +30,6 @@ public class ArticleOperationsREST {
 	public Response setupArticle(ArticleSetupRequestDO request){
 		return Response.ok(request).build();
 	}
+	//http://www.sce.ac.il/article/setup
 	
 }

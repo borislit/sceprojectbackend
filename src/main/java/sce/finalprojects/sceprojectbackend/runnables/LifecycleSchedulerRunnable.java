@@ -1,16 +1,13 @@
 package sce.finalprojects.sceprojectbackend.runnables;
 
 import sce.finalprojects.sceprojectbackend.datatypes.ArticleDO;
-import sce.finalprojects.sceprojectbackend.datatypes.CacheToken;
 import sce.finalprojects.sceprojectbackend.datatypes.LifecycleStageDO;
 import sce.finalprojects.sceprojectbackend.factories.ArticlesFactory;
-import sce.finalprojects.sceprojectbackend.managers.CacheManager;
 import sce.finalprojects.sceprojectbackend.managers.LifecycleScheduleManager;
 
 public class LifecycleSchedulerRunnable implements Runnable{
 	private ArticleDO article;
 	private String articleID;
-	private CacheToken token;
 	
 	public LifecycleSchedulerRunnable(String articleID) {
 		this.articleID = articleID;
@@ -32,7 +29,7 @@ public class LifecycleSchedulerRunnable implements Runnable{
 		
 		System.out.println("Running "+this.articleID);
 		
-		this.token = CacheManager.getInstance().save(article, this.token);
+		factory.save(this.article);
 		
 		setupNextRun();
 		

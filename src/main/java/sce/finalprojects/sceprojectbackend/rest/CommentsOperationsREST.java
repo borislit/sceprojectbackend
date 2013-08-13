@@ -20,7 +20,7 @@ public class CommentsOperationsREST {
 	 */
 	@GET
 	@Path("/more")
-	public Response setupArticle(@QueryParam("articleid") String articleid, @QueryParam("clusterid") String clusterID, @QueryParam("level") int level, @QueryParam("from") int from, @QueryParam("to") int to){
+	public Response getClusterComments(@QueryParam("articleid") String articleid, @QueryParam("clusterid") String clusterID, @QueryParam("level") int level, @QueryParam("from") int from, @QueryParam("to") int to){
 		return Response.ok(clusterID).build();
 	}
 
