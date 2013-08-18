@@ -1,30 +1,22 @@
 package sce.finalprojects.sceprojectbackend.datatypes;
 
+import java.util.ArrayList;
+
 public class CommentEntityDS {
 	
 	private String id;	
-	private String comment; 
 	private String commentHTML;
-	//vector of comment will be double
-	private String articleId;
-	
-	public CommentEntityDS()
-	{
-		super();
-		this.id = "0";
-		this.comment = "";
-		this.commentHTML = "";
-		this.articleId = "";
+	private ArrayList<Double> vector;
+
+	public ArrayList<Double> getVector() {
+		return vector;
 	}
-	
-	public void printCommentEntity()
-	{
-		System.out.println("id: " + this.id);
-		System.out.println("comment: " + this.comment);
-		System.out.println("comment HTML: " + this.commentHTML);
-		System.out.println("articleId: " + this.articleId);
-		System.out.println();
+
+	public void setVector(ArrayList<Double> vector) {
+		this.vector = vector;
 	}
+
+	public CommentEntityDS() {}
 	
 	public String getId()
 	{
@@ -46,24 +38,5 @@ public class CommentEntityDS {
 	{
 		this.commentHTML = html;
 	}
-	
-	public String getComment()
-	{
-		return this.comment;
-	}
-	
-	public void setComment(String comment)
-	{
-		this.comment = comment;
-	}
-	
-	public String getArticleId()
-	{
-		return this.articleId;
-	}
-	
-	public void setArticleId(String articleId)
-	{
-		this.articleId = articleId;
-	}
 }
+	

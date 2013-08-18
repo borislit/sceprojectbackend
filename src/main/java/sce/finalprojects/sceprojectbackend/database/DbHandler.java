@@ -1,5 +1,6 @@
 package sce.finalprojects.sceprojectbackend.database;
 import sce.finalprojects.sceprojectbackend.datatypes.Comment;
+import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
 import sce.finalprojects.sceprojectbackend.datatypes.MapCell;
 import  sce.finalprojects.sceprojectbackend.managers.DatabaseManager;
 
@@ -7,14 +8,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 
 public class DbHandler {
-	
-	
 
-	
 	/**
 	 * return all the comments vectors that belongs to the article
 	 * @param articleID 
@@ -50,10 +49,10 @@ public class DbHandler {
 	 * @throws SQLException
 	 */
 	public static void setArticleMapping(String articleId, ArrayList<MapCell> mapping) throws SQLException {
+		//INSERT INTO `mydb`.`hacnodesmapping` (`articleid`, `commentid`, `node_mapping`) VALUES ('1', '12', 'dsa'), ('2', '12', 'dsa');
 		
 		Connection conn = DatabaseManager.getInstance().getConnection();
 		conn.setAutoCommit(false);
-		//INSERT INTO `mydb`.`hacnodesmapping` (`articleid`, `commentid`, `node_mapping`) VALUES ('1', '12', 'dsa'), ('2', '12', 'dsa');
 		
 		PreparedStatement sqlQuerry = conn.prepareStatement("DELETE FROM HACNodesMapping WHERE  article_id = ? ;");
 		sqlQuerry.setString(1, articleId);
@@ -110,16 +109,11 @@ public class DbHandler {
 	public static void setXmlRepresentation(String articleId, String xmlHacRepresentation) throws SQLException {
 		
 		Connection conn = DatabaseManager.getInstance().getConnection();
-		
 		PreparedStatement sqlQuerry = conn.prepareStatement("UPDATE  articles SET xmlRepresentation = ?  WHERE  article_id = ? ;");
-		
 		sqlQuerry.setString(1, xmlHacRepresentation);
 		sqlQuerry.setString(2, articleId);
 
 		sqlQuerry.execute();
-
-		//System.out.println(xmlHacRepresentation);
-		
 	}
 	
 	/**
@@ -129,7 +123,7 @@ public class DbHandler {
 	 * @throws SQLException
 	 */
 	public static ArrayList<MapCell> getArticleMapping(String articleId) throws SQLException {
-		
+		//TODO check that method
 		Connection conn = DatabaseManager.getInstance().getConnection();
 		
 		PreparedStatement sqlQuerry = conn.prepareStatement("SELECT * FROM HACNodesMapping WHERE article_id = ? ;");
@@ -161,7 +155,7 @@ public class DbHandler {
 	}
 	
 	public static void setArticleWords(String articleId , String[] words) throws SQLException {
-		
+		//TODO write the method
 		Connection conn = DatabaseManager.getInstance().getConnection();
 		PreparedStatement sqlQuerry = conn.prepareStatement("SELECT * FROM HACNodesMapping WHERE article_id = ? ;");
 		
@@ -172,15 +166,49 @@ public class DbHandler {
 		return null;
 	}
 	
-	public static void addNewArticle(String articleId, String articleUrl, int numOfComments) {
+	/**
+	 * creating a new Article in DB
+	 * @param articleId
+	 * @param articleUrl
+	 * @param numOfComments
+	 * @throws SQLException
+	 */
+	public static void addNewArticle(String articleId, String articleUrl, int numOfComments) throws SQLException {
+		//TODO check that method
+    	Connection conn = DatabaseManager.getInstance().getConnection();
+		PreparedStatement sqlQuerry = conn.prepareStatement("INSET INTO articles (article_id,url,number_of_comments,last_update) VALUES (?,?,?,?) ;");
+		sqlQuerry.setString(1, articleId);
+		sqlQuerry.setString(2, articleUrl);
+		sqlQuerry.setInt(3, numOfComments);
+		
+		java.text.SimpleDateFormat sdf = 
+		     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		sqlQuerry.setString(4, sdf.format(new java.util.Date()));
+		
+		sqlQuerry.execute();
 		
             //set in the table: article id, article url and the number of the comment we get the first time
     }
 	
-    public static int getArticleNumOfComments(String articleId)
+	/**
+	 * return the number of comments that stored in the DB for a given article
+	 * @param articleId
+	 * @return
+	 * @throws SQLException
+	 */
+    public static int getArticleNumOfComments(String articleId) throws SQLException
     {
-            //connect to DB and get the number of the last comment of the specific article
-            return 90;
+    	//TODO check that method
+    	Connection conn = DatabaseManager.getInstance().getConnection();
+		PreparedStatement sqlQuerry = conn.prepareStatement("SELECT number_of_comments FROM articles WHERE article_id = ? ;");
+		sqlQuerry.setString(1, articleId);
+		ResultSet rs = sqlQuerry.executeQuery();
+		
+		while(rs.next()) {
+			return rs.getInt("number_of_comments");
+		}
+		return -1;   
     }
     
     /**
@@ -191,6 +219,7 @@ public class DbHandler {
      */
     public static String getUrl(String articleId) throws SQLException
     {
+    	//TODO check that method
     	Connection conn = DatabaseManager.getInstance().getConnection();
 		PreparedStatement sqlQuerry = conn.prepareStatement("SELECT url FROM articles WHERE article_id = ? ;");
 		sqlQuerry.setString(1, articleId);
@@ -199,19 +228,41 @@ public class DbHandler {
 		while(rs.next()) {
 			return rs.getString("url");
 		}
-		
 		return null;
     }
     
-    public static void setArticleNumOfComments(String articleId, int newNum)
+    /**
+     * set the new number of comments for a given comment
+     * @param articleId
+     * @param numberOfComments
+     * @throws SQLException
+     */
+    public static void setArticleNumOfComments(String articleId, int numberOfComments) throws SQLException
     {
-            //set the num of the comment of the article and add the new num
+    	//TODO check that method
+    	Connection conn = DatabaseManager.getInstance().getConnection();
+		PreparedStatement sqlQuerry = conn.prepareStatement("UPDATE articles SET number_of_comments = ? WHERE article_id = ? ;");
+		sqlQuerry.setInt(1, numberOfComments);
+		sqlQuerry.setString(2, articleId);
+		sqlQuerry.execute();
     }
 
-    public static void addCommentToDb(CommentEntityDS comm)
+    public static void addCommentToDb(String articleId,ArrayList<CommentEntityDS> commments) throws SQLException
     {
-            //write the comment in the DB
+    	//TODO check that method
+    	Connection conn = DatabaseManager.getInstance().getConnection();
+    	String insertQuerry = "";
+    	for (CommentEntityDS comm : commments) { //TODO check the toString => look at the getter of comments
+			insertQuerry += "("+comm.getId()+","+articleId+","+comm.getCommentHTML()+","+comm.getVector().toString()+") , ";
+		}
+    	insertQuerry = insertQuerry.substring(0, insertQuerry.length() - 1) + ";";
+		
+		PreparedStatement sqlQuerry = conn.prepareStatement("INSET INTO comments (comment_id,article_id,html,vector) VALUES " +insertQuerry+";");
+		
+		sqlQuerry.execute();
+	
     }
+    
 	
 	
 }
