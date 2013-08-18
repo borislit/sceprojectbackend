@@ -122,23 +122,96 @@ public class DbHandler {
 		
 	}
 	
-	public static ArrayList<MapCell> getArticleMapping(String article_id) {
+	/**
+	 * return the article mapping
+	 * @param articleId
+	 * @return
+	 * @throws SQLException
+	 */
+	public static ArrayList<MapCell> getArticleMapping(String articleId) throws SQLException {
 		
-		//TODO: replace by real DB statement
+		Connection conn = DatabaseManager.getInstance().getConnection();
 		
-		String temp = "1 10 10_3, 1 8 9_3, 1 9 9_3, 1 7 6_3, 1 6 6_3, 1 5 5_3, 1 4 4_3, 1 3 3_3, 1 2 1_3, 1 1 1_3, 1 10 10_2, 1 8 6_2, 1 9 6_2, 1 7 6_2, 1 6 6_2, 1 5 4_2, 1 4 4_2, 1 3 1_2, 1 2 1_2, 1 1 1_2, 1 10 6_1, 1 8 6_1, 1 7 6_1, 1 6 6_1, 1 9 6_1, 1 5 1_1, 1 4 1_1, 1 3 1_1, 1 2 1_1, 1 1 1_1, 1 8 1_0, 1 7 1_0, 1 6 1_0, 1 9 1_0, 1 10 1_0, 1 3 1_0, 1 5 1_0, 1 2 1_0, 1 4 1_0, 1 1 1_0";
-
+		PreparedStatement sqlQuerry = conn.prepareStatement("SELECT * FROM HACNodesMapping WHERE article_id = ? ;");
+		sqlQuerry.setString(1, articleId);
+		ResultSet rs = sqlQuerry.executeQuery();
 		ArrayList<MapCell> returnarray = new ArrayList<MapCell>();
-		String subs[] = temp.split("\\, ");
 		
-		for (String string : subs) {
-			returnarray.add(new MapCell(string.split("\\ ")[0].trim(),string.split("\\ ")[1].trim(),string.split("\\ ")[2].trim()));
+		while(rs.next()) {
+			returnarray.add(new MapCell(rs.getString("article_id"),rs.getString("comment_id"),rs.getString("node_mapping")));
 		}
 		
-		System.out.println(returnarray.toString());
 		return returnarray;
 		
+		
+//		//TODO: replace by real DB statement
+//		
+//		String temp = "1 10 10_3, 1 8 9_3, 1 9 9_3, 1 7 6_3, 1 6 6_3, 1 5 5_3, 1 4 4_3, 1 3 3_3, 1 2 1_3, 1 1 1_3, 1 10 10_2, 1 8 6_2, 1 9 6_2, 1 7 6_2, 1 6 6_2, 1 5 4_2, 1 4 4_2, 1 3 1_2, 1 2 1_2, 1 1 1_2, 1 10 6_1, 1 8 6_1, 1 7 6_1, 1 6 6_1, 1 9 6_1, 1 5 1_1, 1 4 1_1, 1 3 1_1, 1 2 1_1, 1 1 1_1, 1 8 1_0, 1 7 1_0, 1 6 1_0, 1 9 1_0, 1 10 1_0, 1 3 1_0, 1 5 1_0, 1 2 1_0, 1 4 1_0, 1 1 1_0";
+//
+//		ArrayList<MapCell> returnarray = new ArrayList<MapCell>();
+//		String subs[] = temp.split("\\, ");
+//		
+//		for (String string : subs) {
+//			returnarray.add(new MapCell(string.split("\\ ")[0].trim(),string.split("\\ ")[1].trim(),string.split("\\ ")[2].trim()));
+//		}
+//		
+//		System.out.println(returnarray.toString());
+//		return returnarray;
+		
 	}
+	
+	public static void setArticleWords(String articleId , String[] words) throws SQLException {
+		
+		Connection conn = DatabaseManager.getInstance().getConnection();
+		PreparedStatement sqlQuerry = conn.prepareStatement("SELECT * FROM HACNodesMapping WHERE article_id = ? ;");
+		
+	}
+	
+	public static String[] getArticleWords(String articleId) {
+		
+		return null;
+	}
+	
+	public static void addNewArticle(String articleId, String articleUrl, int numOfComments) {
+		
+            //set in the table: article id, article url and the number of the comment we get the first time
+    }
+	
+    public static int getArticleNumOfComments(String articleId)
+    {
+            //connect to DB and get the number of the last comment of the specific article
+            return 90;
+    }
+    
+    /**
+     * return the URL of given Article_id
+     * @param articleId
+     * @return
+     * @throws SQLException
+     */
+    public static String getUrl(String articleId) throws SQLException
+    {
+    	Connection conn = DatabaseManager.getInstance().getConnection();
+		PreparedStatement sqlQuerry = conn.prepareStatement("SELECT url FROM articles WHERE article_id = ? ;");
+		sqlQuerry.setString(1, articleId);
+		ResultSet rs = sqlQuerry.executeQuery();
+		
+		while(rs.next()) {
+			return rs.getString("url");
+		}
+		
+		return null;
+    }
+    
+    public static void setArticleNumOfComments(String articleId, int newNum)
+    {
+            //set the num of the comment of the article and add the new num
+    }
+
+    public static void addCommentToDb(CommentEntityDS comm)
+    {
+            //write the comment in the DB
+    }
 	
 	
 }

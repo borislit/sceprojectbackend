@@ -1,10 +1,12 @@
 package sce.finalprojects.sceprojectbackend.datatypes;
 
+
+
 public class MapCell {
 
 	private String article_id;
 	private String comment_id;
-	private String mapping;
+	private String mapping;  //the level is from the top to the bottom , the last level (leaves) is 0
 
 	public MapCell(String article_id, String comment_id, String mapping) {
 		super();
