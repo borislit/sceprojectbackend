@@ -65,5 +65,14 @@ public class generatorTest {
 		gen = new xmlGenerator("1",efh.a,ArrayOfComments.size());
 		
 	}
+	
+	@Test
+	public void testDB() throws Exception {
+		
+		DbHandler.setArticleWords("1", new String[] {"dov", "bill" ,"avi"});
+		
+		String[] ret = DbHandler.getArticleWords("1");
+		
+	}
 
 }

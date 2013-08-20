@@ -24,12 +24,10 @@ public class DbHandler {
 		
 		//TODO: check what is the impact if the order is changed when returning the entries from the DB (when building the Mapping or XML )
 		//SELECT vector FROM comments WHERE article_id = 'articleID'
+		
 		Connection conn = DatabaseManager.getInstance().getConnection();
-		
 		PreparedStatement sqlQuerry = conn.prepareStatement("SELECT comment_id,vector FROM comments WHERE article_id = ? ORDER BY comment_id ASC;");
-		
 		sqlQuerry.setString(1, articleID);
-		
 		ResultSet rs = sqlQuerry.executeQuery();
 		
 		ArrayList<Comment> ArrayOfComments = new ArrayList<Comment>();
@@ -82,11 +80,8 @@ public class DbHandler {
 	public static String getXMLRepresentation(String articleID) throws SQLException {
 		
 		Connection conn = DatabaseManager.getInstance().getConnection();
-		
 		PreparedStatement sqlQuerry = conn.prepareStatement("SELECT xmlRepresentation FROM articles WHERE article_id = ?;");
-		
 		sqlQuerry.setString(1, articleID);
-
 		ResultSet rs = sqlQuerry.executeQuery();
 		
 		rs.next();
@@ -154,16 +149,41 @@ public class DbHandler {
 		
 	}
 	
+	/**
+	 * set the article words
+	 * @param articleId
+	 * @param words
+	 * @throws SQLException
+	 */
 	public static void setArticleWords(String articleId , String[] words) throws SQLException {
-		//TODO write the method
+		//TODO check the method
 		Connection conn = DatabaseManager.getInstance().getConnection();
-		PreparedStatement sqlQuerry = conn.prepareStatement("SELECT * FROM HACNodesMapping WHERE article_id = ? ;");
+		String insertQuerry ="";
+		int i=0;
+		for (String word : words) {
+			insertQuerry += "("+articleId+","+word+","+(i++)+") , ";
+		}
+		insertQuerry = insertQuerry.substring(0, insertQuerry.length() - 1) + ";";
 		
+		PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO article_words (article_id,word,order) VALUES " + insertQuerry + ";");
+		
+		sqlQuerry.execute();
 	}
 	
-	public static String[] getArticleWords(String articleId) {
+	public static String[] getArticleWords(String articleId) throws SQLException {
+		Connection conn = DatabaseManager.getInstance().getConnection();
 		
-		return null;
+		PreparedStatement sqlQuerry = conn.prepareStatement("SELECT * FROM articel_words WHERE article_id = ? ORDER BY order ASC;");
+		sqlQuerry.setString(1, articleId);
+		ResultSet rs = sqlQuerry.executeQuery();
+		
+		ArrayList<String> arrayOfWords = new ArrayList<String>();
+		
+		while(rs.next()) {
+			arrayOfWords.add(rs.getString("word"));
+		}
+		
+		return (String[]) arrayOfWords.toArray();
 	}
 	
 	/**
@@ -247,7 +267,13 @@ public class DbHandler {
 		sqlQuerry.execute();
     }
 
-    public static void addCommentToDb(String articleId,ArrayList<CommentEntityDS> commments) throws SQLException
+    /**
+     * add comments for an article
+     * @param articleId
+     * @param commments
+     * @throws SQLException
+     */
+    public static void addComments(String articleId,ArrayList<CommentEntityDS> commments) throws SQLException
     {
     	//TODO check that method
     	Connection conn = DatabaseManager.getInstance().getConnection();

@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import sce.finalprojects.sceprojectbackend.database.DbHandler;
 import sce.finalprojects.sceprojectbackend.datatypes.Comment;
 
 
@@ -56,5 +57,5 @@ public class Performance{
 		assertEquals(true,efh.calculated);
 		
 	}
-
+	
 }
