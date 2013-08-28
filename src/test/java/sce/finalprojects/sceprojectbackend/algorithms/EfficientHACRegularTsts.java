@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import sce.finalprojects.sceprojectbackend.database.DbHandler;
+import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.Acell;
 import sce.finalprojects.sceprojectbackend.datatypes.Comment;
 import commentsTreatment.Driver;
@@ -23,7 +23,7 @@ public class EfficientHACRegularTsts {
 	@Before
 	public void initGaacTests() throws SQLException{
 		
-		ArrayOfComments = DbHandler.getAllComentsWithoutHTML("1");
+		ArrayOfComments = DatabaseOperations.getAllComentsWithoutHTML("1");
 	
 //		ArrayOfComments = new Comment[10];
 //		ArrayOfComments[0] =new Comment("comment_number 0", new double[] {1,0,0,0,1,1,0,1});

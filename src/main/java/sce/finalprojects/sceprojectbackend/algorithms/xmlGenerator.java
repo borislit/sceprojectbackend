@@ -18,7 +18,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
 
-import sce.finalprojects.sceprojectbackend.database.DbHandler;
+import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.Acell;
 import sce.finalprojects.sceprojectbackend.datatypes.XmlElement;
 //import commentsTreatment.articleWords;
@@ -116,7 +116,7 @@ public class xmlGenerator {
 			    LSSerializer lsSerializer = domImplementation.createLSSerializer();
 				xmlHacRepresentation = lsSerializer.writeToString(doc);
 			
-				DbHandler.setXmlRepresentation(articleId,xmlHacRepresentation);
+				DatabaseOperations.setXmlRepresentation(articleId,xmlHacRepresentation);
 		
 		 }catch (Exception e)
 		 {

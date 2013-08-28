@@ -1,5 +1,7 @@
 package sce.finalprojects.sceprojectbackend.rest;
 
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -8,6 +10,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.springframework.stereotype.Service;
+
+import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
+import sce.finalprojects.sceprojectbackend.datatypes.GetClustersResponse;
 
 
 /*
@@ -47,8 +52,11 @@ public class ClusterOperationsREST {
 				and the ID's of its sub-clusters
 	 */
 	@GET
-	public Response getClusters(@QueryParam("articleid") String articleid, @QueryParam("level") int level,  @QueryParam("clusterid") String[] requestedClusters){
-		return Response.ok(requestedClusters).build();
+	public Response getClusters(@QueryParam("articleid") String articleID, @QueryParam("level") int level,  @QueryParam("clusterid") List<String> requestedClusters){
+		GetClustersResponse response = new GetClustersResponse();
+		response.setClusterRepresentation(DatabaseOperations.getClustersRepresentationByIDs(requestedClusters, level, articleID));
+		
+		return Response.ok(response).build();
 	}
 
 }

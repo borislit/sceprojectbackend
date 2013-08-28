@@ -25,7 +25,7 @@ import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import sce.finalprojects.sceprojectbackend.database.DbHandler;
+import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.Cluster;
 import sce.finalprojects.sceprojectbackend.datatypes.Comment;
 import sce.finalprojects.sceprojectbackend.datatypes.MapCell;
@@ -47,8 +47,8 @@ public class Maintenance {
 	public void mapXmlHacToClusters(String articleId) throws Exception {
 		
 		///dummy calls to DB
-		String xmlRepresentation = DbHandler.getXMLRepresentation(articleId);
-		ArrayList<Comment> arrayOfComments = DbHandler.getAllComentsWithoutHTML(articleId);
+		String xmlRepresentation = DatabaseOperations.getXMLRepresentation(articleId);
+		ArrayList<Comment> arrayOfComments = DatabaseOperations.getAllComentsWithoutHTML(articleId);
 		///dummy calls - END
 		ArrayList<Cluster> clustersArray = Cluster.makeClustersArray(arrayOfComments);
 		
@@ -107,7 +107,7 @@ public class Maintenance {
 				clustersArray.add(fatherCluster);
 			}	
 		}
-		DbHandler.setArticleMapping(articleId,mapping);
+		DatabaseOperations.setArticleMapping(articleId,mapping);
 	}
 
 	/**
@@ -168,9 +168,9 @@ public class Maintenance {
 	public void addNewElementToHAC(Comment ne, String articleId, double[] vector ) throws Exception {
 		
 		//replace this calls with real values
-		ArrayList<MapCell> mappingArray = DbHandler.getArticleMapping(articleId);   ///this should be replaced from dummy call to a real call
-		String xmlRepresentation = DbHandler.getXMLRepresentation(articleId); 
-		ArrayList<Comment> arrayOfComments = DbHandler.getAllComentsWithoutHTML(articleId); ///this should be replaced from dummy call to a real call
+		ArrayList<MapCell> mappingArray = DatabaseOperations.getArticleMapping(articleId);   ///this should be replaced from dummy call to a real call
+		String xmlRepresentation = DatabaseOperations.getXMLRepresentation(articleId); 
+		ArrayList<Comment> arrayOfComments = DatabaseOperations.getAllComentsWithoutHTML(articleId); ///this should be replaced from dummy call to a real call
 		//end
 		
 		ArrayList<Cluster> clustersArray = Cluster.makeClustersArray(arrayOfComments);
@@ -302,8 +302,8 @@ public class Maintenance {
 		LSSerializer lsSerializer = domImplementation.createLSSerializer();
 		
 		///writing to DB
-		DbHandler.setXmlRepresentation(articleId,lsSerializer.writeToString(doc));
-		DbHandler.setArticleMapping(articleId,mappingArray);
+		DatabaseOperations.setXmlRepresentation(articleId,lsSerializer.writeToString(doc));
+		DatabaseOperations.setArticleMapping(articleId,mappingArray);
 		//TODO: Check why if i'm adding a new element the father of the element after running the algorithm is getting wrong merge sim number
 	}
 

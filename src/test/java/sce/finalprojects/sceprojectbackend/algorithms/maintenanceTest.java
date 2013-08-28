@@ -10,7 +10,7 @@ import org.junit.Test;
 
 
 
-import sce.finalprojects.sceprojectbackend.database.DbHandler;
+import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.Comment;
 import commentsTreatment.Driver;
 
@@ -30,7 +30,7 @@ public class maintenanceTest {
 		
 		maint.mapXmlHacToClusters("1");
 		
-		System.out.println(DbHandler.getArticleMapping("1"));
+		System.out.println(DatabaseOperations.getArticleMapping("1"));
 		
 	}
 	

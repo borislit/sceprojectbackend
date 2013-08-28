@@ -1,8 +1,11 @@
 package sce.finalprojects.sceprojectbackend.database;
+import sce.finalprojects.sceprojectbackend.datatypes.ClusterRepresentationDO;
 import sce.finalprojects.sceprojectbackend.datatypes.Comment;
 import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
 import sce.finalprojects.sceprojectbackend.datatypes.MapCell;
+import sce.finalprojects.sceprojectbackend.managers.ClustersManager;
 import  sce.finalprojects.sceprojectbackend.managers.DatabaseManager;
+import sce.finalprojects.sceprojectbackend.utils.MarkupUtility;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,9 +13,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
-public class DbHandler {
+public class DatabaseOperations {
 
 	/**
 	 * return all the comments vectors that belongs to the article
@@ -283,10 +291,81 @@ public class DbHandler {
 		}
     	insertQuerry = insertQuerry.substring(0, insertQuerry.length() - 1) + ";";
 		
-		PreparedStatement sqlQuerry = conn.prepareStatement("INSET INTO comments (comment_id,article_id,html,vector) VALUES " +insertQuerry+";");
+		PreparedStatement sqlQuerry = conn.prepareStatement("INSERT INTO comments (comment_id,article_id,html,vector) VALUES " +insertQuerry+";");
 		
 		sqlQuerry.execute();
 	
+    }
+    
+    
+    private static Map<String, String> getClustersChildrenIDs(String clusterID, int level, String articleID){
+    	try {
+			Connection conn = DatabaseManager.getInstance().getConnection();
+			Map<String, String> childrenIDs = new HashMap<String, String>();
+			String qryString = "SELECT comments_id,html FROM comments comms, HACNodesMapping mapping WHERE comms.comment_id=mapping.comment_id AND mapping.article_id=? AND mapping.node_mapping = \""+clusterID+"_"+level+"\"";
+	    	PreparedStatement qry = conn.prepareStatement(qryString);
+			qry.setString(1, articleID);
+			ResultSet rs = qry.executeQuery();
+			
+			while(rs.next()){
+				childrenIDs.put(rs.getString(0), rs.getString(1));
+			}
+			
+			return childrenIDs;
+				
+    	} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	return null;
+    }
+
+    public static Set<ClusterRepresentationDO> getClustersRepresentationByIDs(List<String> clusterIDs, int level, String articleID){
+    	
+    	Connection conn;
+    	Map<String, String> children;
+    	Set<String> childrenIDSet;
+    	Set<ClusterRepresentationDO> repDOSet = new HashSet<ClusterRepresentationDO>();
+    	String clusterID;
+    	String parsedLabel;
+    	
+    	try{
+    		
+    		conn = DatabaseManager.getInstance().getConnection();
+
+	    	String qryString = "SELECT comments.* FROM comments comms, HACNodesMapping mapping WHERE comms.comment_id=mapping.comment_id AND mapping.article_id=?";
+	    	qryString += " AND mapping.node_mapping IN (";
+	    	
+	    	for(String cid:clusterIDs){
+	    		qryString = "\""+cid+"_"+level+"\",";
+	    	}
+	    	
+	    	qryString = qryString.substring(0, qryString.lastIndexOf(","));
+	    	
+	    	qryString+=")";
+	    	
+	    
+	    	PreparedStatement qry = conn.prepareStatement(qryString);
+			qry.setString(1, articleID);
+			ResultSet rs = qry.executeQuery();
+			
+			level++;
+			
+			while(rs.next()) {
+				clusterID = rs.getString("comment_id");
+				children = getClustersChildrenIDs(clusterID,level,articleID);
+				childrenIDSet = children.keySet();
+				parsedLabel = MarkupUtility.getCommentBodyFromMarkup(children.get(childrenIDSet.iterator().next()));
+				repDOSet.add(new ClusterRepresentationDO(clusterID, parsedLabel, childrenIDSet));
+			}
+
+		
+    	}catch(SQLException e){
+    		
+    	}
+		
+		return repDOSet;
     }
     
 	

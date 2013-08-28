@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import sce.finalprojects.sceprojectbackend.database.DbHandler;
+import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.Acell;
 import sce.finalprojects.sceprojectbackend.datatypes.Comment;
 
@@ -25,7 +25,7 @@ public class generatorTest {
 	public void init() throws Exception {
 		
 		ArrayOfComments = new ArrayList<Comment>();
-		ArrayOfComments = DbHandler.getAllComentsWithoutHTML("1");
+		ArrayOfComments = DatabaseOperations.getAllComentsWithoutHTML("1");
 
 		vectRep = new double[sizeOfComment];
 //		for (int i = 0   ; i <  sizeOfComment ; i ++) {	
@@ -69,9 +69,9 @@ public class generatorTest {
 	@Test
 	public void testDB() throws Exception {
 		
-		DbHandler.setArticleWords("1", new String[] {"dov", "bill" ,"avi"});
+		DatabaseOperations.setArticleWords("1", new String[] {"dov", "bill" ,"avi"});
 		
-		String[] ret = DbHandler.getArticleWords("1");
+		String[] ret = DatabaseOperations.getArticleWords("1");
 		
 	}
 
