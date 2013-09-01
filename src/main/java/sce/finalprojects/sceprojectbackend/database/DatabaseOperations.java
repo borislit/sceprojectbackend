@@ -327,13 +327,12 @@ public class DatabaseOperations {
     	Map<String, String> children;
     	Set<String> childrenIDSet;
     	Set<ClusterRepresentationDO> repDOSet = new HashSet<ClusterRepresentationDO>();
-    	String clusterID;
     	String parsedLabel;
     	
     	try{
     		
     		conn = DatabaseManager.getInstance().getConnection();
-
+/*
 	    	String qryString = "SELECT comments.* FROM comments comms, HACNodesMapping mapping WHERE comms.comment_id=mapping.comment_id AND mapping.article_id=? AND mapping.node_mapping IN (";
 	    	
 	    	for(String cid:clusterIDs){
@@ -350,9 +349,9 @@ public class DatabaseOperations {
 			ResultSet rs = qry.executeQuery();
 			
 			level++;
-			
-			while(rs.next()) {
-				clusterID = rs.getString("comment_id");
+			*/
+    		
+			for(String clusterID: clusterIDs) {
 				children = getClustersChildrenIDs(clusterID,level,articleID);
 				childrenIDSet = children.keySet();
 				parsedLabel = MarkupUtility.getCommentBodyFromMarkup(children.get(childrenIDSet.iterator().next()));
