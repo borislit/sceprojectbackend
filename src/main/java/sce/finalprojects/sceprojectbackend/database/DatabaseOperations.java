@@ -314,7 +314,6 @@ public class DatabaseOperations {
 			return childrenIDs;
 				
     	} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	
