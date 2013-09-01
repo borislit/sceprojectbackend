@@ -334,11 +334,10 @@ public class DatabaseOperations {
     		
     		conn = DatabaseManager.getInstance().getConnection();
 
-	    	String qryString = "SELECT comments.* FROM comments comms, HACNodesMapping mapping WHERE comms.comment_id=mapping.comment_id AND mapping.article_id=?";
-	    	qryString += " AND mapping.node_mapping IN (";
+	    	String qryString = "SELECT comments.* FROM comments comms, HACNodesMapping mapping WHERE comms.comment_id=mapping.comment_id AND mapping.article_id=? AND mapping.node_mapping IN (";
 	    	
 	    	for(String cid:clusterIDs){
-	    		qryString = "\""+cid+"_"+level+"\",";
+	    		qryString += "\""+cid+"_"+level+"\",";
 	    	}
 	    	
 	    	qryString = qryString.substring(0, qryString.lastIndexOf(","));
@@ -367,6 +366,39 @@ public class DatabaseOperations {
 		
 		return repDOSet;
     }
+    
+    public static List<String> getCommentsForGivenCluster(String articleID, String clusterID, int level, int from, int to){
+    	
+    	Connection conn;
+    	List<String> markupList = new ArrayList<String>();
+    	
+    	try{
+    		
+    		conn = DatabaseManager.getInstance().getConnection();
+
+	    	String qryString = "SELECT html FROM comments comms, HACNodesMapping mapping WHERE comms.comment_id=mapping.comment_id AND mapping.article_id=? AND mapping.node_mapping = ? LIMIT ?,?";
+	    	
+	    
+	    	PreparedStatement qry = conn.prepareStatement(qryString);
+			qry.setString(1, articleID);
+			qry.setString(2, clusterID+"_"+level);
+			qry.setInt(3, from);
+			qry.setInt(4, to);
+			ResultSet rs = qry.executeQuery();
+
+			while(rs.next()) {
+				markupList.add(rs.getString("html"));
+			}
+
+		
+    	}catch(SQLException e){
+    		
+    	}
+    	
+    	return markupList;
+		
+    }
+    
     
 	
 	

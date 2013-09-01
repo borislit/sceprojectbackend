@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.GetClustersResponse;
+import sce.finalprojects.sceprojectbackend.utils.MarkupUtility;
 
 
 /*
@@ -55,7 +56,6 @@ public class ClusterOperationsREST {
 	public Response getClusters(@QueryParam("articleid") String articleID, @QueryParam("level") int level,  @QueryParam("clusterid") List<String> requestedClusters){
 		GetClustersResponse response = new GetClustersResponse();
 		response.setClusterRepresentation(DatabaseOperations.getClustersRepresentationByIDs(requestedClusters, level, articleID));
-		
 		return Response.ok(response).build();
 	}
 
