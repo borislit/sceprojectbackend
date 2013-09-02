@@ -37,7 +37,7 @@ public class ArrayOfCommentsFactory extends BaseFactory<ArrayOfCommentsDO> {
 		//in case the article comments doesn't exist 	
 		if(arrayOfComments == null || arrayOfComments.size() == 0)
 		{
-			ArrayList<CommentEntityDS> commentsDSArray = sarit.getCommentsFromArticle(DatabaseOperations.getUrl(articleId));  //TODO: change it to a real call
+			ArrayList<CommentEntityDS> commentsDSArray = sarit.getCommentsFromArticle(DatabaseOperations.getUrl(articleId),articleId,DatabaseOperations.getArticleNumOfComments(articleId));  //TODO: change it to a real call
 			DatabaseOperations.setComments(articleId, commentsDSArray); //save the comments in the DB
 			 //save the comments array in the cache
 			commentsDO = new ArrayOfCommentsDO(articleId, Comment.convertCommentsDStoCommentsArrayList(commentsDSArray));
