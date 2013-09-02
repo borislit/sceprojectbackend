@@ -22,7 +22,7 @@ public class BuildingTreeDataManager {
 	 */
 	public static void gettingCommentsForTheFirstTime(URL url, String articleId, int numOfComments)
 	{
-		DbHandler.addNewArticle(articleId, url.toString(), numOfComments); //TODO delete when the server is ready
+		DatabaseOperations.addNewArticle(articleId, url.toString(), numOfComments); //TODO delete when the server is ready
 		commentsArray = new CommentEntityDS[numOfComments];
 		int numOfThreads = HelperFunctions.getNumOfThreads(numOfComments, 0);
 		commentsString = new String[numOfThreads];
