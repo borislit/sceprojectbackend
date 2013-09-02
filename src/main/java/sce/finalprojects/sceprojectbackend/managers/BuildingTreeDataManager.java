@@ -2,10 +2,10 @@ package sce.finalprojects.sceprojectbackend.managers;
 
 import java.net.URL;
 import java.util.ArrayList;
-import sce.finalProject.dataBaseManager.DbHandler;
-import sce.finalProject.dataStructures.CommentEntityDS;
-import sce.finalProject.miscellaneousness.HelperFunctions;
-import sce.finalProject.textProcessing.TextProcessingManager;
+import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
+import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
+import sce.finalprojects.sceprojectbackend.utils.HelperFunctions;
+import sce.finalprojects.sceprojectbackend.textProcessing.TextProcessingManager;
 import DataTypes.StatisticData;
 
 
@@ -22,7 +22,7 @@ public class BuildingTreeDataManager {
 	 */
 	public static void gettingCommentsForTheFirstTime(URL url, String articleId, int numOfComments)
 	{
-		DbHandler.addNewArticle(articleId, url.toString(), numOfComments);
+		DbHandler.addNewArticle(articleId, url.toString(), numOfComments); //TODO delete when the server is ready
 		commentsArray = new CommentEntityDS[numOfComments];
 		int numOfThreads = HelperFunctions.getNumOfThreads(numOfComments, 0);
 		commentsString = new String[numOfThreads];
@@ -35,7 +35,7 @@ public class BuildingTreeDataManager {
 		TextProcessingManager cst = new TextProcessingManager();
 		StatisticData[][] sd = cst.getTextResult(finalString.toString(),numOfComments);
 		Double[][] wordCommentsMatrix = cst.buildWordCommentMatrix(sd, numOfComments);
-		DbHandler.setArticleWords(TextProcessingManager.wordsArray, articleId);
+		DbHandler.setArticleWords(TextProcessingManager.wordsArray, articleId);//TODO delete when the server is ready
 		ArrayList<ArrayList<Double>> commentsVectors = cst.buildCommentsVector(wordCommentsMatrix, numOfComments);
 		
 		for(int i=0; i<numOfComments; i++)
@@ -45,6 +45,7 @@ public class BuildingTreeDataManager {
 //		for(int i=0; i<numOfComments;i++)
 //			commentsArray[i].printCommentEntity();
 		
-		DbHandler.addComments(commentsArray, articleId);
+		DbHandler.addComments(commentsArray, articleId);//TODO delete when the server is ready
+		//TODO return array list of comments insteat of saving in DB
 	}
 }
