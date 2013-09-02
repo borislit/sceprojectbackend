@@ -26,9 +26,14 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
+import sce.finalprojects.sceprojectbackend.datatypes.ArrayOfCommentsDO;
 import sce.finalprojects.sceprojectbackend.datatypes.Cluster;
 import sce.finalprojects.sceprojectbackend.datatypes.Comment;
+import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
+import sce.finalprojects.sceprojectbackend.datatypes.DocDO;
 import sce.finalprojects.sceprojectbackend.datatypes.MapCell;
+import sce.finalprojects.sceprojectbackend.factories.ArrayOfCommentsFactory;
+import sce.finalprojects.sceprojectbackend.factories.DocFactory;
 /**
  * this class is responsible of creating a mapping from XML and for adding a new element to the HAC
  * @author the source
@@ -45,11 +50,13 @@ public class Maintenance {
 	 * @throws Exception
 	 */
 	public void mapXmlHacToClusters(String articleId) throws Exception {
+	
+		//String xmlRepresentation = DatabaseOperations.getXMLRepresentation(articleId);
 		
-		///dummy calls to DB
-		String xmlRepresentation = DatabaseOperations.getXMLRepresentation(articleId);
+		DocFactory DocumentFactory = new DocFactory();
+		DocDO document = DocumentFactory.get(articleId);
+		
 		ArrayList<Comment> arrayOfComments = DatabaseOperations.getAllComentsWithoutHTML(articleId);
-		///dummy calls - END
 		ArrayList<Cluster> clustersArray = Cluster.makeClustersArray(arrayOfComments);
 		
 		ArrayList<MapCell> mapping = new ArrayList<MapCell>();
@@ -59,12 +66,12 @@ public class Maintenance {
 		Cluster childcluster;
 		Cluster fatherCluster;
 		
-		Document doc = getDocumentFromXml(xmlRepresentation); 
+		//Document doc = getDocumentFromXml(xmlRepresentation); 
 		
 		//Evaluate XPath against Document itself
 		XPath xPath = XPathFactory.newInstance().newXPath();
 		
-		Element root = doc.getDocumentElement();
+		Element root = document.doc.getDocumentElement();
 		int currentLevel = getMaxLevel(root);
 		int lengthOfNodeList;
 		
@@ -74,7 +81,7 @@ public class Maintenance {
 			currentLevel--;
 			//Retrieve the nodes of the level that before the last level
 			NodeList nodesList = (NodeList)xPath.evaluate("//Cluster[@level = "+currentLevel+" ]",
-					doc.getDocumentElement(), XPathConstants.NODESET);
+					document.doc.getDocumentElement(), XPathConstants.NODESET);
 			lengthOfNodeList = nodesList.getLength();
 			//take every element from the current level and add his children's comments to the mapping
 			for(int i = 0 ; i < lengthOfNodeList ; i++) {
@@ -109,27 +116,6 @@ public class Maintenance {
 		}
 		DatabaseOperations.setArticleMapping(articleId,mapping);
 	}
-
-	/**
-	 * helper to get a DOC initiate with the XML of the article
-	 * @param xmlRepresentation
-	 * @return
-	 * @throws ParserConfigurationException
-	 * @throws SAXException
-	 * @throws IOException
-	 */
-	private Document getDocumentFromXml(String xmlRepresentation)
-			throws ParserConfigurationException, SAXException, IOException {
-		// Create a factory
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		// Use document builder factory
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		//Parse the document
-		Reader reader = new CharArrayReader(xmlRepresentation.toCharArray());
-		Document doc = builder.parse(new InputSource(reader));
-		return doc;
-	}
-	
 	
 	/**
 	 * Traverse the tree until finding the last level
@@ -137,7 +123,6 @@ public class Maintenance {
 	 * @return the max level of the tree
 	 */
 	private int getMaxLevel(Element root) {
-		
 		Element last = root;
 		do {
 			 last = (Element) last.getLastChild();
@@ -146,13 +131,45 @@ public class Maintenance {
 		return Integer.parseInt(last.getAttribute("level"));
 	}
 	
-	public void addNewElementsToHAC(ArrayList<Comment> neArray, String articleId, double[] vector) throws Exception {
+	/**
+	 * Receives an Array of comments and add them one by one to the HAC using the maintenance algorithm
+	 * Save the new DOC in the cache 
+	 * Save the new xmlRepresentation in the DB
+	 * Save the mapping array to DB
+	 * save the new comments to DB (save it to cache one by one and finally save it to DB)
+	 * @param neArray
+	 * @param articleId
+	 * @param vector
+	 * @throws Exception
+	 */
+	public void addNewElementsToHAC(ArrayList<CommentEntityDS> neCommentDSArray/*ArrayList<Comment> neArray*/, String articleId, double[] vector) throws Exception {
+	
+		//docFactory
+		DocFactory documentFactory = new DocFactory();
+		DocDO document = documentFactory.get(articleId);
+		//mapping
+		ArrayList<MapCell> mappingArray = DatabaseOperations.getArticleMapping(articleId);
 		
+		//set the cached comments array into the new cached DO
+		ArrayOfCommentsFactory commentsArrayFactory = new ArrayOfCommentsFactory();
+		ArrayOfCommentsDO arrayOfCommentsDO = new ArrayOfCommentsDO(articleId, null);
+		arrayOfCommentsDO = commentsArrayFactory.get(articleId);
+		
+		ArrayList<Comment> neArray = Comment.convertCommentsDStoCommentsArrayList(neCommentDSArray);
 		
 		for (Comment ne : neArray) {
 			Comment.nomalizeCommentVector(ne);
-			addNewElementToHAC(ne, articleId, vector);
+			addNewElementToHAC(ne, articleId, vector, document, mappingArray, arrayOfCommentsDO.arrayOfComment);
+			//save the comments array with the ne to the cache (to start a new add element with the last added element)
+			arrayOfCommentsDO.arrayOfComment.add(ne);
+			commentsArrayFactory.save(arrayOfCommentsDO);			
 		}
+		
+		DOMImplementationLS domImplementation = (DOMImplementationLS) document.doc.getImplementation();
+		DatabaseOperations.setXmlRepresentation(articleId,domImplementation.createLSSerializer().writeToString(document.doc));
+		DatabaseOperations.setArticleMapping(articleId,mappingArray);
+		documentFactory.save(document);
+		DatabaseOperations.setComments(articleId, neCommentDSArray);
 	}
 	
 	
@@ -165,20 +182,12 @@ public class Maintenance {
 	 * @param vector
 	 * @throws Exception 
 	 */
-	public void addNewElementToHAC(Comment ne, String articleId, double[] vector ) throws Exception {
-		
-		//replace this calls with real values
-		ArrayList<MapCell> mappingArray = DatabaseOperations.getArticleMapping(articleId);   ///this should be replaced from dummy call to a real call
-		String xmlRepresentation = DatabaseOperations.getXMLRepresentation(articleId); 
-		ArrayList<Comment> arrayOfComments = DatabaseOperations.getAllComentsWithoutHTML(articleId); ///this should be replaced from dummy call to a real call
-		//end
-		
+	public void addNewElementToHAC(Comment ne, String articleId, double[] vector,DocDO document, ArrayList<MapCell> mappingArray , ArrayList<Comment> arrayOfComments ) throws Exception {
+
 		ArrayList<Cluster> clustersArray = Cluster.makeClustersArray(arrayOfComments);
 		Cluster newElement = new Cluster(ne);
 		Cluster childcluster;
 		Cluster fatherCluster;
-		
-		Document doc = getDocumentFromXml(xmlRepresentation); 
 		
 		NodeList childNodes;
 		NodeList nodesList;
@@ -186,7 +195,7 @@ public class Maintenance {
 		Element fatherElement;
 		Element tempChild;
 		Element newXMLElement;
-		Element root = doc.getDocumentElement();
+		Element root = document.doc.getDocumentElement();
 		
 		//Evaluate XPath against Document itself
 		XPath xPath = XPathFactory.newInstance().newXPath();
@@ -205,7 +214,7 @@ public class Maintenance {
 				fatherElement = root;
 				//add the NE to the XML concatenate it until the last level
 				do{
-					newXMLElement = doc.createElement("Cluster");
+					newXMLElement = document.doc.createElement("Cluster");
 					newXMLElement.setAttribute("id", newElement.cluster_id);
 					newXMLElement.setAttribute("level", ""+ (Integer.parseInt(fatherElement.getAttribute("level"))+1) );
 					newXMLElement.setAttribute("mergeSim", ""+1);
@@ -220,9 +229,9 @@ public class Maintenance {
 				break;
 			}
 
-			//Retrieve the nodes of the level that before the last level
+			//Retrieve the nodes of the level that before the last level (search from the top = root to the requested level)
 			nodesList = (NodeList)xPath.evaluate("//Cluster[@level = "+lastLevel+" ]",
-					doc.getDocumentElement(), XPathConstants.NODESET);
+					root, XPathConstants.NODESET);
 
 			lengthOfNodeList = nodesList.getLength();
 			double minSim = 2;
@@ -277,7 +286,7 @@ public class Maintenance {
 				fatherElement = tempChild;
 				//add the NE to the XML concatenate it until the last level
 				do{
-					newXMLElement = doc.createElement("Cluster");
+					newXMLElement = document.doc.createElement("Cluster");
 					newXMLElement.setAttribute("id", newElement.cluster_id);
 					newXMLElement.setAttribute("level", ""+ (Integer.parseInt(fatherElement.getAttribute("level"))+1) );
 					newXMLElement.setAttribute("mergeSim", ""+1);
@@ -295,15 +304,10 @@ public class Maintenance {
 		// write the content into xml file
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
-		DOMSource source = new DOMSource(doc);
+		DOMSource source = new DOMSource(document.doc);
 		StreamResult result = new StreamResult(new File("C:\\file.xml"));
 		transformer.transform(source, result);
-		DOMImplementationLS domImplementation = (DOMImplementationLS) doc.getImplementation();
-		LSSerializer lsSerializer = domImplementation.createLSSerializer();
-		
-		///writing to DB
-		DatabaseOperations.setXmlRepresentation(articleId,lsSerializer.writeToString(doc));
-		DatabaseOperations.setArticleMapping(articleId,mappingArray);
+
 		//TODO: Check why if i'm adding a new element the father of the element after running the algorithm is getting wrong merge sim number
 	}
 

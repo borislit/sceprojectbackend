@@ -1,6 +1,5 @@
 package sce.finalprojects.sceprojectbackend.algorithms;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -8,19 +7,16 @@ import java.util.Queue;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.LSSerializer;
+
 
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.Acell;
+import sce.finalprojects.sceprojectbackend.datatypes.DocDO;
 import sce.finalprojects.sceprojectbackend.datatypes.XmlElement;
+import sce.finalprojects.sceprojectbackend.factories.DocFactory;
 //import commentsTreatment.articleWords;
 
 
@@ -34,6 +30,13 @@ public class xmlGenerator {
 	public String xmlHacRepresentation;
 	private int[] level; ///counts the number of elements in each level
 	
+	/**
+	 * Generate the FIRST xml representation
+	 * called after efficient HAC is finish
+	 * @param articleId
+	 * @param ma
+	 * @param numberOfComments
+	 */
 	public xmlGenerator(String articleId, ArrayList<Acell> ma , int numberOfComments) {
 			
 		level = new int[numberOfComments];
@@ -105,23 +108,19 @@ public class xmlGenerator {
 				}	
 				
 				// write the content into xml file
-				TransformerFactory transformerFactory = TransformerFactory.newInstance();
-				Transformer transformer = transformerFactory.newTransformer();
-				DOMSource source = new DOMSource(doc);
-				StreamResult result = new StreamResult(new File("C:\\file.xml"));
-		 
-				transformer.transform(source, result);
+//				TransformerFactory transformerFactory = TransformerFactory.newInstance();
+//				Transformer transformer = transformerFactory.newTransformer();
+//				DOMSource source = new DOMSource(doc);
+//				StreamResult result = new StreamResult(new File("C:\\file.xml"));		 
+//				transformer.transform(source, result);
 				
+				//save the XML representation to the DB
 			    DOMImplementationLS domImplementation = (DOMImplementationLS) doc.getImplementation();
-			    LSSerializer lsSerializer = domImplementation.createLSSerializer();
-				xmlHacRepresentation = lsSerializer.writeToString(doc);
-			
-				DatabaseOperations.setXmlRepresentation(articleId,xmlHacRepresentation);
+			    DatabaseOperations.setXmlRepresentation(articleId,domImplementation.createLSSerializer().writeToString(doc));
+			    //save the DOC to the factory
+			    new DocFactory().save(new DocDO(articleId,doc));
 		
-		 }catch (Exception e)
-		 {
-			 e.printStackTrace();
-		 }
+		 }catch (Exception e){ e.printStackTrace();}
 	}
 	
 	/**
