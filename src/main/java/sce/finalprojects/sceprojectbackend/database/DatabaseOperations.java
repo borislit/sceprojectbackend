@@ -164,7 +164,7 @@ public class DatabaseOperations {
 	 * @throws SQLException
 	 */
 	public static void setArticleWords(String articleId , String[] words) throws SQLException {
-		//TODO check the method
+		//TODO check the method, need to replace to arrauList instead of array
 		Connection conn = DatabaseManager.getInstance().getConnection();
 		String insertQuerry ="";
 		int i=0;
@@ -283,7 +283,7 @@ public class DatabaseOperations {
      */
     public static void addComments(String articleId,ArrayList<CommentEntityDS> commments) throws SQLException
     {
-    	//TODO check that method
+    	//TODO check that method, need to replace to array instead of arrayList
     	Connection conn = DatabaseManager.getInstance().getConnection();
     	String insertQuerry = "";
     	for (CommentEntityDS comm : commments) { //TODO check the toString => look at the getter of comments
