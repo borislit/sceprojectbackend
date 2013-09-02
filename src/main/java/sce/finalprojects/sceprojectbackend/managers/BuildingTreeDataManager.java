@@ -35,17 +35,13 @@ public class BuildingTreeDataManager {
 		TextProcessingManager cst = new TextProcessingManager();
 		StatisticData[][] sd = cst.getTextResult(finalString.toString(),numOfComments);
 		Double[][] wordCommentsMatrix = cst.buildWordCommentMatrix(sd, numOfComments);
-		DbHandler.setArticleWords(TextProcessingManager.wordsArray, articleId);//TODO delete when the server is ready
+		DatabaseOperations.setArticleWords(TextProcessingManager.wordsArray, articleId);//TODO delete when the server is ready
 		ArrayList<ArrayList<Double>> commentsVectors = cst.buildCommentsVector(wordCommentsMatrix, numOfComments);
 		
 		for(int i=0; i<numOfComments; i++)
 			commentsArray[i].setVector(commentsVectors.get(i));
 		
-//		//TODO delete printing
-//		for(int i=0; i<numOfComments;i++)
-//			commentsArray[i].printCommentEntity();
-		
-		DbHandler.addComments(commentsArray, articleId);//TODO delete when the server is ready
-		//TODO return array list of comments insteat of saving in DB
+		DatabaseOperations.setComments(commentsArray, articleId);//TODO delete when the server is ready
+		//TODO change to array list and return array list of comments insteat of saving in DB
 	}
 }

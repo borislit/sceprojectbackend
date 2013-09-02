@@ -3,11 +3,10 @@ package sce.finalprojects.sceprojectbackend.managers;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-
-import sce.finalProject.dataBaseManager.DbHandler;
-import sce.finalProject.dataStructures.CommentEntityDS;
-import sce.finalProject.miscellaneousness.HelperFunctions;
-import sce.finalProject.textProcessing.TextProcessingManager;
+import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
+import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
+import sce.finalprojects.sceprojectbackend.utils.HelperFunctions;
+import sce.finalprojects.sceprojectbackend.textProcessing.TextProcessingManager;
 import DataTypes.StatisticData;
 
 
@@ -22,11 +21,11 @@ public class MaintenanceDataManager {
 	 */
 	public static void gettingCommentsForMaintenance(String articleId, int newNumOfComments)
 	{
-		int lastComment = DbHandler.getArticleNumOfComments(articleId);
+		int lastComment = DatabaseOperations.getArticleNumOfComments(articleId);
 		commentsArray = new CommentEntityDS[newNumOfComments - lastComment];
-		DbHandler.setArticleNumOfComments(articleId, newNumOfComments);
+		DatabaseOperations.setArticleNumOfComments(articleId, newNumOfComments);
 		try {
-			URL url = new URL(DbHandler.getUrl(articleId));
+			URL url = new URL(DatabaseOperations.getUrl(articleId));
 			int numOfThreads = HelperFunctions.getNumOfThreads(newNumOfComments, lastComment);
 			commentsString = new String[numOfThreads];
 			HelperFunctions.buildThreads(url, newNumOfComments, numOfThreads, lastComment, null, new MaintenanceDataManager());
@@ -52,12 +51,9 @@ public class MaintenanceDataManager {
 			
 //			for(int i=0; i<commentsArray.length; i++)
 //				commentsArray[i].setVector(commentsVectors.get(i));
-//			
-//			//TODO delete printing
-//			for(int i=0;i<commentsArray.length;i++)
-//				commentsArray[i].printCommentEntity();
+
 			
-			DbHandler.addComments(commentsArray, articleId);
+			DatabaseOperations.setComments(commentsArray, articleId);//TODO change to arrayList
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

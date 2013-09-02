@@ -1,10 +1,11 @@
 package sce.finalprojects.sceprojectbackend.textProcessing;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import sce.finalProject.dataBaseManager.DbHandler;
-import sce.finalProject.miscellaneousness.HelperFunctions;
+import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
+import sce.finalprojects.sceprojectbackend.utils.HelperFunctions;
 import Configurations.Configurations;
 import DataTypes.Document;
 import DataTypes.StatisticData;
@@ -42,6 +43,7 @@ public class TextProcessingManager {
 			//tokenizer.setUseWordNet(true);
 			Stemmer stemmer = new Stemmer();//Creating porter stemmer
 			StatisticCalculations statisticCalculator = new StatisticCalculations(StatisticCalculations.TF);//Creating statistic calculator with option of calculating TF.
+			//TODO check
 			TextFileWriter textFileWriter = new TextFileWriter("C:\\Users\\saritProj");//Creating text file writer for saving results into text files
 			FinalResults finalResults = new FinalResults();//Creating container for saving final results of operations.
 			tl.connectProcessToDocumentOut(sentenceSplitter, textFileWriter);//Connecting output of FileLoader to SentenceSplitter and FinalResults
@@ -78,21 +80,13 @@ public class TextProcessingManager {
 			for(int j=0; j<commentVector.size();j++)
 				commentsMatrix[i][commentVector.get(j)] = (double)1;
 		}
-		System.out.println(wordsArray);
 		for(int i=0; i<numOfWords; i++)//fill the matrix with values 
 		{
 			for(int j=0; j<numOfComments; j++)
 				if(commentsMatrix[i][j] == null)
 					commentsMatrix[i][j] = (double)0;
 		}
-		
-//		//TODO delete printing
-//		for(int i=0;i<numOfWords;i++)
-//		{
-//			for(int j=0; j<numOfComments;j++)
-//				System.out.print(commentsMatrix[i][j].intValue() + " ");
-//			System.out.println();
-//		}
+
 		return commentsMatrix;
 	}
 	
@@ -115,15 +109,13 @@ public class TextProcessingManager {
 				vector.add((double)matrix[j][i]);
 			}
 			commentsVectors.add(vector);
-			//System.out.println(vector);//TODO delete printing
 		}
 		return commentsVectors;		
 	}
 	
-	public ArrayList<ArrayList<Double>> vectorsCompletionForMaintenance(ArrayList<String> newWordsArray, StatisticData[][] sd, int numOfComments)
+	public ArrayList<ArrayList<Double>> vectorsCompletionForMaintenance(ArrayList<String> newWordsArray, StatisticData[][] sd, int numOfComments) throws SQLException
 	{
 		ArrayList<String> wordArray = HelperFunctions.addNewWordsToOldWords(newWordsArray);
-		System.out.println(wordArray.size());
 		ArrayList<ArrayList<Double>> commentsVectors = new ArrayList<ArrayList<Double>>();
 		ArrayList<Double> vector = null;
 		boolean flag = false;
@@ -153,7 +145,6 @@ public class TextProcessingManager {
 				else
 					vector.add((double)0);
 			}
-			System.out.println(vector);
 			commentsVectors.add(vector);
 		}
 		return commentsVectors;

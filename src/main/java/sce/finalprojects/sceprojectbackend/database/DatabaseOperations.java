@@ -175,7 +175,7 @@ public class DatabaseOperations {
 	 * @throws SQLException
 	 */
 	public static void setArticleWords(String articleId , String[] words) throws SQLException {
-		//TODO check the method, need to replace to arrauList instead of array
+		//TODO check the method, need to replace to arrayList instead of array
 		Connection conn = DatabaseManager.getInstance().getConnection();
 		String insertQuerry ="";
 		int i=0;

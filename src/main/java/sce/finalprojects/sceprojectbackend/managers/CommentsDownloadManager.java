@@ -8,8 +8,8 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import sce.finalProject.dataStructures.CommentEntityDS;
-import sce.finalProject.miscellaneousness.UrlHelper;
+import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
+import sce.finalprojects.sceprojectbackend.utils.UrlHelper;
 
 public class CommentsDownloadManager {
 	

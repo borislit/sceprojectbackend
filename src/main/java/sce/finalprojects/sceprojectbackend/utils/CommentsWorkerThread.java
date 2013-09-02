@@ -2,10 +2,8 @@ package sce.finalprojects.sceprojectbackend.utils;
 
 import java.io.FileNotFoundException;
 import java.net.URL;
+import sce.finalprojects.sceprojectbackend.managers.*;
 
-import sce.finalProject.managers.BuildingTreeDataManager;
-import sce.finalProject.managers.CommentsDownloadManager;
-import sce.finalProject.managers.MaintenanceDataManager;
 
 
 public class CommentsWorkerThread extends Thread{

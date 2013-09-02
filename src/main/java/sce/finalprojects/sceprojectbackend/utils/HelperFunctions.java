@@ -1,11 +1,12 @@
 package sce.finalprojects.sceprojectbackend.utils;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
-import sce.finalProject.dataBaseManager.DbHandler;
-import sce.finalProject.managers.BuildingTreeDataManager;
-import sce.finalProject.managers.MaintenanceDataManager;
+import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
+import sce.finalprojects.sceprojectbackend.managers.*;
+
 
 public class HelperFunctions {
 	
@@ -100,10 +101,10 @@ public class HelperFunctions {
 		}
 	}
 	
-	public static ArrayList<String> addNewWordsToOldWords(ArrayList<String> newWordsArray)
+	public static ArrayList<String> addNewWordsToOldWords(ArrayList<String> newWordsArray) throws SQLException
 	{
 		ArrayList<String> result = new ArrayList<String>();
-		String oldWords[] = DbHandler.getArticleWords("aaa");
+		String oldWords[] = DatabaseOperations.getArticleWords("aaa");
 		boolean isWordExist;
 		
 		for(int i=0;i<oldWords.length;i++)
