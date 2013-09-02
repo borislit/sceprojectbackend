@@ -100,8 +100,8 @@ public class Comment {
 	 * @param commentsDS
 	 * @return
 	 */
-	public static ArrayList<Comment> convertCommentsDStoCommentsArrayList(ArrayList<CommentEntityDS> commentsDS) {
 		
+	public static ArrayList<Comment> convertCommentsDStoCommentsArrayList(ArrayList<CommentEntityDS> commentsDS) {
 		ArrayList<Comment> returnArray = new ArrayList<Comment>();
 		
 		for (CommentEntityDS comment : commentsDS) {
