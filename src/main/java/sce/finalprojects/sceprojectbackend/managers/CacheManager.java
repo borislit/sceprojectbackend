@@ -19,7 +19,7 @@ public class CacheManager {
 	}
 	
 	public enum ObjectType {
-	    ARTICLE
+	    ARTICLE, DOC, MAPPING, XML, ARRAYOFCOMMENTS
 	}
 
 	private HashMap<String, Cachable> cached = new HashMap<String, Cachable>(); //TODO Limit this in size

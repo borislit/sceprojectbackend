@@ -12,9 +12,11 @@ public abstract class BaseFactory<T extends Cachable> {
 	public final T get(String id){
 		Cachable cachedObject = cacheManager.fetch(id,  getType());
 		
+		//in case the object found
 		if(cachedObject != null)
 			return (T)cachedObject;
 		
+		//in case the object didn't exist in the cache
 		return handle(id);
 	}
 	
@@ -27,8 +29,8 @@ public abstract class BaseFactory<T extends Cachable> {
 		//TODO Try to come up with fallback - BORIS
 	}
 	
-	public final void save(Cachable obj){
-		cacheManager.save(obj, null);
+	public final CacheToken save(Cachable obj){
+		return cacheManager.save(obj, null);
 	}
 	
 	abstract protected T handle(String id); 

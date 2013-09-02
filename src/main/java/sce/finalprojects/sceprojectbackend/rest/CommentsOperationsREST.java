@@ -31,9 +31,9 @@ public class CommentsOperationsREST {
 	 */
 	@GET
 	@Path("/more")
-	public Response getClusterComments(@QueryParam("articleid") String articleid, @QueryParam("clusterid") String clusterID, @QueryParam("level") int level, @QueryParam("from") int from, @QueryParam("to") int to){
+	public Response getClusterComments(@QueryParam("articleid") String articleId, @QueryParam("clusterid") String clusterID, @QueryParam("level") int level, @QueryParam("from") int from, @QueryParam("to") int to){
 		GetClusterCommentsResponse response = new GetClusterCommentsResponse();
-		response.setMarkup(DatabaseOperations.getCommentsForGivenCluster(articleID, clusterID, level, from, to));
+		response.setMarkup(DatabaseOperations.getCommentsForGivenCluster(articleId, clusterID, level, from, to));
 		return Response.ok(clusterID).build();
 	}
 

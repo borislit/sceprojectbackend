@@ -1,4 +1,5 @@
 package sce.finalprojects.sceprojectbackend.datatypes;
+import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
 import java.util.ArrayList;
 
 /**
@@ -91,6 +92,23 @@ public class Comment {
 		}
 		
 		return vect;
+		
+	}
+	
+	/**
+	 * convert the DS comments to Comments array list
+	 * @param commentsDS
+	 * @return
+	 */
+	public static ArrayList<Comment> convertCommentsDStoCommentsArrayList(ArrayList<CommentEntityDS> commentsDS) {
+		
+		ArrayList<Comment> returnArray = new ArrayList<Comment>();
+		
+		for (CommentEntityDS comment : commentsDS) {
+			returnArray.add(new Comment(comment.getId(), comment.getVector()));
+		}
+		
+		return returnArray;
 		
 	}
 

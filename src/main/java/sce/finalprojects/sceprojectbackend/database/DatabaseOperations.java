@@ -28,22 +28,27 @@ public class DatabaseOperations {
 	 * @return an arrayList of comments 
 	 * @throws SQLException 
 	 */
-	public static ArrayList<Comment> getAllComentsWithoutHTML(String articleID) throws SQLException {
+	public static ArrayList<Comment> getAllComentsWithoutHTML(String articleID){
 		
 		//TODO: check what is the impact if the order is changed when returning the entries from the DB (when building the Mapping or XML )
 		//SELECT vector FROM comments WHERE article_id = 'articleID'
 		
-		Connection conn = DatabaseManager.getInstance().getConnection();
-		PreparedStatement sqlQuerry = conn.prepareStatement("SELECT comment_id,vector FROM comments WHERE article_id = ? ORDER BY comment_id ASC;");
-		sqlQuerry.setString(1, articleID);
-		ResultSet rs = sqlQuerry.executeQuery();
-		
-		ArrayList<Comment> ArrayOfComments = new ArrayList<Comment>();
-		
-		while(rs.next())
-		{
-			ArrayOfComments.add(new Comment(rs.getString("comment_id"),Comment.replaceStringWithVector(rs.getString("vector"))));
-		}
+		Connection conn;
+		ArrayList<Comment> ArrayOfComments = null;
+		try {
+			
+			conn = DatabaseManager.getInstance().getConnection();
+			PreparedStatement sqlQuerry = conn.prepareStatement("SELECT comment_id,vector FROM comments WHERE article_id = ? ORDER BY comment_id ASC;");
+			sqlQuerry.setString(1, articleID);
+			ResultSet rs = sqlQuerry.executeQuery();
+			ArrayOfComments = new ArrayList<Comment>();
+			
+			while(rs.next())
+			{
+				ArrayOfComments.add(new Comment(rs.getString("comment_id"),Comment.replaceStringWithVector(rs.getString("vector"))));
+			}
+			
+		} catch (SQLException e) {e.printStackTrace();}
 		
 		return ArrayOfComments;
 	}
@@ -85,22 +90,28 @@ public class DatabaseOperations {
 	 * @return
 	 * @throws SQLException 
 	 */
-	public static String getXMLRepresentation(String articleID) throws SQLException {
+	public static String getXMLRepresentation(String articleID){
 		
-		Connection conn = DatabaseManager.getInstance().getConnection();
-		PreparedStatement sqlQuerry = conn.prepareStatement("SELECT xmlRepresentation FROM articles WHERE article_id = ?;");
-		sqlQuerry.setString(1, articleID);
-		ResultSet rs = sqlQuerry.executeQuery();
-		
-		rs.next();
-		String xmlrep= rs.getString("xmlRepresentation");
-		
-		if(xmlrep.length() == 0)
+		Connection conn;
+		try {
+			conn = DatabaseManager.getInstance().getConnection();
+			PreparedStatement sqlQuerry = conn.prepareStatement("SELECT xmlRepresentation FROM articles WHERE article_id = ?;");
+			sqlQuerry.setString(1, articleID);
+			ResultSet rs = sqlQuerry.executeQuery();
+			
+			rs.next();
+			String xmlrep= rs.getString("xmlRepresentation");
+			
+			if(xmlrep.length() == 0)
+				return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>";
+			
+			//return xmlrep;
+			return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><Cluster id=\"1\" level=\"0\" mergeSim=\"1.0\"><Cluster id=\"6\" level=\"1\" mergeSim=\"0.9\"><Cluster id=\"10\" level=\"2\" mergeSim=\"1.0\"><Cluster id=\"10\" level=\"3\" mergeSim=\"1\"><Cluster id=\"10\" level=\"4\" mergeSim=\"1\"/></Cluster></Cluster><Cluster id=\"6\" level=\"2\" mergeSim=\"0.8\"><Cluster id=\"9\" level=\"3\" mergeSim=\"0.6\"><Cluster id=\"8\" level=\"4\" mergeSim=\"1.0\"/><Cluster id=\"9\" level=\"4\" mergeSim=\"0.6\"/></Cluster><Cluster id=\"6\" level=\"3\" mergeSim=\"0.4\"><Cluster id=\"7\" level=\"4\" mergeSim=\"1.0\"/><Cluster id=\"6\" level=\"4\" mergeSim=\"0.4\"/></Cluster></Cluster></Cluster><Cluster id=\"1\" level=\"1\" mergeSim=\"0.7\"><Cluster id=\"4\" level=\"2\" mergeSim=\"0.3\"><Cluster id=\"5\" level=\"3\" mergeSim=\"1.0\"><Cluster id=\"5\" level=\"4\" mergeSim=\"1\"/></Cluster><Cluster id=\"4\" level=\"3\" mergeSim=\"0.3\"><Cluster id=\"4\" level=\"4\" mergeSim=\"1\"/></Cluster></Cluster><Cluster id=\"1\" level=\"2\" mergeSim=\"0.5\"><Cluster id=\"3\" level=\"3\" mergeSim=\"1.0\"><Cluster id=\"3\" level=\"4\" mergeSim=\"1\"/></Cluster><Cluster id=\"1\" level=\"3\" mergeSim=\"0.2\"><Cluster id=\"2\" level=\"4\" mergeSim=\"1.0\"/><Cluster id=\"1\" level=\"4\" mergeSim=\"0.2\"/></Cluster></Cluster></Cluster></Cluster>";
+
+		} catch (SQLException e) {
+			e.printStackTrace();
 			return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>";
-		
-		//return xmlrep;
-		return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><Cluster id=\"1\" level=\"0\" mergeSim=\"1.0\"><Cluster id=\"6\" level=\"1\" mergeSim=\"0.9\"><Cluster id=\"10\" level=\"2\" mergeSim=\"1.0\"><Cluster id=\"10\" level=\"3\" mergeSim=\"1\"><Cluster id=\"10\" level=\"4\" mergeSim=\"1\"/></Cluster></Cluster><Cluster id=\"6\" level=\"2\" mergeSim=\"0.8\"><Cluster id=\"9\" level=\"3\" mergeSim=\"0.6\"><Cluster id=\"8\" level=\"4\" mergeSim=\"1.0\"/><Cluster id=\"9\" level=\"4\" mergeSim=\"0.6\"/></Cluster><Cluster id=\"6\" level=\"3\" mergeSim=\"0.4\"><Cluster id=\"7\" level=\"4\" mergeSim=\"1.0\"/><Cluster id=\"6\" level=\"4\" mergeSim=\"0.4\"/></Cluster></Cluster></Cluster><Cluster id=\"1\" level=\"1\" mergeSim=\"0.7\"><Cluster id=\"4\" level=\"2\" mergeSim=\"0.3\"><Cluster id=\"5\" level=\"3\" mergeSim=\"1.0\"><Cluster id=\"5\" level=\"4\" mergeSim=\"1\"/></Cluster><Cluster id=\"4\" level=\"3\" mergeSim=\"0.3\"><Cluster id=\"4\" level=\"4\" mergeSim=\"1\"/></Cluster></Cluster><Cluster id=\"1\" level=\"2\" mergeSim=\"0.5\"><Cluster id=\"3\" level=\"3\" mergeSim=\"1.0\"><Cluster id=\"3\" level=\"4\" mergeSim=\"1\"/></Cluster><Cluster id=\"1\" level=\"3\" mergeSim=\"0.2\"><Cluster id=\"2\" level=\"4\" mergeSim=\"1.0\"/><Cluster id=\"1\" level=\"4\" mergeSim=\"0.2\"/></Cluster></Cluster></Cluster></Cluster>";
-		
+		}
 	}
 	
 	/**
@@ -281,12 +292,12 @@ public class DatabaseOperations {
      * @param commments
      * @throws SQLException
      */
-    public static void addComments(String articleId,ArrayList<CommentEntityDS> commments) throws SQLException
+    public static void setComments(String articleId,ArrayList<CommentEntityDS> commments) throws SQLException
     {
     	//TODO check that method
     	Connection conn = DatabaseManager.getInstance().getConnection();
     	String insertQuerry = "";
-    	for (CommentEntityDS comm : commments) { //TODO check the toString => look at the getter of comments
+    	for (CommentEntityDS comm : commments) {   //TODO check the toString => look at the getter of comments
 			insertQuerry += "("+comm.getId()+","+articleId+","+comm.getCommentHTML()+","+comm.getVector().toString()+") , ";
 		}
     	insertQuerry = insertQuerry.substring(0, insertQuerry.length() - 1) + ";";
