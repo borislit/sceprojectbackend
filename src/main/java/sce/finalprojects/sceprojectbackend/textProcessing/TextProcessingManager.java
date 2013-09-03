@@ -22,6 +22,7 @@ public class TextProcessingManager {
 	
 	public int numOfWords = 0;
 	public static ArrayList<String> wordsArray = new ArrayList<String>();
+	public static ArrayList<String> newWordsForTheArticle = new ArrayList<String>();
 	
 	/**
 	 * this function using the text processing tool (Igor) and do all the text processing
@@ -80,6 +81,7 @@ public class TextProcessingManager {
 			for(int j=0; j<commentVector.size();j++)
 				commentsMatrix[i][commentVector.get(j)] = (double)1;
 		}
+		
 		for(int i=0; i<numOfWords; i++)//fill the matrix with values 
 		{
 			for(int j=0; j<numOfComments; j++)
@@ -99,7 +101,7 @@ public class TextProcessingManager {
 	public ArrayList<ArrayList<Double>> buildCommentsVector(Double[][] matrix, int numOfComments)
 	{
 		ArrayList<ArrayList<Double>> commentsVectors = new ArrayList<ArrayList<Double>>();
-		ArrayList<Double> vector = null;
+		ArrayList<Double> vector;
 		
 		for(int i=0; i<numOfComments; i++)
 		{
@@ -117,22 +119,22 @@ public class TextProcessingManager {
 	{
 		ArrayList<String> wordArray = HelperFunctions.addNewWordsToOldWords(newWordsArray);
 		ArrayList<ArrayList<Double>> commentsVectors = new ArrayList<ArrayList<Double>>();
-		ArrayList<Double> vector = null;
+		ArrayList<Double> vector;
 		boolean flag = false;
 		
-		for(int i=0;i<numOfComments;i++)
+		for(int i=0; i<numOfComments; i++)
 		{
 			vector = new ArrayList<Double>();
-			for(int j=0;j<wordArray.size();j++)
+			for(int j=0 ;j<wordArray.size(); j++)
 			{
 				flag=false;
 				Vector<Integer> vectorOfTheComment;
-				for(int t=0;t<sd[0].length;t++)
+				for(int t=0; t<sd[0].length; t++)
 				{
 					if(sd[0][t].getTerm().equals(wordArray.get(j)))
 					{
 						vectorOfTheComment = sd[0][t].getListOfSentenceIndeces();
-						for(int k=0;k<vectorOfTheComment.size();k++)
+						for(int k=0; k<vectorOfTheComment.size(); k++)
 							if(vectorOfTheComment.get(k) == i)
 							{
 								flag =true;

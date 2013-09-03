@@ -10,6 +10,7 @@ import org.junit.Test;
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.Acell;
 import sce.finalprojects.sceprojectbackend.datatypes.Comment;
+import sce.finalprojects.sceprojectbackend.utils.CommentsDownloadTest;
 import commentsTreatment.Driver;
 
 
@@ -125,10 +126,10 @@ public class EfficientHACRegularTsts {
 	@Test
 	public void testWithCommentsFromArtice() throws Exception {
 		
-		Driver.numOfComments = 8 ;
+		CommentsDownloadTest.numOfComments = 8 ;
 		
 		
-		ArrayList<ArrayList<Double>> vectArray = Driver.returnCommentsArray();
+		ArrayList<ArrayList<Double>> vectArray = CommentsDownloadTest.returnCommentsArray();
 		
 		this.ArrayOfComments = new ArrayList<Comment>();
 		
@@ -137,7 +138,7 @@ public class EfficientHACRegularTsts {
 //		for (int i = 0   ; i < sizeOfVector ; i ++) 
 //			vectRep.add(true);
 //		
-		for(int i = 0 ; i < Driver.numOfComments ; i++ )
+		for(int i = 0 ; i < CommentsDownloadTest.numOfComments ; i++ )
 			ArrayOfComments.add(new Comment("Comment "+(i+1), vectArray.get(i)));
 		
 		this.efh = new EfficientHAC(ArrayOfComments, vectRep);
@@ -145,7 +146,7 @@ public class EfficientHACRegularTsts {
 		
 		//XML
 		
-		xmlGenerator x = new xmlGenerator("1",efh.a, Driver.numOfComments);
+		xmlGenerator x = new xmlGenerator("1",efh.a, CommentsDownloadTest.numOfComments);
 		
 	}
 

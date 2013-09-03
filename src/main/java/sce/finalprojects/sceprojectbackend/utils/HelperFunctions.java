@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.managers.*;
+import sce.finalprojects.sceprojectbackend.textProcessing.TextProcessingManager;
 
 
 public class HelperFunctions {
@@ -104,6 +105,7 @@ public class HelperFunctions {
 	public static ArrayList<String> addNewWordsToOldWords(ArrayList<String> newWordsArray) throws SQLException
 	{
 		ArrayList<String> result = new ArrayList<String>();
+		
 		String oldWords[] = DatabaseOperations.getArticleWords("aaa");
 		boolean isWordExist;
 		
@@ -120,12 +122,11 @@ public class HelperFunctions {
 					break;
 				}
 			if(isWordExist == false)
+			{
 				result.add(newWordsArray.get(i));
+				TextProcessingManager.newWordsForTheArticle.add(newWordsArray.get(i));
+			}
 		}
-		
-		System.out.println(result);
 		return result;
 	}
-	
-
 }

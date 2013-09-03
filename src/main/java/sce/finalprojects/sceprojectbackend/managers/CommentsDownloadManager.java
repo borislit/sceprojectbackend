@@ -23,13 +23,13 @@ public class CommentsDownloadManager {
 	public void getCommentsByUrl(URL url, int numOfComments, int threadId, int lastComment, BuildingTreeDataManager btdm, MaintenanceDataManager mdm) throws FileNotFoundException
 	{	
 		String htmlArr[];
-		PrintWriter out = new PrintWriter("C:\\\\comments" + threadId + ".txt"); ////TODO delete
+		PrintWriter out = new PrintWriter("C:\\\\comments" + threadId + ".txt"); ////TODO delete after testing
 		int initialOffset = 0;
 		int beginningComment = 0;
 		
 		if(lastComment == 0)
 			do{
-				htmlArr = getHtmlCommentsFromYahoo(uh.getFixUrl(uh.buildUrl(url), (threadId-1)*100));			
+				htmlArr = getHtmlCommentsFromYahoo(uh.getFixUrl(uh.buildUrl(url), (threadId-1) * 100));			
 			}while(htmlArr == null);
 		else
 		{
@@ -37,7 +37,7 @@ public class CommentsDownloadManager {
 			if(threadId == 1)
 				beginningComment = lastComment - initialOffset;			
 			do{
-				htmlArr = getHtmlCommentsFromYahoo(uh.getFixUrl(uh.buildUrl(url), ((threadId-1)*100) + initialOffset));	
+				htmlArr = getHtmlCommentsFromYahoo(uh.getFixUrl(uh.buildUrl(url), ((threadId-1) * 100) + initialOffset));	
 			}while(htmlArr == null);
 		}
 		
@@ -54,7 +54,7 @@ public class CommentsDownloadManager {
 						e.printStackTrace();
 			}	
 		}
-		out.close(); //TODO delete
+		out.close(); //TODO delete after testing
 	}
 	
 	 /**
@@ -87,9 +87,7 @@ public class CommentsDownloadManager {
 	                }
 	                String tempHtml[] = new String[htmlComments.length-1];
 	                for(int i=1; i<htmlComments.length; i++)
-	                {
 	                	tempHtml[i-1] = htmlComments[i];
-	                }
 	                return tempHtml;
 	            }
 	            else{
@@ -111,14 +109,14 @@ public class CommentsDownloadManager {
     public CommentEntityDS getCommentEntityFromHtml(String html, PrintWriter out, int i, int j, int initialOffset) throws FileNotFoundException
     {
   	  	CommentEntityDS result = new CommentEntityDS();
-  	  	result.setId("" + ((i-1)*100 + initialOffset + j + 1));//set the id of the comment(Serial number)
+  	  	result.setId("" + ((i-1) * 100 + initialOffset + j + 1));//set the id of the comment(Serial number)
 		result.setCommentHTML(html); //set the htmlComment from the array
 			  
 		String[] splitComment = html.split("comment-content");//get and set the clear comment from the html 
 		splitComment = splitComment[1].split("p>");
 		String clearComment = splitComment[0];
 		clearComment = clearComment.replaceAll("[ ]+", " ");
-		clearComment = (clearComment.substring(5,clearComment.length()-6));
+		clearComment = (clearComment.substring(5, clearComment.length() - 6));
 		writeCommentInFile(out, clearComment, i, j, initialOffset);//TODO delete
 		addCommentToString(prepareCommentToTextProcessing(clearComment));
 	
@@ -150,10 +148,10 @@ public class CommentsDownloadManager {
 		return this.commentString.toString();
 	}
 
-	//TODO delete
+	//TODO delete after testing
 	public void writeCommentInFile(PrintWriter out , String comment, int i, int j, int initialOffset) throws FileNotFoundException
     {
-    	int id = (i-1)*100 + initialOffset + j + 1 ;
+    	int id = (i-1) * 100 + initialOffset + j + 1 ;
 		out.println(id + "  " + comment);
     }
 }

@@ -1,6 +1,7 @@
 package sce.finalprojects.sceprojectbackend.managers;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
@@ -19,8 +20,9 @@ public class BuildingTreeDataManager {
 	 * @param url of the current article
 	 * @param articleId
 	 * @param numOfComments that the article have
+	 * @throws SQLException 
 	 */
-	public static void gettingCommentsForTheFirstTime(URL url, String articleId, int numOfComments)
+	public static ArrayList<CommentEntityDS> gettingCommentsForTheFirstTime(URL url, String articleId, int numOfComments) throws SQLException
 	{
 		DatabaseOperations.addNewArticle(articleId, url.toString(), numOfComments); //TODO delete when the server is ready
 		commentsArray = new CommentEntityDS[numOfComments];
@@ -35,13 +37,20 @@ public class BuildingTreeDataManager {
 		TextProcessingManager cst = new TextProcessingManager();
 		StatisticData[][] sd = cst.getTextResult(finalString.toString(),numOfComments);
 		Double[][] wordCommentsMatrix = cst.buildWordCommentMatrix(sd, numOfComments);
-		DatabaseOperations.setArticleWords(TextProcessingManager.wordsArray, articleId);//TODO delete when the server is ready
 		ArrayList<ArrayList<Double>> commentsVectors = cst.buildCommentsVector(wordCommentsMatrix, numOfComments);
 		
-		for(int i=0; i<numOfComments; i++)
-			commentsArray[i].setVector(commentsVectors.get(i));
+		DatabaseOperations.setArticleWords(articleId, TextProcessingManager.wordsArray);//TODO delete when the server is ready
+		//the DB function get array, need to change it so the function will get array list
 		
-		DatabaseOperations.setComments(commentsArray, articleId);//TODO delete when the server is ready
-		//TODO change to array list and return array list of comments insteat of saving in DB
+		ArrayList<CommentEntityDS> arrayListOfComments = new ArrayList<CommentEntityDS>();
+		for(int i=0; i<numOfComments; i++)
+		{
+			commentsArray[i].setVector(commentsVectors.get(i));
+			arrayListOfComments.add(commentsArray[i]);
+		}
+		
+		DatabaseOperations.setComments(articleId, arrayListOfComments);//TODO delete when the server is ready
+	
+		return arrayListOfComments;
 	}
 }

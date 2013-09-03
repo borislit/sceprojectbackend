@@ -294,7 +294,7 @@ public class DatabaseOperations {
      */
     public static void setComments(String articleId,ArrayList<CommentEntityDS> commments) throws SQLException
     {
-    	//TODO check that method, need to replace to array instead of arrayList
+    	//TODO check that method
     	Connection conn = DatabaseManager.getInstance().getConnection();
     	String insertQuerry = "";
     	for (CommentEntityDS comm : commments) {   //TODO check the toString => look at the getter of comments

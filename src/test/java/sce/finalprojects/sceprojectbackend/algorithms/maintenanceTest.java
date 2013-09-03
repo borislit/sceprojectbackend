@@ -10,8 +10,10 @@ import org.junit.Test;
 
 
 
+
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.Comment;
+import sce.finalprojects.sceprojectbackend.utils.CommentsDownloadTest;
 import commentsTreatment.Driver;
 
 
@@ -46,10 +48,10 @@ public class maintenanceTest {
 	@Test
 	public void testAddNewElementIntoAnArticle() throws Exception {
 		
-		Driver.numOfComments = 10 ;
+		CommentsDownloadTest.numOfComments = 10 ;
 		
 		
-		ArrayList<ArrayList<Double>> vectArray = Driver.returnCommentsArray();
+		ArrayList<ArrayList<Double>> vectArray = CommentsDownloadTest.returnCommentsArray();
 		
 		ArrayList<Comment> ArrayOfComments = new ArrayList<Comment>();
 		
@@ -59,22 +61,22 @@ public class maintenanceTest {
 //		for (int i = 0   ; i < sizeOfVector ; i ++) 
 //			vectRep.add(true);
 		
-		for(int i = 0 ; i < Driver.numOfComments ; i++ )
+		for(int i = 0 ; i < CommentsDownloadTest.numOfComments ; i++ )
 			ArrayOfComments.add(new Comment("Comment "+(i+1), vectArray.get(i)));
 		
 		EfficientHAC efh = new EfficientHAC(ArrayOfComments, vectRep);
 		efh.runAlgorithm();
 		//XML
-		xmlGenerator x = new xmlGenerator("1",efh.a, Driver.numOfComments);
+		xmlGenerator x = new xmlGenerator("1",efh.a, CommentsDownloadTest.numOfComments);
 		
-		Driver.numOfComments = 1;
+		CommentsDownloadTest.numOfComments = 1;
 		
-		vectArray = Driver.returnCommentsArray();
+		vectArray = CommentsDownloadTest.returnCommentsArray();
 		ArrayOfComments.set(0, new Comment("comment 11", vectArray.get(0)));
 		vectRep = new double[sizeOfVector+2];
 		
 		
-		maint.addNewElementToHAC(ArrayOfComments.get(0), Driver.articleId, vectRep);
+		maint.addNewElementToHAC(ArrayOfComments.get(0), CommentsDownloadTest.articleId, vectRep);
 		
 	}
 	
