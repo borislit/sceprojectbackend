@@ -189,6 +189,12 @@ public class DatabaseOperations {
 		sqlQuerry.execute();
 	}
 	
+	/**
+	 * return the word of the article ordered by order col
+	 * @param articleId
+	 * @return
+	 * @throws SQLException
+	 */
 	public static String[] getArticleWords(String articleId) throws SQLException {
 		Connection conn = DatabaseManager.getInstance().getConnection();
 		
