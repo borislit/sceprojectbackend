@@ -3,15 +3,12 @@ import sce.finalprojects.sceprojectbackend.datatypes.ClusterRepresentationDO;
 import sce.finalprojects.sceprojectbackend.datatypes.Comment;
 import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
 import sce.finalprojects.sceprojectbackend.datatypes.MapCell;
-import sce.finalprojects.sceprojectbackend.managers.ClustersManager;
 import  sce.finalprojects.sceprojectbackend.managers.DatabaseManager;
 import sce.finalprojects.sceprojectbackend.utils.MarkupUtility;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -174,7 +171,7 @@ public class DatabaseOperations {
 	 * @param words
 	 * @throws SQLException
 	 */
-	public static void setArticleWords(String articleId , String[] words) throws SQLException {
+	public static void setArticleWords(String articleId , ArrayList<String> words) throws SQLException {
 		//TODO check the method, need to replace to arrayList instead of array
 		Connection conn = DatabaseManager.getInstance().getConnection();
 		String insertQuerry ="";

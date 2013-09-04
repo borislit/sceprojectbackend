@@ -1,14 +1,7 @@
 package sce.finalprojects.sceprojectbackend.algorithms;
 
-import java.io.CharArrayReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -16,14 +9,10 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
-
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.LSSerializer;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+
 
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.ArrayOfCommentsDO;
@@ -50,27 +39,26 @@ public class Maintenance {
 	 * @throws Exception
 	 */
 	public void mapXmlHacToClusters(String articleId) throws Exception {
-	
-		//String xmlRepresentation = DatabaseOperations.getXMLRepresentation(articleId);
 		
 		DocFactory DocumentFactory = new DocFactory();
 		DocDO document = DocumentFactory.get(articleId);
-		
-		ArrayList<Comment> arrayOfComments = DatabaseOperations.getAllComentsWithoutHTML(articleId);
-		ArrayList<Cluster> clustersArray = Cluster.makeClustersArray(arrayOfComments);
+		ArrayOfCommentsFactory commentsFactory = new ArrayOfCommentsFactory();
+		ArrayOfCommentsDO arrayOfComments = commentsFactory.get(articleId);
+
+		ArrayList<Cluster> clustersArray = Cluster.makeClustersArray(arrayOfComments.arrayOfComment);
 		
 		ArrayList<MapCell> mapping = new ArrayList<MapCell>();
+		//Initialize necessary elements 
 		Element fatherElement;
 		NodeList childNodes;
 		Element tempChild;
 		Cluster childcluster;
 		Cluster fatherCluster;
 		
-		//Document doc = getDocumentFromXml(xmlRepresentation); 
-		
 		//Evaluate XPath against Document itself
 		XPath xPath = XPathFactory.newInstance().newXPath();
 		
+		//defining the root
 		Element root = document.doc.getDocumentElement();
 		int currentLevel = getMaxLevel(root);
 		int lengthOfNodeList;
@@ -105,11 +93,9 @@ public class Maintenance {
 					for (Comment comment : childcluster.innerComments) {
 						mapping.add(new MapCell(articleId , comment.comment_id, fatherElement.getAttribute("id")+"_"+currentLevel));
 					}
-
 					//merge the children into the father cluster
 					fatherCluster.mergeWithCluster(childcluster);
 				}	
-				
 				clustersArray = Cluster.removeUnavailableClustersFromArray(clustersArray);
 				clustersArray.add(fatherCluster);
 			}	
