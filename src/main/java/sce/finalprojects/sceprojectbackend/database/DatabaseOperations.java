@@ -172,7 +172,7 @@ public class DatabaseOperations {
 	 * @throws SQLException
 	 */
 	public static void setArticleWords(String articleId , ArrayList<String> words) throws SQLException {
-		//TODO check the method, need to replace to arrayList instead of array
+		//TODO check the method
 		Connection conn = DatabaseManager.getInstance().getConnection();
 		String insertQuerry ="";
 		int i=0;
@@ -409,6 +409,11 @@ public class DatabaseOperations {
     	
     	return markupList;
 		
+    }
+    
+    public static boolean checkArticleExitanceByID(String articleID){
+    	//TODO implement function
+    	return false;
     }
     
     
