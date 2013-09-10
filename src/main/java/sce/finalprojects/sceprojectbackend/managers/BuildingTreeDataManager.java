@@ -24,7 +24,7 @@ public class BuildingTreeDataManager {
 	 * @param numOfComments that the article have
 	 * @throws SQLException 
 	 */
-	public static ArrayList<CommentEntityDS> gettingCommentsForTheFirstTime(String urlString, String articleId, int numOfComments) throws SQLException
+	public static ArrayList<CommentEntityDS> gettingCommentsForTheFirstTime(String urlString, String articleId, int numOfComments)
 	{
 		//DatabaseOperations.addNewArticle(articleId, url.toString(), numOfComments); //TODO delete when the server is ready
 		commentsArray = new CommentEntityDS[numOfComments];
@@ -55,7 +55,7 @@ public class BuildingTreeDataManager {
 			arrayListOfComments.add(commentsArray[i]);
 		}
 		
-		DatabaseOperations.setComments(articleId, arrayListOfComments);//TODO delete when the server is ready
+		//DatabaseOperations.setComments(articleId, arrayListOfComments);//TODO delete when the server is ready
 	
 		return arrayListOfComments;
 	}

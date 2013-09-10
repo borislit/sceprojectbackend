@@ -171,19 +171,22 @@ public class DatabaseOperations {
 	 * @param words
 	 * @throws SQLException
 	 */
-	public static void setArticleWords(String articleId , ArrayList<String> words) throws SQLException {
+	public static void setArticleWords(String articleId , ArrayList<String> words) {
 		//TODO check the method, need to replace to arrayList instead of array
-		Connection conn = DatabaseManager.getInstance().getConnection();
-		String insertQuerry ="";
-		int i=0;
-		for (String word : words) {
-			insertQuerry += "("+articleId+","+word+","+(i++)+") , ";
-		}
-		insertQuerry = insertQuerry.substring(0, insertQuerry.length() - 1) + ";";
-		
-		PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO article_words (article_id,word,order) VALUES " + insertQuerry + ";");
-		
-		sqlQuerry.execute();
+		Connection conn;
+		try {
+			conn = DatabaseManager.getInstance().getConnection();
+			String insertQuerry ="";
+			int i=0;
+			for (String word : words) {
+				insertQuerry += "("+articleId+","+word+","+(i++)+") , ";
+			}
+			insertQuerry = insertQuerry.substring(0, insertQuerry.length() - 1) + ";";
+			
+			PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO article_words (article_id,word,order) VALUES " + insertQuerry + ";");
+			
+			sqlQuerry.execute();
+		} catch (SQLException e) {e.printStackTrace();}
 	}
 	
 	/**
@@ -192,20 +195,24 @@ public class DatabaseOperations {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static String[] getArticleWords(String articleId) throws SQLException {
-		Connection conn = DatabaseManager.getInstance().getConnection();
+	public static String[] getArticleWords(String articleId) {
+		Connection conn;
+		try {
+			conn = DatabaseManager.getInstance().getConnection();
+			PreparedStatement sqlQuerry = conn.prepareStatement("SELECT * FROM articel_words WHERE article_id = ? ORDER BY order ASC;");
+			sqlQuerry.setString(1, articleId);
+			ResultSet rs = sqlQuerry.executeQuery();
+			
+			ArrayList<String> arrayOfWords = new ArrayList<String>();
+			
+			while(rs.next()) {
+				arrayOfWords.add(rs.getString("word"));
+			}
+			
+			return (String[]) arrayOfWords.toArray();
+		} catch (SQLException e) {e.printStackTrace();}
 		
-		PreparedStatement sqlQuerry = conn.prepareStatement("SELECT * FROM articel_words WHERE article_id = ? ORDER BY order ASC;");
-		sqlQuerry.setString(1, articleId);
-		ResultSet rs = sqlQuerry.executeQuery();
-		
-		ArrayList<String> arrayOfWords = new ArrayList<String>();
-		
-		while(rs.next()) {
-			arrayOfWords.add(rs.getString("word"));
-		}
-		
-		return (String[]) arrayOfWords.toArray();
+		return null;
 	}
 	
 	/**
@@ -239,17 +246,21 @@ public class DatabaseOperations {
 	 * @return
 	 * @throws SQLException
 	 */
-    public static int getArticleNumOfComments(String articleId) throws SQLException
+    public static int getArticleNumOfComments(String articleId)
     {
     	//TODO check that method
-    	Connection conn = DatabaseManager.getInstance().getConnection();
-		PreparedStatement sqlQuerry = conn.prepareStatement("SELECT number_of_comments FROM articles WHERE article_id = ? ;");
-		sqlQuerry.setString(1, articleId);
-		ResultSet rs = sqlQuerry.executeQuery();
+    	Connection conn;
+		try {
+			conn = DatabaseManager.getInstance().getConnection();
+			PreparedStatement sqlQuerry = conn.prepareStatement("SELECT number_of_comments FROM articles WHERE article_id = ? ;");
+			sqlQuerry.setString(1, articleId);
+			ResultSet rs = sqlQuerry.executeQuery();
+			
+			while(rs.next()) {
+				return rs.getInt("number_of_comments");
+			}
+		} catch (SQLException e) {e.printStackTrace();}
 		
-		while(rs.next()) {
-			return rs.getInt("number_of_comments");
-		}
 		return -1;   
     }
     
@@ -259,17 +270,21 @@ public class DatabaseOperations {
      * @return
      * @throws SQLException
      */
-    public static String getUrl(String articleId) throws SQLException
+    public static String getUrl(String articleId)
     {
     	//TODO check that method
-    	Connection conn = DatabaseManager.getInstance().getConnection();
-		PreparedStatement sqlQuerry = conn.prepareStatement("SELECT url FROM articles WHERE article_id = ? ;");
-		sqlQuerry.setString(1, articleId);
-		ResultSet rs = sqlQuerry.executeQuery();
+    	Connection conn;
+		try {
+			conn = DatabaseManager.getInstance().getConnection();
+			PreparedStatement sqlQuerry = conn.prepareStatement("SELECT url FROM articles WHERE article_id = ? ;");
+			sqlQuerry.setString(1, articleId);
+			ResultSet rs = sqlQuerry.executeQuery();
+			
+			while(rs.next()) {
+				return rs.getString("url");
+			}
+		} catch (SQLException e) {e.printStackTrace();}
 		
-		while(rs.next()) {
-			return rs.getString("url");
-		}
 		return null;
     }
     
@@ -295,19 +310,23 @@ public class DatabaseOperations {
      * @param commments
      * @throws SQLException
      */
-    public static void setComments(String articleId,ArrayList<CommentEntityDS> commments) throws SQLException
+    public static void setComments(String articleId,ArrayList<CommentEntityDS> commments)
     {
     	//TODO check that method
-    	Connection conn = DatabaseManager.getInstance().getConnection();
-    	String insertQuerry = "";
-    	for (CommentEntityDS comm : commments) {   //TODO check the toString => look at the getter of comments
-			insertQuerry += "("+comm.getId()+","+articleId+","+comm.getCommentHTML()+","+comm.getVector().toString()+") , ";
-		}
-    	insertQuerry = insertQuerry.substring(0, insertQuerry.length() - 1) + ";";
-		
-		PreparedStatement sqlQuerry = conn.prepareStatement("INSERT INTO comments (comment_id,article_id,html,vector) VALUES " +insertQuerry+";");
-		
-		sqlQuerry.execute();
+    	Connection conn;
+		try {
+			conn = DatabaseManager.getInstance().getConnection();
+			String insertQuerry = "";
+	    	for (CommentEntityDS comm : commments) {   //TODO check the toString => look at the getter of comments
+				insertQuerry += "("+comm.getId()+","+articleId+","+comm.getCommentHTML()+","+comm.getVector().toString()+") , ";
+			}
+	    	insertQuerry = insertQuerry.substring(0, insertQuerry.length() - 1) + ";";
+			
+			PreparedStatement sqlQuerry = conn.prepareStatement("INSERT INTO comments (comment_id,article_id,html,vector) VALUES " +insertQuerry+";");
+			
+			sqlQuerry.execute();
+		} catch (SQLException e) {e.printStackTrace();}
+    	
 	
     }
     
@@ -336,15 +355,13 @@ public class DatabaseOperations {
 
     public static Set<ClusterRepresentationDO> getClustersRepresentationByIDs(List<String> clusterIDs, int level, String articleID){
     	
-    	Connection conn;
+    	
     	Map<String, String> children;
     	Set<String> childrenIDSet;
     	Set<ClusterRepresentationDO> repDOSet = new HashSet<ClusterRepresentationDO>();
     	String parsedLabel;
-    	
-    	try{
-    		
-    		conn = DatabaseManager.getInstance().getConnection();
+
+    		//Connection conn = DatabaseManager.getInstance().getConnection();
 /*
 	    	String qryString = "SELECT comments.* FROM comments comms, HACNodesMapping mapping WHERE comms.comment_id=mapping.comment_id AND mapping.article_id=? AND mapping.node_mapping IN (";
 	    	
@@ -370,12 +387,6 @@ public class DatabaseOperations {
 				parsedLabel = MarkupUtility.getCommentBodyFromMarkup(children.get(childrenIDSet.iterator().next()));
 				repDOSet.add(new ClusterRepresentationDO(clusterID, parsedLabel, childrenIDSet));
 			}
-
-		
-    	}catch(SQLException e){
-    		
-    	}
-		
 		return repDOSet;
     }
     
@@ -408,10 +419,53 @@ public class DatabaseOperations {
     	}
     	
     	return markupList;
-		
     }
     
+    /**
+     * check if the article is existing in the DB
+     * @param articleId
+     * @return
+     */
+    public static boolean CheckArticlAExistanceById(String articleId) {
+    	
+    	Connection conn;
+		try {
+			conn = DatabaseManager.getInstance().getConnection();
+			PreparedStatement sqlQuerry = conn.prepareStatement("SELECT article_id FROM articles WHERE article_id = ? ;");
+			sqlQuerry.setString(1, articleId);
+			ResultSet rs = sqlQuerry.executeQuery();
+			
+			while(rs.next()) {
+				return true;}
+		} catch (SQLException e) {e.printStackTrace();}
+		return false;
+    }
     
-	
+    /**
+     * get all the comments HTML for a given article ordered by comment id
+     * @param articleId
+     * @return
+     */
+	public static ArrayList<String> getAllArticleCommentsHtml(String articleId) {
+		
+		Connection conn;
+		try {
+			conn = DatabaseManager.getInstance().getConnection();
+			PreparedStatement sqlQuerry = conn.prepareStatement("SELECT html FROM comments WHERE article_id = ? ORDER BY comment_id ASC;");
+			sqlQuerry.setString(1, articleId);
+			ResultSet rs = sqlQuerry.executeQuery();
+			ArrayList<String> returnArray = new ArrayList<String>();
+			
+			while(rs.next()) {
+				returnArray.add(rs.getString("hmtl"));
+			}
+			
+			return returnArray;
+			
+		} catch (SQLException e) {e.printStackTrace();}
+		
+		return null;
+		
+	}
 	
 }
