@@ -1,11 +1,10 @@
 package sce.finalprojects.sceprojectbackend.algorithms;
 
 import java.io.FileNotFoundException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.sql.SQLException;
 
-import sce.finalProject.managers.BuildingTreeDataManager;
-import sce.finalProject.managers.MaintenanceDataManager;
+import sce.finalprojects.sceprojectbackend.managers.MaintenanceDataManager;
+
 
 public class Driver {
 	
@@ -25,6 +24,11 @@ public class Driver {
 //		} catch (MalformedURLException e) {
 //			e.printStackTrace();
 //		}
-		MaintenanceDataManager.gettingCommentsForMaintenance(articleId, numOfComments);
+		try {
+			MaintenanceDataManager.gettingCommentsForMaintenance(articleId, numOfComments);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

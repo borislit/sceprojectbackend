@@ -7,14 +7,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class GetClusterCommentsResponse {
 	
-	private List<String> markup;
+	private String markup;
 
-	public List<String> getMarkup() {
+	public String getMarkup() {
 		return markup;
 	}
 
-	public void setMarkup(List<String> markup) {
-		this.markup = markup;
+	public void setMarkup(List<String> markupList) {
+		
+		StringBuilder sb = new StringBuilder();
+		
+		for(String tmpMarkup: markupList)
+			sb.append(tmpMarkup);
+		
+		markup = sb.toString();
 	}
 
 }
