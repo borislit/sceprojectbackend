@@ -171,6 +171,7 @@ public class DatabaseOperations {
 	 * @param words
 	 * @throws SQLException
 	 */
+<<<<<<< HEAD
 	public static void setArticleWords(String articleId , ArrayList<String> words) {
 		//TODO check the method, need to replace to arrayList instead of array
 		Connection conn;
@@ -187,6 +188,21 @@ public class DatabaseOperations {
 			
 			sqlQuerry.execute();
 		} catch (SQLException e) {e.printStackTrace();}
+=======
+	public static void setArticleWords(String articleId , ArrayList<String> words) throws SQLException {
+		//TODO check the method
+		Connection conn = DatabaseManager.getInstance().getConnection();
+		String insertQuerry ="";
+		int i=0;
+		for (String word : words) {
+			insertQuerry += "("+articleId+","+word+","+(i++)+") , ";
+		}
+		insertQuerry = insertQuerry.substring(0, insertQuerry.length() - 1) + ";";
+		
+		PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO article_words (article_id,word,order) VALUES " + insertQuerry + ";");
+		
+		sqlQuerry.execute();
+>>>>>>> e6944f69ff845f3c6620f267f601c75aef0eaf63
 	}
 	
 	/**
@@ -421,6 +437,7 @@ public class DatabaseOperations {
     	return markupList;
     }
     
+<<<<<<< HEAD
     /**
      * check if the article is existing in the DB
      * @param articleId
@@ -440,6 +457,13 @@ public class DatabaseOperations {
 		} catch (SQLException e) {e.printStackTrace();}
 		return false;
     }
+=======
+    public static boolean checkArticleExitanceByID(String articleID){
+    	//TODO implement function
+    	return false;
+    }
+    
+>>>>>>> e6944f69ff845f3c6620f267f601c75aef0eaf63
     
     /**
      * get all the comments HTML for a given article ordered by comment id

@@ -8,6 +8,7 @@ import javax.ws.rs.core.Response;
 
 import org.springframework.stereotype.Service;
 
+import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.ArticleSetupRequestDO;
 
 
@@ -37,6 +38,13 @@ public class ArticleOperationsREST {
 	@POST
 	@Path("/setup")
 	public Response setupArticle(ArticleSetupRequestDO request){
+		
+		if(DatabaseOperations.checkArticleExitanceByID(request.getArticleID())){
+			DatabaseOperations.getClustersRepresentationByIDs(clusterIDs, 0, request.getArticleID())
+		}else{
+			
+		}
+		
 		return Response.ok(request).build();
 	}
 	//http://www.sce.ac.il/article/setup
