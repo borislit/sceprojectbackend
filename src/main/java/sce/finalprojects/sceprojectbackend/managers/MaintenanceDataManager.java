@@ -21,41 +21,41 @@ public class MaintenanceDataManager {
 	 * @param articleId- by this article id we will get data from the DB about all we done with this article
 	 * @throws SQLException 
 	 */
-	public static ArrayList<CommentEntityDS> gettingCommentsForMaintenance(String articleId, int newNumOfComments) throws SQLException
+	public static ArrayList<CommentEntityDS> gettingCommentsForMaintenance(String urlString, String articleId, int newNumOfComments, int lastComment) throws SQLException
 	{
-		int lastComment = DatabaseOperations.getArticleNumOfComments(articleId); //TODO get as a parameter
+		//int lastComment = DatabaseOperations.getArticleNumOfComments(articleId); //TODO get as a parameter
 		commentsArray = new CommentEntityDS[newNumOfComments - lastComment];
-		DatabaseOperations.setArticleNumOfComments(articleId, newNumOfComments);
-		ArrayList<CommentEntityDS> arrayListOfComments = new ArrayList<CommentEntityDS>();
+		int numOfThreads = HelperFunctions.getNumOfThreads(newNumOfComments, lastComment);
+		commentsString = new String[numOfThreads];
+		
+		DatabaseOperations.setArticleNumOfComments(articleId, newNumOfComments);//TODO delete when the server is ready
 
 		try {
-			URL url = new URL(DatabaseOperations.getUrl(articleId));
-			int numOfThreads = HelperFunctions.getNumOfThreads(newNumOfComments, lastComment);
-			commentsString = new String[numOfThreads];
+			URL url = new URL(urlString);
 			HelperFunctions.buildThreads(url, newNumOfComments, numOfThreads, lastComment, null, new MaintenanceDataManager());
-		
-			StringBuilder finalString = new StringBuilder();
-			for(int i=0; i<numOfThreads; i++)
-				finalString.append(commentsString[i]);
-						
-			TextProcessingManager cst = new TextProcessingManager();
-			StatisticData[][] sd = cst.getTextResult(finalString.toString(),newNumOfComments - lastComment);
-			ArrayList<String> newWordsArray = TextProcessingManager.wordsArray;
-			ArrayList<ArrayList<Double>> commentsVectors = cst.vectorsCompletionForMaintenance(newWordsArray, sd, newNumOfComments - lastComment);
-			
-			DatabaseOperations.setArticleWords(articleId, TextProcessingManager.newWordsForTheArticle);//TODO delete when the server is ready
-			//the DB function get array, need to change it so the function will get array list
-			
-			for(int i=0; i<commentsArray.length; i++)
-			{
-				commentsArray[i].setVector(commentsVectors.get(i));
-				arrayListOfComments.add(commentsArray[i]);
-			}
-			
-			DatabaseOperations.setComments(articleId, arrayListOfComments);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
+		StringBuilder finalString = new StringBuilder();
+		for(int i=0; i<numOfThreads; i++)
+			finalString.append(commentsString[i]);
+					
+		TextProcessingManager cst = new TextProcessingManager();
+		StatisticData[][] sd = cst.getTextResult(finalString.toString(),newNumOfComments - lastComment);
+		ArrayList<String> newWordsArray = TextProcessingManager.wordsArray;
+		ArrayList<ArrayList<Double>> commentsVectors = cst.vectorsCompletionForMaintenance(newWordsArray, sd, newNumOfComments - lastComment);
+		
+		DatabaseOperations.setArticleWords(articleId, TextProcessingManager.newWordsForTheArticle);//TODO delete when the server is ready
+		
+		ArrayList<CommentEntityDS> arrayListOfComments = new ArrayList<CommentEntityDS>();
+		for(int i=0; i<commentsArray.length; i++)
+		{
+			commentsArray[i].setVector(commentsVectors.get(i));
+			arrayListOfComments.add(commentsArray[i]);
+		}
+		
+		DatabaseOperations.setComments(articleId, arrayListOfComments);
+	
 		return arrayListOfComments;
 	}
 }
