@@ -28,6 +28,7 @@ public class ArrayOfCommentsFactory extends BaseFactory<ArrayOfCommentsDO> {
 			DatabaseOperations.setComments(articleId, commentsDSArray); //save the comments in the DB
 			 //save the comments array in the cache
 			commentsDO = new ArrayOfCommentsDO(articleId, Comment.convertCommentsDStoCommentsArrayList(commentsDSArray));
+			setVector(commentsDO);
 			return commentsDO;
 		}
 		

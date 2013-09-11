@@ -152,13 +152,14 @@ public class EfficientHACRegularTsts {
 	@Test
 	public void testDBsomeTest() throws Exception {
 		
-		DatabaseOperations.addNewArticle("123", "http://news.yahoo.com/_xhr/contentcomments/get_comments/?content_id=5dfccac3-8873-3941-845c-c9e1de3d20cc&_device=full&count=10&sortBy=highestRated&isNext=true&offset=10&pageNumber=1&_media.modules.content_comments.switches._enable_view_others=1&_media.modules.content_comments.switches._enable_mutecommenter=1&enable_collapsed_comment=1", 792 );
+		DatabaseOperations.addNewArticle("123", "http://news.yahoo.com/_xhr/contentcomments/get_comments/?content_id=5dfccac3-8873-3941-845c-c9e1de3d20cc&_device=full&count=10&sortBy=highestRated&isNext=true&offset=10&pageNumber=1&_media.modules.content_comments.switches._enable_view_others=1&_media.modules.content_comments.switches._enable_mutecommenter=1&enable_collapsed_comment=1", 155 );
 		
 		ArrayOfCommentsFactory commentsFactory = new ArrayOfCommentsFactory();
 		ArrayOfCommentsDO arrayOfComments = commentsFactory.get("123");
 		
 		EfficientHAC efh = new EfficientHAC(arrayOfComments.arrayOfComment, arrayOfComments.vect);
-		xmlGenerator xxx = new xmlGenerator("123", efh.a, 792);
+		efh.runAlgorithm();
+		xmlGenerator xxx = new xmlGenerator("123", efh.a, 155);
 		Maintenance maint = new Maintenance();
 		maint.mapXmlHacToClusters("123");
 		

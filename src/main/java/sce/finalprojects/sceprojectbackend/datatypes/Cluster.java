@@ -89,20 +89,20 @@ public double GAAC(Cluster c1, Cluster c2, double[] vector) throws Exception{
 	result = (1f / ( (c1.innerComments.size()+c2.innerComments.size())*(c1.innerComments.size()+c2.innerComments.size() -1f) ) );
 	
 	vector = initialVector(vector);
-
+	
 	if(vector == null)
 		throw new Exception("Vector representation didnt initiate");
 
 	///sum all the vectors into one vector 
 	for (Comment com : c1.innerComments) {
-
+		
 		for(int i = 0 ; i < com.vector.size() ; i++)
 
 			vector[i] += com.vector.get(i);
 	}
 
 	for (Comment com : c2.innerComments) {
-
+		
 		for(int i = 0 ; i < com.vector.size() ; i++)
 
 			vector[i] += com.vector.get(i);

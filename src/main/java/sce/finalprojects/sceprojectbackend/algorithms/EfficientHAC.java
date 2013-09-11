@@ -122,7 +122,11 @@ public class EfficientHAC {
 		{
 			k1 = getArgMax();
 			
+			System.out.print(f+" "+k1+" ");
+			
 			k2 = p.get(k1).peek().index;
+			
+			System.out.println(k2);
 			
 			a.add(new Acell(clustersArray.get(k1).cluster_id,clustersArray.get(k2).cluster_id,p.get(k1).peek().sim));
 			
@@ -171,11 +175,15 @@ public class EfficientHAC {
 		int position = -1;
 		for(int k = 0 ; k < numberOfElements; k++)
 		{
-			tempSim = p.get(k).peek().sim;
-			if(i[k] && (tempSim > maxSim))
+			if(i[k])
 			{
-				maxSim = tempSim;
-				position = k;
+				tempSim = p.get(k).peek().sim;
+			    if (tempSim > maxSim)
+			    {
+			    	maxSim = tempSim;
+					position = k;
+			    }
+				
 			}
 		}
 		return position;
