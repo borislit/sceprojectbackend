@@ -171,9 +171,9 @@ public class DatabaseOperations {
 	 * @param words
 	 * @throws SQLException
 	 */
-<<<<<<< HEAD
+
 	public static void setArticleWords(String articleId , ArrayList<String> words) {
-		//TODO check the method, need to replace to arrayList instead of array
+		//TODO check the method - problem with the statment
 		Connection conn;
 		try {
 			conn = DatabaseManager.getInstance().getConnection();
@@ -188,22 +188,7 @@ public class DatabaseOperations {
 			
 			sqlQuerry.execute();
 		} catch (SQLException e) {e.printStackTrace();}
-=======
-	public static void setArticleWords(String articleId , ArrayList<String> words) throws SQLException {
-		//TODO check the method
-		Connection conn = DatabaseManager.getInstance().getConnection();
-		String insertQuerry ="";
-		int i=0;
-		for (String word : words) {
-			insertQuerry += "("+articleId+","+word+","+(i++)+") , ";
-		}
-		insertQuerry = insertQuerry.substring(0, insertQuerry.length() - 1) + ";";
-		
-		PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO article_words (article_id,word,order) VALUES " + insertQuerry + ";");
-		
-		sqlQuerry.execute();
->>>>>>> e6944f69ff845f3c6620f267f601c75aef0eaf63
-	}
+}
 	
 	/**
 	 * return the word of the article ordered by order col
@@ -241,7 +226,7 @@ public class DatabaseOperations {
 	public static void addNewArticle(String articleId, String articleUrl, int numOfComments) throws SQLException {
 		//TODO check that method
     	Connection conn = DatabaseManager.getInstance().getConnection();
-		PreparedStatement sqlQuerry = conn.prepareStatement("INSET INTO articles (article_id,url,number_of_comments,last_update) VALUES (?,?,?,?) ;");
+		PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO articles (article_id,url,number_of_comments,last_update) VALUES (?,?,?,?) ;");
 		sqlQuerry.setString(1, articleId);
 		sqlQuerry.setString(2, articleUrl);
 		sqlQuerry.setInt(3, numOfComments);
@@ -437,13 +422,12 @@ public class DatabaseOperations {
     	return markupList;
     }
     
-<<<<<<< HEAD
     /**
      * check if the article is existing in the DB
      * @param articleId
      * @return
      */
-    public static boolean CheckArticlAExistanceById(String articleId) {
+	public static boolean checkArticleExitanceByID(String articleId){
     	
     	Connection conn;
 		try {
@@ -457,14 +441,7 @@ public class DatabaseOperations {
 		} catch (SQLException e) {e.printStackTrace();}
 		return false;
     }
-=======
-    public static boolean checkArticleExitanceByID(String articleID){
-    	//TODO implement function
-    	return false;
-    }
-    
->>>>>>> e6944f69ff845f3c6620f267f601c75aef0eaf63
-    
+
     /**
      * get all the comments HTML for a given article ordered by comment id
      * @param articleId

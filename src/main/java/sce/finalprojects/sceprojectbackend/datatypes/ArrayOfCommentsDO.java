@@ -7,6 +7,8 @@ import sce.finalprojects.sceprojectbackend.managers.CacheManager;
 public class ArrayOfCommentsDO extends Cachable{
 	
 	public ArrayList<Comment> arrayOfComment;
+	
+	public double[] vect;
 
 	public ArrayOfCommentsDO(String ArticleId,ArrayList<Comment> _arrayOfComment) {
 		

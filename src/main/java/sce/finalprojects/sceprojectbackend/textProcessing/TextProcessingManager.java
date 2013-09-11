@@ -35,7 +35,7 @@ public class TextProcessingManager {
 		StatisticData[][] sd = null;
 		try {
 			Configurations c = Configurations.createConfigurations();
-			c.addProperty(Configurations.SAVING_PATH_KEY, "C:\\Users\\saritProj");//Here must be path for saving result files.
+			c.addProperty(Configurations.SAVING_PATH_KEY, "C:\\");//Here must be path for saving result files.
 			c.addProperty(Configurations.WORDNET_DIC_PATH, "C:\\Users\\saritProj\\WordNet\\2.1\\dict");
 			c.addProperty(Configurations.POS_TAGGER_PATH, "C:\\Users\\saritProj\\stanford-postagger-full-2012-11-11\\models\\english-caseless-left3words-distsim.tagger");
 			TextLoader tl = new TextLoader(new Document(0, finalString));

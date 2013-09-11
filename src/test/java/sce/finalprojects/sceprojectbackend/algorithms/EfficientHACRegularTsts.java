@@ -4,14 +4,17 @@ import static org.junit.Assert.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.apache.poi.hssf.record.DBCellRecord;
 import org.junit.Before;
 import org.junit.Test;
 
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.Acell;
+import sce.finalprojects.sceprojectbackend.datatypes.ArrayOfCommentsDO;
 import sce.finalprojects.sceprojectbackend.datatypes.Comment;
-import sce.finalprojects.sceprojectbackend.utils.CommentsDownloadTest;
-import commentsTreatment.Driver;
+import sce.finalprojects.sceprojectbackend.factories.ArrayOfCommentsFactory;
+
+
 
 
 
@@ -126,9 +129,6 @@ public class EfficientHACRegularTsts {
 	@Test
 	public void testWithCommentsFromArtice() throws Exception {
 		
-		CommentsDownloadTest.numOfComments = 8 ;
-		
-		
 		ArrayList<ArrayList<Double>> vectArray = CommentsDownloadTest.returnCommentsArray();
 		
 		this.ArrayOfComments = new ArrayList<Comment>();
@@ -147,6 +147,20 @@ public class EfficientHACRegularTsts {
 		//XML
 		
 		xmlGenerator x = new xmlGenerator("1",efh.a, CommentsDownloadTest.numOfComments);
+	}
+	
+	@Test
+	public void testDBsomeTest() throws Exception {
+		
+		DatabaseOperations.addNewArticle("123", "http://news.yahoo.com/_xhr/contentcomments/get_comments/?content_id=5dfccac3-8873-3941-845c-c9e1de3d20cc&_device=full&count=10&sortBy=highestRated&isNext=true&offset=10&pageNumber=1&_media.modules.content_comments.switches._enable_view_others=1&_media.modules.content_comments.switches._enable_mutecommenter=1&enable_collapsed_comment=1", 792 );
+		
+		ArrayOfCommentsFactory commentsFactory = new ArrayOfCommentsFactory();
+		ArrayOfCommentsDO arrayOfComments = commentsFactory.get("123");
+		
+		EfficientHAC efh = new EfficientHAC(arrayOfComments.arrayOfComment, arrayOfComments.vect);
+		xmlGenerator xxx = new xmlGenerator("123", efh.a, 792);
+		Maintenance maint = new Maintenance();
+		maint.mapXmlHacToClusters("123");
 		
 	}
 
