@@ -40,7 +40,7 @@ public class ArticleOperationsREST {
 	public Response setupArticle(ArticleSetupRequestDO request){
 		
 		if(DatabaseOperations.checkArticleExitanceByID(request.getArticleID())){
-			DatabaseOperations.getClustersRepresentationByIDs(clusterIDs, 0, request.getArticleID())
+			//DatabaseOperations.getClustersRepresentationByIDs(clusterIDs, 0, request.getArticleID())
 		}else{
 			
 		}
