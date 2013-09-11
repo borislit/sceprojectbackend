@@ -9,8 +9,7 @@ public class UrlHelper {
 	 * @param url, getting from boris
 	 * @return a format of url that contain 3 parameter that need to be replaced
 	 */
-	public synchronized URL buildUrl(URL url)
-	{
+	public synchronized URL buildUrl(URL url){
 		String pathUrl = url.getPath();
 		String qry  = url.getQuery();		
 		String[] placeholders = {"{{COUNT_ARG}}", "{{OFFSET_ARG}}", "{{PAGE_NUM_ARG}}"};
@@ -35,8 +34,7 @@ public class UrlHelper {
 	 * @param offset, the number that the comments we ask start from
 	 * @return a fix URL that ready to send to yahoo
 	 */
-	public synchronized URL getFixUrl(URL url, int offset)
-	{
+	public synchronized URL getFixUrl(URL url, int offset){
 		String pathUrl = url.getPath();
 		String qry = url.getQuery();
 		qry = qry.replace("{{COUNT_ARG}}", "count=100&");

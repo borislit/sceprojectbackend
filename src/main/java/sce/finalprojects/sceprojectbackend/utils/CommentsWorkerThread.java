@@ -27,8 +27,7 @@ public class CommentsWorkerThread extends Thread{
 	 * @param mdm - MaintenanceDataManager object
 	 * @param lastComment- the comment that we want to start from 
 	 */
-	public CommentsWorkerThread(int id, URL url,int numOfComments, BuildingTreeDataManager btdm, MaintenanceDataManager mdm, int lastComment)
-	{
+	public CommentsWorkerThread(int id, URL url,int numOfComments, BuildingTreeDataManager btdm, MaintenanceDataManager mdm, int lastComment){
 		this.threadId = id;
 		this.url = url;
 		this.numOfComments = numOfComments;
@@ -39,16 +38,13 @@ public class CommentsWorkerThread extends Thread{
 		this.lastComment = lastComment;
 	}
 	
-	public void run() 
-	{
+	public void run() {
 		try {
-			if(this.btdm != null)
-			{
+			if(this.btdm != null){
 				this.cdm.getCommentsByUrl(url, numOfComments, threadId, lastComment, btdm, null);
 				BuildingTreeDataManager.commentsString[this.threadId-1] = cdm.getCommentString();
 			}
-			else
-			{
+			else{
 				this.cdm.getCommentsByUrl(url, numOfComments, threadId, lastComment, null, mdm);
 				MaintenanceDataManager.commentsString[this.threadId-1] = cdm.getCommentString();
 			}

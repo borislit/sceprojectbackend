@@ -30,8 +30,7 @@ public class TextProcessingManager {
 	 * @param numOfComments - the number of comments that going to go throw the process
 	 * @return StatisticData sd that contain the result of the text processing
 	 */
-	public StatisticData[][] getTextResult(String finalString, int numOfComments) 
-	{	
+	public StatisticData[][] getTextResult(String finalString, int numOfComments) {	
 		StatisticData[][] sd = null;
 		try {
 			Configurations c = Configurations.createConfigurations();
@@ -44,7 +43,6 @@ public class TextProcessingManager {
 			//tokenizer.setUseWordNet(true);
 			Stemmer stemmer = new Stemmer();//Creating porter stemmer
 			StatisticCalculations statisticCalculator = new StatisticCalculations(StatisticCalculations.TF);//Creating statistic calculator with option of calculating TF.
-			//TODO check
 			TextFileWriter textFileWriter = new TextFileWriter("C:\\Users\\saritProj");//Creating text file writer for saving results into text files
 			FinalResults finalResults = new FinalResults();//Creating container for saving final results of operations.
 			tl.connectProcessToDocumentOut(sentenceSplitter, textFileWriter);//Connecting output of FileLoader to SentenceSplitter and FinalResults
@@ -57,6 +55,10 @@ public class TextProcessingManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 			}
+		numOfWords = sd[0].length;
+		for(int i = 0; i < numOfWords; i++){
+			wordsArray.add(sd[0][i].getTerm());//insert the words
+		}
 		return sd;
 	}
 
@@ -70,24 +72,19 @@ public class TextProcessingManager {
 	 */	
 	public Double[][] buildWordCommentMatrix(StatisticData[][] sd, int numOfComments)
 	{
-		numOfWords = sd[0].length;
 		Double[][] commentsMatrix = new Double[numOfWords][numOfComments];
 		Vector<Integer> commentVector;
 		
-		for(int i=0; i<numOfWords; i++)
-		{
-			wordsArray.add(sd[0][i].getTerm());//insert the words
+		for(int i = 0; i < numOfWords; i++){
 			commentVector = sd[0][i].getListOfSentenceIndeces();			
-			for(int j=0; j<commentVector.size();j++)
+			for(int j = 0; j < commentVector.size(); j++)
 				commentsMatrix[i][commentVector.get(j)] = (double)1;
 		}
 		
-		for(int i=0; i<numOfWords; i++)//fill the matrix with values 
-		{
-			for(int j=0; j<numOfComments; j++)
+		for(int i = 0; i < numOfWords; i++)//fill the matrix with values 
+			for(int j = 0; j < numOfComments; j++)
 				if(commentsMatrix[i][j] == null)
 					commentsMatrix[i][j] = (double)0;
-		}
 
 		return commentsMatrix;
 	}
@@ -98,45 +95,35 @@ public class TextProcessingManager {
 	 * @param numOfComments
 	 * @return an array that includes all the comments vectors
 	 */
-	public ArrayList<ArrayList<Double>> buildCommentsVector(Double[][] matrix, int numOfComments)
-	{
+	public ArrayList<ArrayList<Double>> buildCommentsVector(Double[][] matrix, int numOfComments){
 		ArrayList<ArrayList<Double>> commentsVectors = new ArrayList<ArrayList<Double>>();
 		ArrayList<Double> vector;
 		
-		for(int i=0; i<numOfComments; i++)
-		{
+		for(int i = 0; i < numOfComments; i++){
 			vector = new ArrayList<Double>();
-			for(int j=0; j<numOfWords; j++)
-			{
+			for(int j = 0; j < numOfWords; j++)
 				vector.add((double)matrix[j][i]);
-			}
 			commentsVectors.add(vector);
 		}
 		return commentsVectors;		
 	}
 	
-	public ArrayList<ArrayList<Double>> vectorsCompletionForMaintenance(ArrayList<String> newWordsArray, StatisticData[][] sd, int numOfComments) throws SQLException
-	{
+	public ArrayList<ArrayList<Double>> vectorsCompletionForMaintenance(ArrayList<String> newWordsArray, StatisticData[][] sd, int numOfComments) throws SQLException{
 		ArrayList<String> wordArray = HelperFunctions.addNewWordsToOldWords(newWordsArray);
 		ArrayList<ArrayList<Double>> commentsVectors = new ArrayList<ArrayList<Double>>();
 		ArrayList<Double> vector;
 		boolean flag = false;
 		
-		for(int i=0; i<numOfComments; i++)
-		{
+		for(int i = 0; i < numOfComments; i++){
 			vector = new ArrayList<Double>();
-			for(int j=0 ;j<wordArray.size(); j++)
-			{
+			for(int j = 0; j < wordArray.size(); j++){
 				flag=false;
 				Vector<Integer> vectorOfTheComment;
-				for(int t=0; t<sd[0].length; t++)
-				{
-					if(sd[0][t].getTerm().equals(wordArray.get(j)))
-					{
+				for(int t = 0; t < sd[0].length; t++){
+					if(sd[0][t].getTerm().equals(wordArray.get(j))){
 						vectorOfTheComment = sd[0][t].getListOfSentenceIndeces();
-						for(int k=0; k<vectorOfTheComment.size(); k++)
-							if(vectorOfTheComment.get(k) == i)
-							{
+						for(int k = 0; k < vectorOfTheComment.size(); k++)
+							if(vectorOfTheComment.get(k) == i){
 								flag =true;
 								break;
 							}

@@ -5,6 +5,7 @@ import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
 import sce.finalprojects.sceprojectbackend.datatypes.MapCell;
 import  sce.finalprojects.sceprojectbackend.managers.DatabaseManager;
 import sce.finalprojects.sceprojectbackend.utils.MarkupUtility;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -330,6 +331,14 @@ public class DatabaseOperations {
     	
 	
     }
+    
+    //TODO implementation
+    public static String[] getHtmlByArticleId(String articleId)
+	{
+		return null;
+	}
+	
+	
     
     
     private static Map<String, String> getClustersChildrenIDs(String clusterID, int level, String articleID){

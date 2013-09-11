@@ -1,5 +1,6 @@
 package sce.finalprojects.sceprojectbackend.managers;
 
+import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -20,15 +21,16 @@ public class MaintenanceDataManager {
 	 * this function called when we want to update the HAC tree to get more comments of the article
 	 * @param articleId- by this article id we will get data from the DB about all we done with this article
 	 * @throws SQLException 
+	 * @throws FileNotFoundException 
 	 */
-	public static ArrayList<CommentEntityDS> gettingCommentsForMaintenance(String urlString, String articleId, int newNumOfComments, int lastComment) throws SQLException
-	{
-		//int lastComment = DatabaseOperations.getArticleNumOfComments(articleId); //TODO get as a parameter
+	public static ArrayList<CommentEntityDS> gettingCommentsForMaintenance(String urlString, String articleId, int newNumOfComments, int lastComment, String[] htmlArr) throws SQLException, FileNotFoundException{
 		commentsArray = new CommentEntityDS[newNumOfComments - lastComment];
 		int numOfThreads = HelperFunctions.getNumOfThreads(newNumOfComments, lastComment);
 		commentsString = new String[numOfThreads];
-		
-		DatabaseOperations.setArticleNumOfComments(articleId, newNumOfComments);//TODO delete when the server is ready
+		ArrayList<ArrayList<Double>> commentsVectors = new ArrayList<ArrayList<Double>>();
+		ArrayList<CommentEntityDS> arrayListOfComments = new ArrayList<CommentEntityDS>();
+				
+		//DatabaseOperations.setArticleNumOfComments(articleId, newNumOfComments);//TODO delete when the server is ready
 
 		try {
 			URL url = new URL(urlString);
@@ -37,24 +39,39 @@ public class MaintenanceDataManager {
 			e.printStackTrace();
 		}
 		StringBuilder finalString = new StringBuilder();
+		if(htmlArr != null){
+			CommentsDownloadManager cdm = new CommentsDownloadManager();
+			for(int i=0; i<htmlArr.length; i++)
+				finalString.append(cdm.cleanTheCommentFromTheHtml(htmlArr[i]));
+		}
 		for(int i=0; i<numOfThreads; i++)
 			finalString.append(commentsString[i]);
-					
-		TextProcessingManager cst = new TextProcessingManager();
-		StatisticData[][] sd = cst.getTextResult(finalString.toString(),newNumOfComments - lastComment);
-		ArrayList<String> newWordsArray = TextProcessingManager.wordsArray;
-		ArrayList<ArrayList<Double>> commentsVectors = cst.vectorsCompletionForMaintenance(newWordsArray, sd, newNumOfComments - lastComment);
-		
-		DatabaseOperations.setArticleWords(articleId, TextProcessingManager.newWordsForTheArticle);//TODO delete when the server is ready
-		
-		ArrayList<CommentEntityDS> arrayListOfComments = new ArrayList<CommentEntityDS>();
-		for(int i=0; i<commentsArray.length; i++)
-		{
-			commentsArray[i].setVector(commentsVectors.get(i));
-			arrayListOfComments.add(commentsArray[i]);
+
+		if(htmlArr != null){
+			TextProcessingManager cst = new TextProcessingManager();
+			StatisticData[][] sd = cst.getTextResult(finalString.toString(),newNumOfComments);
+			Double[][] wordCommentsMatrix = cst.buildWordCommentMatrix(sd, newNumOfComments);
+			commentsVectors = cst.buildCommentsVector(wordCommentsMatrix, newNumOfComments);
+			
+			for(int i=0; i<commentsArray.length; i++){
+				commentsArray[i].setVector(commentsVectors.get(i + lastComment));
+				arrayListOfComments.add(commentsArray[i]);
+			}
 		}
-		
-		DatabaseOperations.setComments(articleId, arrayListOfComments);
+		else{
+			TextProcessingManager cst = new TextProcessingManager();
+			StatisticData[][] sd = cst.getTextResult(finalString.toString(),newNumOfComments - lastComment);
+			ArrayList<String> newWordsArray = TextProcessingManager.wordsArray;
+			commentsVectors = cst.vectorsCompletionForMaintenance(newWordsArray, sd, newNumOfComments - lastComment);
+			
+			for(int i=0; i<commentsArray.length; i++){
+				commentsArray[i].setVector(commentsVectors.get(i));
+				arrayListOfComments.add(commentsArray[i]);
+			}
+		}
+	
+		//DatabaseOperations.setArticleWords(articleId, TextProcessingManager.newWordsForTheArticle);//TODO delete when the server is ready
+		//DatabaseOperations.setComments(articleId, arrayListOfComments);//TODO delete when the server is ready
 	
 		return arrayListOfComments;
 	}

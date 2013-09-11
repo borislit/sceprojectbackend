@@ -20,19 +20,17 @@ public class CommentsDownloadManager {
 	/**
 	 * this function is the main function that get all the comments by the given URL
 	 */
-	public void getCommentsByUrl(URL url, int numOfComments, int threadId, int lastComment, BuildingTreeDataManager btdm, MaintenanceDataManager mdm) throws FileNotFoundException
-	{	
+	public void getCommentsByUrl(URL url, int numOfComments, int threadId, int lastComment, BuildingTreeDataManager btdm, MaintenanceDataManager mdm) throws FileNotFoundException{	
 		String htmlArr[];
-		PrintWriter out = new PrintWriter("C:\\\\comments" + threadId + ".txt"); ////TODO delete after testing
+		PrintWriter out = new PrintWriter("C:\\\\comments" + threadId + "_" + lastComment + ".txt"); ////TODO delete after testing
 		int initialOffset = 0;
 		int beginningComment = 0;
-		
+				
 		if(lastComment == 0)
 			do{
 				htmlArr = getHtmlCommentsFromYahoo(uh.getFixUrl(uh.buildUrl(url), (threadId-1) * 100));			
 			}while(htmlArr == null);
-		else
-		{
+		else{
 			initialOffset = (lastComment/100) * 100;
 			if(threadId == 1)
 				beginningComment = lastComment - initialOffset;			
@@ -42,8 +40,7 @@ public class CommentsDownloadManager {
 		}
 		
 		CommentEntityDS result;
-		for(int i=beginningComment; i<htmlArr.length && i<numOfComments + beginningComment; i++)
-		{
+		for(int i = beginningComment; i < htmlArr.length && i < numOfComments + beginningComment; i++){
 			try {
 				result = getCommentEntityFromHtml(htmlArr[i], out, threadId, i, initialOffset);
 				if (btdm != null)
@@ -61,8 +58,7 @@ public class CommentsDownloadManager {
      * the function connect to yahoo site, get the ajax object and turn it into an atml array that each cell
      * present an html of specific comment
      */
-	public String[] getHtmlCommentsFromYahoo(URL url)
-	{
+	public String[] getHtmlCommentsFromYahoo(URL url){
 		String nextLine;
 	    URLConnection urlConn = null;
 	    InputStreamReader inStream = null;
@@ -75,18 +71,16 @@ public class CommentsDownloadManager {
 	        buff = new BufferedReader(inStream);
 	        while (true){
 	        	nextLine = buff.readLine(); 
-	            if (nextLine != null)
-	            {
+	            if (nextLine != null){
 	            	result = "" + nextLine;
 	                htmlComments = result.split("js-item comment ");
-	                for(int i=1; i<htmlComments.length; i++)
-	                {
+	                for(int i=1; i<htmlComments.length; i++){
 	                	htmlComments[i] = "<li class=\"js-item comment" + htmlComments[i];
                 		String temp[] = htmlComments[i].split("li>");
     	                htmlComments[i] = temp[0] + "li>";
 	                }
 	                String tempHtml[] = new String[htmlComments.length-1];
-	                for(int i=1; i<htmlComments.length; i++)
+	                for(int i = 1; i < htmlComments.length; i++)
 	                	tempHtml[i-1] = htmlComments[i];
 	                return tempHtml;
 	            }
@@ -106,59 +100,68 @@ public class CommentsDownloadManager {
 	  * into text processing
 	  * 
 	  */
-    public CommentEntityDS getCommentEntityFromHtml(String html, PrintWriter out, int i, int j, int initialOffset) throws FileNotFoundException
-    {
+    public CommentEntityDS getCommentEntityFromHtml(String html, PrintWriter out, int i, int j, int initialOffset) throws FileNotFoundException{
   	  	CommentEntityDS result = new CommentEntityDS();
   	  	result.setId("" + ((i-1) * 100 + initialOffset + j + 1));//set the id of the comment(Serial number)
-		result.setCommentHTML(html); //set the htmlComment from the array
-			  
-		String[] splitComment = html.split("comment-content");//get and set the clear comment from the html 
-		splitComment = splitComment[1].split("p>");
-		String clearComment = splitComment[0];
-		clearComment = clearComment.replaceAll("[ ]+", " ");
-		clearComment = (clearComment.substring(5, clearComment.length() - 6));
+		result.setCommentHTML(html); //set the htmlComment from the array  
+		//DbHandler.setHtml(html);//delete
+		String clearComment = cleanTheCommentFromTheHtml(html);
 		writeCommentInFile(out, clearComment, i, j, initialOffset);//TODO delete
-		addCommentToString(prepareCommentToTextProcessing(clearComment));
+		addCommentToString(clearComment);
 	
 		return result;
     }
     
+    public String cleanTheCommentFromTheHtml(String html){
+    	String[] splitComment = html.split("comment-content");//get and set the clear comment from the html 
+		splitComment = splitComment[1].split("p>");
+		String clearComment = splitComment[0];
+		clearComment = clearComment.replaceAll("[ ]+", " ");
+		clearComment = (clearComment.substring(6, clearComment.length() - 6));
+		clearComment = prepareCommentToTextProcessing(clearComment);
+		
+		return clearComment;
+    	
+    }
+    
 	public String prepareCommentToTextProcessing(String comment)
 	{
-		//check how to remove number with dot after the number
 		  String tempComment = comment;
 		  tempComment = tempComment.replaceAll("\\W", " ");
-		  tempComment = tempComment.replaceAll("(quot)", "");
-		  tempComment = tempComment.replaceAll("(n)", "");
-		  tempComment = tempComment.replaceAll("(br)", "");
-		  tempComment = tempComment + ".";
+		  tempComment = tempComment.replaceAll("( quot )", "");
+		  tempComment = tempComment.replaceAll("( n )", "");
+		  tempComment = tempComment.replaceAll("( br )", "");
+		  
+		  StringBuilder temp = new StringBuilder();
+		  for(int i = 0; i < tempComment.length(); i++)
+			  if(!(Character.isDigit(tempComment.charAt(i))))
+					  temp.append(tempComment.charAt(i));
+			  else
+				  if(!(Character.isDigit(tempComment.charAt(i+1)))) {
+					  temp.append(tempComment.charAt(i));
+					  temp.append("a");
+				  }
+				  else
+					  temp.append(tempComment.charAt(i)); 
+		  tempComment = temp.toString() + ".";
 		  tempComment = tempComment.replaceFirst("[ ]+\\.", ".");
 		  tempComment = tempComment.toLowerCase();
 		  
 		  return tempComment;
 	}
 	
-	public void addCommentToString(String comment)
-	{
+	public void addCommentToString(String comment){
 		this.commentString.append(comment);
 	}
 	
-	public String getCommentString()
-	{
+	public String getCommentString(){
 		return this.commentString.toString();
 	}
 
 	//TODO delete after testing
-	public void writeCommentInFile(PrintWriter out , String comment, int i, int j, int initialOffset) throws FileNotFoundException
-    {
+	public void writeCommentInFile(PrintWriter out , String comment, int i, int j, int initialOffset) throws FileNotFoundException{
     	int id = (i-1) * 100 + initialOffset + j + 1 ;
 		out.println(id + "  " + comment);
     }
+	
 }
-	
-	
-	
-	
-	
-	
-	
