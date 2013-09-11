@@ -340,14 +340,7 @@ public class DatabaseOperations {
 	
     }
     
-    //TODO implementation
-    public static String[] getHtmlByArticleId(String articleId)
-	{
-		return null;
-	}
-	
-	
-    
+
     
     private static Map<String, String> getClustersChildrenIDs(String clusterID, int level, String articleID){
     	try {
