@@ -29,26 +29,8 @@ public class EfficientHACRegularTsts {
 	public void initGaacTests() throws SQLException{
 		
 		ArrayOfComments = DatabaseOperations.getAllComentsWithoutHTML("1");
-	
-//		ArrayOfComments = new Comment[10];
-//		ArrayOfComments[0] =new Comment("comment_number 0", new double[] {1,0,0,0,1,1,0,1});
-//		ArrayOfComments[1] =new Comment("comment_number 1", new double[] {1,0,1,1,0,1,0,1});
-//		ArrayOfComments[2] =new Comment("comment_number 2", new double[] {0,0,1,0,1,1,0,1});
-//		ArrayOfComments[3] =new Comment("comment_number 3", new double[] {1,0,0,1,0,1,0,0});
-//		ArrayOfComments[4] =new Comment("comment_number 4", new double[] {1,1,0,1,0,1,1,1});
-//		ArrayOfComments[5] =new Comment("comment_number 5", new double[] {1,0,1,1,0,1,0,1});
-//		ArrayOfComments[6] =new Comment("comment_number 6", new double[] {0,0,1,1,1,1,0,1});
-//		ArrayOfComments[7] =new Comment("comment_number 7", new double[] {1,1,1,1,0,1,1,1});
-//		ArrayOfComments[8] =new Comment("comment_number 8", new double[] {0,0,1,0,0,1,0,0});
-//		ArrayOfComments[9] =new Comment("comment_number 9", new double[] {1,1,1,0,1,1,0,0});
-		
-		
 		vectRep = new double[9];
-//		for (int i = 0   ; i <  9 ; i ++) {
-//			
-//			vectRep.add(true);
-			
-//		}
+
 
 	}
 	
@@ -128,28 +110,6 @@ public class EfficientHACRegularTsts {
 	}
 
 	@Test
-	public void testWithCommentsFromArtice() throws Exception {
-		
-		ArrayList<ArrayList<Double>> vectArray = CommentsDownloadTest.returnCommentsArray();
-		
-		this.ArrayOfComments = new ArrayList<Comment>();
-		
-		int sizeOfVector = vectArray.get(0).size();
-		this.vectRep = new double[sizeOfVector];
-//		for (int i = 0   ; i < sizeOfVector ; i ++) 
-//			vectRep.add(true);
-//		
-		for(int i = 0 ; i < CommentsDownloadTest.numOfComments ; i++ )
-			ArrayOfComments.add(new Comment("Comment "+(i+1), vectArray.get(i)));
-		
-		this.efh = new EfficientHAC(ArrayOfComments, vectRep);
-		this.efh.runAlgorithm();
-		
-		//XML
-		
-		xmlGenerator x = new xmlGenerator("1",efh.a, CommentsDownloadTest.numOfComments);
-	}
-	@Test
 	public void testNormalization() throws Exception {
 		
 		Comment com1 = new Comment("1", new double[] {0.37,0.25,0.47});
@@ -166,16 +126,23 @@ public class EfficientHACRegularTsts {
 	@Test
 	public void testDBsomeTest() throws Exception {
 		
-		DatabaseOperations.addNewArticle("123", "http://news.yahoo.com/_xhr/contentcomments/get_comments/?content_id=5dfccac3-8873-3941-845c-c9e1de3d20cc&_device=full&count=10&sortBy=highestRated&isNext=true&offset=10&pageNumber=1&_media.modules.content_comments.switches._enable_view_others=1&_media.modules.content_comments.switches._enable_mutecommenter=1&enable_collapsed_comment=1", 155 );
+		int numOfCom = 160;
+		
+		DatabaseOperations.addNewArticle("123", "http://news.yahoo.com/_xhr/contentcomments/get_comments/?content_id=5dfccac3-8873-3941-845c-c9e1de3d20cc&_device=full&count=10&sortBy=highestRated&isNext=true&offset=10&pageNumber=1&_media.modules.content_comments.switches._enable_view_others=1&_media.modules.content_comments.switches._enable_mutecommenter=1&enable_collapsed_comment=1", numOfCom );
 		
 		ArrayOfCommentsFactory commentsFactory = new ArrayOfCommentsFactory();
 		ArrayOfCommentsDO arrayOfComments = commentsFactory.get("123");
+		commentsFactory.save(arrayOfComments);
 		
 		EfficientHAC efh = new EfficientHAC(arrayOfComments.arrayOfComment, arrayOfComments.vect);
 		efh.runAlgorithm();
-		xmlGenerator xxx = new xmlGenerator("123", efh.a, 155);
+		xmlGenerator xxx = new xmlGenerator("123", efh.a, numOfCom);
 		Maintenance maint = new Maintenance();
 		maint.mapXmlHacToClusters("123");
+		
+		System.out.println(DatabaseOperations.getXMLRepresentation("123"));
+		DatabaseOperations.getArticleMapping("123");
+		
 		
 	}
 
