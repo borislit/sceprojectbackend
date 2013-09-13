@@ -34,16 +34,16 @@ public class TextProcessingManager {
 		StatisticData[][] sd = null;
 		try {
 			Configurations c = Configurations.createConfigurations();
-			c.addProperty(Configurations.SAVING_PATH_KEY, "C:\\");//Here must be path for saving result files.
-			c.addProperty(Configurations.WORDNET_DIC_PATH, "C:\\Users\\saritProj\\WordNet\\2.1\\dict");
-			c.addProperty(Configurations.POS_TAGGER_PATH, "C:\\Users\\saritProj\\stanford-postagger-full-2012-11-11\\models\\english-caseless-left3words-distsim.tagger");
+			c.addProperty(Configurations.SAVING_PATH_KEY, "C:\\project temp\\");//Here must be path for saving result files.
+			//c.addProperty(Configurations.WORDNET_DIC_PATH, "C:\\project temp\\saritProj\\WordNet\\2.1\\dict");
+			c.addProperty(Configurations.POS_TAGGER_PATH, "C:\\project temp\\stanford-postagger-2012-11-11\\models\\english-caseless-left3words-distsim.tagger");
 			TextLoader tl = new TextLoader(new Document(0, finalString));
 			SentenceSplitter<RegularExpressionAlgorithm> sentenceSplitter = new SentenceSplitter<RegularExpressionAlgorithm>(new RegularExpressionAlgorithm());//Creating sentence splitter with RegularExpressionAlgorithm
 			Tokenizer tokenizer = new Tokenizer(true);//Creating Tokenizer with options deleting stopwords
 			//tokenizer.setUseWordNet(true);
 			Stemmer stemmer = new Stemmer();//Creating porter stemmer
 			StatisticCalculations statisticCalculator = new StatisticCalculations(StatisticCalculations.TF);//Creating statistic calculator with option of calculating TF.
-			TextFileWriter textFileWriter = new TextFileWriter("C:\\Users\\saritProj");//Creating text file writer for saving results into text files
+			TextFileWriter textFileWriter = new TextFileWriter("C:\\project temp\\");//Creating text file writer for saving results into text files
 			FinalResults finalResults = new FinalResults();//Creating container for saving final results of operations.
 			tl.connectProcessToDocumentOut(sentenceSplitter, textFileWriter);//Connecting output of FileLoader to SentenceSplitter and FinalResults
 			sentenceSplitter.connectProcessToSplittedDocumentOut(tokenizer, textFileWriter);//Connecting output of SentenceSplitter to Tokenizer

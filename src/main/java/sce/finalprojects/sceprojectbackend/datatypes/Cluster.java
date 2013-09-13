@@ -15,9 +15,6 @@ public class Cluster {
 	
 	public boolean availability;
 
-
-
-
 /**
  * Constructor that make an new cluster with the data of the comment 
  * @param com
@@ -95,14 +92,14 @@ public double GAAC(Cluster c1, Cluster c2, double[] vector) throws Exception{
 
 	///sum all the vectors into one vector 
 	for (Comment com : c1.innerComments) {
-		
+		//System.out.println(com.vector.toString());
 		for(int i = 0 ; i < com.vector.size() ; i++)
 
 			vector[i] += com.vector.get(i);
 	}
 
 	for (Comment com : c2.innerComments) {
-		
+		//System.out.println(com.vector.toString());
 		for(int i = 0 ; i < com.vector.size() ; i++)
 
 			vector[i] += com.vector.get(i);
@@ -113,7 +110,7 @@ public double GAAC(Cluster c1, Cluster c2, double[] vector) throws Exception{
 	double squarOfVector = squareOfVector(vector);
 	
 	result *= (squarOfVector - (c1.innerComments.size() + c2.innerComments.size() ) );
-
+	
 	return result;
 }
 
@@ -137,7 +134,7 @@ public double squareOfVector(double[] vect){
 
 	double sum = 0;
 	for (double d : vect) {
-		sum += d*d;
+		sum += Math.pow(d, 2);
 	}
 	return sum;
 }

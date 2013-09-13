@@ -11,6 +11,7 @@ import org.junit.Test;
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.Acell;
 import sce.finalprojects.sceprojectbackend.datatypes.ArrayOfCommentsDO;
+import sce.finalprojects.sceprojectbackend.datatypes.Cluster;
 import sce.finalprojects.sceprojectbackend.datatypes.Comment;
 import sce.finalprojects.sceprojectbackend.factories.ArrayOfCommentsFactory;
 
@@ -148,6 +149,19 @@ public class EfficientHACRegularTsts {
 		
 		xmlGenerator x = new xmlGenerator("1",efh.a, CommentsDownloadTest.numOfComments);
 	}
+	@Test
+	public void testNormalization() throws Exception {
+		
+		Comment com1 = new Comment("1", new double[] {0.37,0.25,0.47});
+		Comment.nomalizeCommentVector(com1);
+		Comment com2 = new Comment("2", new double[] {0.25,0.17,0.12});
+		Comment.nomalizeCommentVector(com2);
+		Cluster cl1 = new Cluster(com1);
+		Cluster cl2 = new Cluster(com2);
+		System.out.println(cl1.GAAC(cl1, cl2, new double[com1.vector.size()]));
+		
+	}
+	
 	
 	@Test
 	public void testDBsomeTest() throws Exception {

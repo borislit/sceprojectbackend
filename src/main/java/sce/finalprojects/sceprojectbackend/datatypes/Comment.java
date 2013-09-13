@@ -62,18 +62,19 @@ public class Comment {
 	 * @param com
 	 */
 	public static void nomalizeCommentVector(Comment com){
-		double sum = 0;
+		double lenghtOfVector = 0;
 		int arraySize = com.vector.size();
+		double element = 0;
 		for(int i=0 ; i < arraySize ; i++)
 		{
-			sum += (com.vector.get(i) * com.vector.get(i) );
+			element = com.vector.get(i);
+			lenghtOfVector += Math.pow(element, 2);
 		}
-		sum = Math.sqrt(sum);
+		lenghtOfVector = Math.sqrt(lenghtOfVector);
 		for(int i=0 ; i < arraySize ; i++)
 		{
-			com.vector.set(i, (com.vector.get(i)/sum) );
+			com.vector.set(i, (com.vector.get(i)/lenghtOfVector) );
 		}
-		
 	}
 
 	/**
