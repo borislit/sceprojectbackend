@@ -66,13 +66,5 @@ public class generatorTest {
 		
 	}
 	
-	@Test
-	public void testDB() throws Exception {
-		
-		DatabaseOperations.setArticleWords("1", new String[] {"dov", "bill" ,"avi"});
-		
-		String[] ret = DatabaseOperations.getArticleWords("1");
-		
-	}
 
 }

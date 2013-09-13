@@ -122,11 +122,11 @@ public class EfficientHAC {
 		{
 			k1 = getArgMax();
 			
-			System.out.print(f+" "+k1+" ");
+			//System.out.print(f+" "+k1+" ");
 			
 			k2 = p.get(k1).peek().index;
 			
-			System.out.println(k2);
+			//System.out.println(k2);
 			
 			a.add(new Acell(clustersArray.get(k1).cluster_id,clustersArray.get(k2).cluster_id,p.get(k1).peek().sim));
 			

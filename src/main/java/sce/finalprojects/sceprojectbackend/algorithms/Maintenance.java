@@ -2,6 +2,7 @@ package sce.finalprojects.sceprojectbackend.algorithms;
 
 import java.io.File;
 import java.util.ArrayList;
+
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -9,9 +10,11 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.ls.DOMImplementationLS;
+
 
 
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
@@ -21,6 +24,7 @@ import sce.finalprojects.sceprojectbackend.datatypes.Comment;
 import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
 import sce.finalprojects.sceprojectbackend.datatypes.DocDO;
 import sce.finalprojects.sceprojectbackend.datatypes.MapCell;
+import sce.finalprojects.sceprojectbackend.datatypes.XmlElement;
 import sce.finalprojects.sceprojectbackend.factories.ArrayOfCommentsFactory;
 import sce.finalprojects.sceprojectbackend.factories.DocFactory;
 /**
@@ -68,14 +72,14 @@ public class Maintenance {
 			
 			currentLevel--;
 			//Retrieve the nodes of the level that before the last level
-			NodeList nodesList = (NodeList)xPath.evaluate("//Cluster[@level = "+currentLevel+" ]",
+			NodeList nodesList = (NodeList)xPath.evaluate("//"+XmlElement.ELEMENT_CLUSTER+"[@"+XmlElement.ELEMENT_LEVEL+" = "+currentLevel+" ]",
 					document.doc.getDocumentElement(), XPathConstants.NODESET);
 			lengthOfNodeList = nodesList.getLength();
 			//take every element from the current level and add his children's comments to the mapping
 			for(int i = 0 ; i < lengthOfNodeList ; i++) {
 
 				fatherElement = (Element) nodesList.item(i);
-				fatherCluster = new Cluster(Cluster.findClusterByIdFromArray(clustersArray, fatherElement.getAttribute("id")));
+				fatherCluster = new Cluster(Cluster.findClusterByIdFromArray(clustersArray, fatherElement.getAttribute(XmlElement.ELEMENT_ID)));
 				if(fatherCluster.cluster_id == null)
 					throw new Exception("cluster didnt found");
 				///get the elements children
@@ -85,13 +89,13 @@ public class Maintenance {
 				for(int j = 0 ; j < childNodes.getLength() ; j++) {
 
 					tempChild = (Element) childNodes.item(j);
-					childcluster  = Cluster.findClusterByIdFromArray(clustersArray, tempChild.getAttribute("id"));
+					childcluster  = Cluster.findClusterByIdFromArray(clustersArray, tempChild.getAttribute(XmlElement.ELEMENT_ID));
 					if(childcluster == null)
 						throw new Exception("cluster didnt found");
 					//add the entry to the map for each comment that belongs to the child cluster
 
 					for (Comment comment : childcluster.innerComments) {
-						mapping.add(new MapCell(articleId , comment.comment_id, fatherElement.getAttribute("id")+"_"+currentLevel));
+						mapping.add(new MapCell(articleId , comment.comment_id, fatherElement.getAttribute(XmlElement.ELEMENT_ID)+"_"+currentLevel));
 					}
 					//merge the children into the father cluster
 					fatherCluster.mergeWithCluster(childcluster);
@@ -114,7 +118,7 @@ public class Maintenance {
 			 last = (Element) last.getLastChild();
 		}
 		while(last.getLastChild() != null);
-		return Integer.parseInt(last.getAttribute("level"));
+		return Integer.parseInt(last.getAttribute(XmlElement.ELEMENT_LEVEL));
 	}
 	
 	/**
@@ -200,23 +204,23 @@ public class Maintenance {
 				fatherElement = root;
 				//add the NE to the XML concatenate it until the last level
 				do{
-					newXMLElement = document.doc.createElement("Cluster");
-					newXMLElement.setAttribute("id", newElement.cluster_id);
-					newXMLElement.setAttribute("level", ""+ (Integer.parseInt(fatherElement.getAttribute("level"))+1) );
-					newXMLElement.setAttribute("mergeSim", ""+1);
+					newXMLElement = document.doc.createElement(XmlElement.ELEMENT_CLUSTER);
+					newXMLElement.setAttribute(XmlElement.ELEMENT_ID, newElement.cluster_id);
+					newXMLElement.setAttribute(XmlElement.ELEMENT_LEVEL, ""+ (Integer.parseInt(fatherElement.getAttribute(XmlElement.ELEMENT_LEVEL))+1) );
+					newXMLElement.setAttribute(XmlElement.ELEMENT_MERG_SIM, ""+1);
 					//adding to XML
 					fatherElement.appendChild(newXMLElement); 
 					//adding to mapping array
-					mappingArray.add(new MapCell(articleId, newElement.cluster_id,""+fatherElement.getAttribute("id")+"_"+fatherElement.getAttribute("level") ));
+					mappingArray.add(new MapCell(articleId, newElement.cluster_id,""+fatherElement.getAttribute(XmlElement.ELEMENT_ID)+"_"+fatherElement.getAttribute(XmlElement.ELEMENT_LEVEL) ));
 					fatherElement = newXMLElement;
 
 				}
-				while(maxlevel > Integer.parseInt(fatherElement.getAttribute("level")));
+				while(maxlevel > Integer.parseInt(fatherElement.getAttribute(XmlElement.ELEMENT_LEVEL)));
 				break;
 			}
 
 			//Retrieve the nodes of the level that before the last level (search from the top = root to the requested level)
-			nodesList = (NodeList)xPath.evaluate("//Cluster[@level = "+lastLevel+" ]",
+			nodesList = (NodeList)xPath.evaluate("//"+XmlElement.ELEMENT_CLUSTER+"[@"+XmlElement.ELEMENT_LEVEL+" = "+lastLevel+" ]",
 					root, XPathConstants.NODESET);
 
 			lengthOfNodeList = nodesList.getLength();
@@ -227,9 +231,9 @@ public class Maintenance {
 
 				fatherElement = (Element) nodesList.item(i);
 				//find the maximum similarity of the level
-				if(Double.parseDouble(fatherElement.getAttribute("mergeSim")) < minSim)
-					minSim = Double.parseDouble(fatherElement.getAttribute("mergeSim"));
-				fatherCluster = new Cluster(Cluster.findClusterByIdFromArray(clustersArray, fatherElement.getAttribute("id")));
+				if(Double.parseDouble(fatherElement.getAttribute(XmlElement.ELEMENT_MERG_SIM)) < minSim)
+					minSim = Double.parseDouble(fatherElement.getAttribute(XmlElement.ELEMENT_MERG_SIM));
+				fatherCluster = new Cluster(Cluster.findClusterByIdFromArray(clustersArray, fatherElement.getAttribute(XmlElement.ELEMENT_ID)));
 				if(fatherCluster.cluster_id == null)
 					throw new Exception("cluster didnt found");
 				///get the elements children
@@ -239,7 +243,7 @@ public class Maintenance {
 				for(int j = 0 ; j < childNodes.getLength() ; j++) {
 
 					tempChild = (Element) childNodes.item(j);
-					childcluster  = Cluster.findClusterByIdFromArray(clustersArray, tempChild.getAttribute("id"));
+					childcluster  = Cluster.findClusterByIdFromArray(clustersArray, tempChild.getAttribute(XmlElement.ELEMENT_ID));
 					if(childcluster == null)
 						throw new Exception("cluster didnt found");
 					//merge the children into the father cluster
@@ -255,7 +259,7 @@ public class Maintenance {
 			///finding the maximum similarity element 
 			for(int i = 0 ; i < lengthOfNodeList ; i++) {
 				tempChild = (Element) nodesList.item(i);
-				Cluster element = Cluster.findClusterByIdFromArray(clustersArray, tempChild.getAttribute("id"));
+				Cluster element = Cluster.findClusterByIdFromArray(clustersArray, tempChild.getAttribute(XmlElement.ELEMENT_ID));
 				sim = element.GAAC(element,newElement, vector);
 				if(sim > maxSim) {
 					maxSim = sim;
@@ -267,22 +271,22 @@ public class Maintenance {
 			if((maxSim > minSim) && maxSimIndex != -1) {
 				tempChild = (Element) nodesList.item(maxSimIndex);
 				//replacing the similarity of the root to be the similarity with the new elements
-				tempChild.removeAttribute("mergeSim");
-				tempChild.setAttribute("mergeSim", ""+maxSim);
+				tempChild.removeAttribute(XmlElement.ELEMENT_MERG_SIM);
+				tempChild.setAttribute(XmlElement.ELEMENT_MERG_SIM, ""+maxSim);
 				fatherElement = tempChild;
 				//add the NE to the XML concatenate it until the last level
 				do{
-					newXMLElement = document.doc.createElement("Cluster");
-					newXMLElement.setAttribute("id", newElement.cluster_id);
-					newXMLElement.setAttribute("level", ""+ (Integer.parseInt(fatherElement.getAttribute("level"))+1) );
-					newXMLElement.setAttribute("mergeSim", ""+1);
+					newXMLElement = document.doc.createElement(XmlElement.ELEMENT_CLUSTER);
+					newXMLElement.setAttribute(XmlElement.ELEMENT_ID, newElement.cluster_id);
+					newXMLElement.setAttribute(XmlElement.ELEMENT_LEVEL, ""+ (Integer.parseInt(fatherElement.getAttribute(XmlElement.ELEMENT_LEVEL))+1) );
+					newXMLElement.setAttribute(XmlElement.ELEMENT_MERG_SIM, ""+1);
 					//adding to XML
 					fatherElement.appendChild(newXMLElement); 
 					//adding to mapping array
-					mappingArray.add(new MapCell(articleId, newElement.cluster_id,""+fatherElement.getAttribute("id")+"_"+fatherElement.getAttribute("level") ));
+					mappingArray.add(new MapCell(articleId, newElement.cluster_id,""+fatherElement.getAttribute(XmlElement.ELEMENT_ID)+"_"+fatherElement.getAttribute(XmlElement.ELEMENT_LEVEL) ));
 					fatherElement = newXMLElement;
 				}
-				while(maxlevel > Integer.parseInt(fatherElement.getAttribute("level"))); 
+				while(maxlevel > Integer.parseInt(fatherElement.getAttribute(XmlElement.ELEMENT_LEVEL))); 
 				lastLevel = 0;
 			}
 		}

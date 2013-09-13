@@ -65,23 +65,20 @@ public class DatabaseOperations {
 		Connection conn = DatabaseManager.getInstance().getConnection();
 		conn.setAutoCommit(false);
 		
-		PreparedStatement sqlQuerry = conn.prepareStatement("DELETE FROM HACNodesMapping WHERE  article_id = ? ;");
+		PreparedStatement sqlQuerry = conn.prepareStatement("DELETE FROM HACNodesMapping WHERE article_id = ? ;");
 		sqlQuerry.setString(1, articleId);
-		sqlQuerry.addBatch();
+		sqlQuerry.execute();
 		
 		StringBuffer insertQuerry = new StringBuffer();
 		for (MapCell mapCell : mapping) {
 			insertQuerry.append("('").append(mapCell.getArticle_id()).append("','").append(mapCell.getComment_id()).append("','").append(mapCell.getMapping()).append("'),");
 		}
 		//insertQuerry = insertQuerry.substring(0, insertQuerry.length() - 1) + ";";
-		insertQuerry.replace(0, insertQuerry.length()-1, insertQuerry.substring(0, insertQuerry.length()-2));
+		insertQuerry.replace(0, insertQuerry.length(), insertQuerry.substring(0, insertQuerry.length()-1));
 		
-		sqlQuerry = conn.prepareStatement("INSERT INTO HACNodesMapping (articleid, commentid, node_mapping) VALUES "+insertQuerry);
-		sqlQuerry.addBatch();
+		sqlQuerry = conn.prepareStatement("INSERT INTO HACNodesMapping (`article_id`, `comment_id`, `node_mapping`) VALUES "+insertQuerry);
+		sqlQuerry.execute();
 		
-		sqlQuerry.executeBatch();
-		conn.commit();
-		conn.setAutoCommit(true);
 		
 	}
 	
@@ -106,8 +103,8 @@ public class DatabaseOperations {
 			if(xmlrep.length() == 0)
 				return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>";
 			
-			//return xmlrep;
-			return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><Cluster id=\"1\" level=\"0\" mergeSim=\"1.0\"><Cluster id=\"6\" level=\"1\" mergeSim=\"0.9\"><Cluster id=\"10\" level=\"2\" mergeSim=\"1.0\"><Cluster id=\"10\" level=\"3\" mergeSim=\"1\"><Cluster id=\"10\" level=\"4\" mergeSim=\"1\"/></Cluster></Cluster><Cluster id=\"6\" level=\"2\" mergeSim=\"0.8\"><Cluster id=\"9\" level=\"3\" mergeSim=\"0.6\"><Cluster id=\"8\" level=\"4\" mergeSim=\"1.0\"/><Cluster id=\"9\" level=\"4\" mergeSim=\"0.6\"/></Cluster><Cluster id=\"6\" level=\"3\" mergeSim=\"0.4\"><Cluster id=\"7\" level=\"4\" mergeSim=\"1.0\"/><Cluster id=\"6\" level=\"4\" mergeSim=\"0.4\"/></Cluster></Cluster></Cluster><Cluster id=\"1\" level=\"1\" mergeSim=\"0.7\"><Cluster id=\"4\" level=\"2\" mergeSim=\"0.3\"><Cluster id=\"5\" level=\"3\" mergeSim=\"1.0\"><Cluster id=\"5\" level=\"4\" mergeSim=\"1\"/></Cluster><Cluster id=\"4\" level=\"3\" mergeSim=\"0.3\"><Cluster id=\"4\" level=\"4\" mergeSim=\"1\"/></Cluster></Cluster><Cluster id=\"1\" level=\"2\" mergeSim=\"0.5\"><Cluster id=\"3\" level=\"3\" mergeSim=\"1.0\"><Cluster id=\"3\" level=\"4\" mergeSim=\"1\"/></Cluster><Cluster id=\"1\" level=\"3\" mergeSim=\"0.2\"><Cluster id=\"2\" level=\"4\" mergeSim=\"1.0\"/><Cluster id=\"1\" level=\"4\" mergeSim=\"0.2\"/></Cluster></Cluster></Cluster></Cluster>";
+			return xmlrep;
+			//return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><Cluster id=\"1\" level=\"0\" mergeSim=\"1.0\"><Cluster id=\"6\" level=\"1\" mergeSim=\"0.9\"><Cluster id=\"10\" level=\"2\" mergeSim=\"1.0\"><Cluster id=\"10\" level=\"3\" mergeSim=\"1\"><Cluster id=\"10\" level=\"4\" mergeSim=\"1\"/></Cluster></Cluster><Cluster id=\"6\" level=\"2\" mergeSim=\"0.8\"><Cluster id=\"9\" level=\"3\" mergeSim=\"0.6\"><Cluster id=\"8\" level=\"4\" mergeSim=\"1.0\"/><Cluster id=\"9\" level=\"4\" mergeSim=\"0.6\"/></Cluster><Cluster id=\"6\" level=\"3\" mergeSim=\"0.4\"><Cluster id=\"7\" level=\"4\" mergeSim=\"1.0\"/><Cluster id=\"6\" level=\"4\" mergeSim=\"0.4\"/></Cluster></Cluster></Cluster><Cluster id=\"1\" level=\"1\" mergeSim=\"0.7\"><Cluster id=\"4\" level=\"2\" mergeSim=\"0.3\"><Cluster id=\"5\" level=\"3\" mergeSim=\"1.0\"><Cluster id=\"5\" level=\"4\" mergeSim=\"1\"/></Cluster><Cluster id=\"4\" level=\"3\" mergeSim=\"0.3\"><Cluster id=\"4\" level=\"4\" mergeSim=\"1\"/></Cluster></Cluster><Cluster id=\"1\" level=\"2\" mergeSim=\"0.5\"><Cluster id=\"3\" level=\"3\" mergeSim=\"1.0\"><Cluster id=\"3\" level=\"4\" mergeSim=\"1\"/></Cluster><Cluster id=\"1\" level=\"3\" mergeSim=\"0.2\"><Cluster id=\"2\" level=\"4\" mergeSim=\"1.0\"/><Cluster id=\"1\" level=\"4\" mergeSim=\"0.2\"/></Cluster></Cluster></Cluster></Cluster>";
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -151,21 +148,9 @@ public class DatabaseOperations {
 		}
 		
 		return returnarray;
-		
-		
-//		//TODO: replace by real DB statement
-//		
+
+		//		
 //		String temp = "1 10 10_3, 1 8 9_3, 1 9 9_3, 1 7 6_3, 1 6 6_3, 1 5 5_3, 1 4 4_3, 1 3 3_3, 1 2 1_3, 1 1 1_3, 1 10 10_2, 1 8 6_2, 1 9 6_2, 1 7 6_2, 1 6 6_2, 1 5 4_2, 1 4 4_2, 1 3 1_2, 1 2 1_2, 1 1 1_2, 1 10 6_1, 1 8 6_1, 1 7 6_1, 1 6 6_1, 1 9 6_1, 1 5 1_1, 1 4 1_1, 1 3 1_1, 1 2 1_1, 1 1 1_1, 1 8 1_0, 1 7 1_0, 1 6 1_0, 1 9 1_0, 1 10 1_0, 1 3 1_0, 1 5 1_0, 1 2 1_0, 1 4 1_0, 1 1 1_0";
-//
-//		ArrayList<MapCell> returnarray = new ArrayList<MapCell>();
-//		String subs[] = temp.split("\\, ");
-//		
-//		for (String string : subs) {
-//			returnarray.add(new MapCell(string.split("\\ ")[0].trim(),string.split("\\ ")[1].trim(),string.split("\\ ")[2].trim()));
-//		}
-//		
-//		System.out.println(returnarray.toString());
-//		return returnarray;
 		
 	}
 	
@@ -227,7 +212,7 @@ public class DatabaseOperations {
 	 * @throws SQLException
 	 */
 	public static void addNewArticle(String articleId, String articleUrl, int numOfComments) throws SQLException {
-		//TODO check that method
+
     	Connection conn = DatabaseManager.getInstance().getConnection();
 		PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO articles (article_id,url,number_of_comments,last_update) VALUES (?,?,?,?) ;");
 		sqlQuerry.setString(1, articleId);
@@ -252,7 +237,7 @@ public class DatabaseOperations {
 	 */
     public static int getArticleNumOfComments(String articleId)
     {
-    	//TODO check that method
+
     	Connection conn;
 		try {
 			conn = DatabaseManager.getInstance().getConnection();

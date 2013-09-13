@@ -25,7 +25,7 @@ public class ArrayOfCommentsFactory extends BaseFactory<ArrayOfCommentsDO> {
 		if(arrayOfComments == null || arrayOfComments.size() == 0)
 		{
 			ArrayList<CommentEntityDS> commentsDSArray = BuildingTreeDataManager.gettingCommentsForTheFirstTime(DatabaseOperations.getUrl(articleId),articleId,DatabaseOperations.getArticleNumOfComments(articleId));
-			//this.checker(commentsDSArray);
+			this.checker(commentsDSArray); //TODO: remove it when sarit finish
 			DatabaseOperations.setComments(articleId, commentsDSArray); //save the comments in the DB
 			 //save the comments array in the cache
 			commentsDO = new ArrayOfCommentsDO(articleId, Comment.convertCommentsDStoCommentsArrayList(commentsDSArray));
@@ -63,7 +63,10 @@ public class ArrayOfCommentsFactory extends BaseFactory<ArrayOfCommentsDO> {
 				}	
 			}
 			if (flag)
+			{
+				commentEntityDS.getVector().set(0, (double) 1);
 				System.out.println(commentEntityDS.getId());
+			}
 		}
 		
 	}

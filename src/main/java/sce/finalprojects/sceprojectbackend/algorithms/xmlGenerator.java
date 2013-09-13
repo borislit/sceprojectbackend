@@ -57,10 +57,10 @@ public class xmlGenerator {
 
 				//creating the root element
 				temp = queue.poll();
-				Element rootElement = doc.createElement("Cluster");
-				rootElement.setAttribute("id",temp.id);
-				rootElement.setAttribute("level", ""+temp.level);
-				rootElement.setAttribute("mergeSim", ""+temp.mergeSim);
+				Element rootElement = doc.createElement(XmlElement.ELEMENT_CLUSTER);
+				rootElement.setAttribute(XmlElement.ELEMENT_ID,temp.id);
+				rootElement.setAttribute(XmlElement.ELEMENT_LEVEL, ""+temp.level);
+				rootElement.setAttribute(XmlElement.ELEMENT_MERG_SIM, ""+temp.mergeSim);
 				doc.appendChild(rootElement);
 				level[temp.level]++;
 				pushToqueues(temp);
@@ -70,29 +70,29 @@ public class xmlGenerator {
 				{
 					//adding the sun on level + 1
 					temp = queue.poll();
-					sunOfRoot = doc.createElement("Cluster");
-					sunOfRoot.setAttribute("id",temp.id);
-					if(temp.id.equals(rootElement.getAttribute("id")))
-						sunOfRoot.setAttribute("mergeSim", "1");
+					sunOfRoot = doc.createElement(XmlElement.ELEMENT_CLUSTER);
+					sunOfRoot.setAttribute(XmlElement.ELEMENT_ID,temp.id);
+					if(temp.id.equals(rootElement.getAttribute(XmlElement.ELEMENT_ID)))
+						sunOfRoot.setAttribute(XmlElement.ELEMENT_MERG_SIM, "1");
 					else
-						sunOfRoot.setAttribute("mergeSim", ""+temp.mergeSim);
+						sunOfRoot.setAttribute(XmlElement.ELEMENT_MERG_SIM, ""+temp.mergeSim);
 					
-					sunOfRoot.setAttribute("level", ""+temp.level);
+					sunOfRoot.setAttribute(XmlElement.ELEMENT_LEVEL, ""+temp.level);
 					rootElement.appendChild(sunOfRoot); //adding to XML
 					treeQueue.add(sunOfRoot);  //adding to levelOrder queue
 					level[temp.level]++;
 					pushToqueues(temp); //adding the suns of temp
 
 					//check if the node doesn't have more ( so its can only add itself)
-					if(queue.peek().id.equalsIgnoreCase(rootElement.getAttribute("id"))
+					if(queue.peek().id.equalsIgnoreCase(rootElement.getAttribute(XmlElement.ELEMENT_ID))
 							|| (mergeMap.containsKey(temp.id) && !mergeMap.get(temp.id).isEmpty() ))
 					{
 						//adding the root on level +1 if there any child's
 						temp = queue.poll();
-						sunOfRoot = doc.createElement("Cluster");
-						sunOfRoot.setAttribute("id",temp.id);
-						sunOfRoot.setAttribute("level", ""+temp.level);
-						sunOfRoot.setAttribute("mergeSim", ""+temp.mergeSim);
+						sunOfRoot = doc.createElement(XmlElement.ELEMENT_CLUSTER);
+						sunOfRoot.setAttribute(XmlElement.ELEMENT_ID,temp.id);
+						sunOfRoot.setAttribute(XmlElement.ELEMENT_LEVEL, ""+temp.level);
+						sunOfRoot.setAttribute(XmlElement.ELEMENT_MERG_SIM, ""+temp.mergeSim);
 						rootElement.appendChild(sunOfRoot); //adding to XML
 						treeQueue.add(sunOfRoot);  //adding to levelOrder queue
 						level[temp.level]++;
