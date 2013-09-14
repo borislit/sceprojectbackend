@@ -135,5 +135,20 @@ public class DatabaseObjectCacheImpl {
         e.printStackTrace();
         }
         return objObject;
-}
+    }
+    
+    public static void clearCache(){
+		 Statement stmt = null;
+		 try {
+			 Connection conn = DatabaseManager.getInstance().getConnection();
+		 
+		 	String query = "DELETE FROM POJOCache";
+		 
+			stmt = conn.createStatement();
+			stmt.executeUpdate(query);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    }
 }

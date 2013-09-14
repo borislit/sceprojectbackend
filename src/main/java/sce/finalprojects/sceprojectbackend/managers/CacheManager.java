@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import sce.finalprojects.sceprojectbackend.config.CacheConfig;
+import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.Cachable;
 import sce.finalprojects.sceprojectbackend.datatypes.CacheToken;
 import sce.finalprojects.sceprojectbackend.datatypes.LRUCache;
@@ -49,7 +50,7 @@ public class CacheManager {
 		cachedObj = cached.get(cacheID);
 		
 		if(cachedObj == null){
-			cachedObj = DatabaseManager.getInstance().fetchFromCache(cacheID);
+			cachedObj = DatabaseOperations.fetchFromCache(cacheID);
 		}
 		
 		if(cachedObj != null){
@@ -71,7 +72,7 @@ public class CacheManager {
 		
 		switch(token.getOrigin()){
 			case DB:
-				return DatabaseManager.getInstance().fetchFromCache(token.getCacheID());
+				return DatabaseOperations.fetchFromCache(token.getCacheID());
 			case MEMORY:
 				return cached.get(token.getCacheID());
 			case NEW:
@@ -109,7 +110,7 @@ public class CacheManager {
 			removeFromMemoryCache(cacheID);
 			
 			token.setOrigin(CacheManager.CacheOrigin.DB);
-			DatabaseManager.getInstance().saveToCache(obj, token); 
+			DatabaseOperations.saveToCache(obj, token); 
 			
 		}else{
 			System.out.println("Item "+obj.getId()+" Removed, Age:"+doAge);
@@ -123,6 +124,11 @@ public class CacheManager {
 		
 	}
 	
+	public static void clearCache(){
+
+			DatabaseOperations.clearCache();
+	}
+	
 	private void removeFromMemoryCache(String cacheID){
 		if(cached.containsKey(cacheID)){
 			cached.remove(cacheID);
@@ -130,7 +136,7 @@ public class CacheManager {
 	}
 	
 	private void removeFromDatabaseCache(String cacheID){	
-			DatabaseManager.getInstance().removeFromCache(cacheID);	
+			DatabaseOperations.removeFromCache(cacheID);	
 	}
 	
 	private String generateCacheID(String contentID, CacheManager.ObjectType type){
@@ -138,4 +144,5 @@ public class CacheManager {
 		return generatedCacheId;
 		//return new String(md.digest(generatedCacheId.getBytes()));
 	}
+	
 }

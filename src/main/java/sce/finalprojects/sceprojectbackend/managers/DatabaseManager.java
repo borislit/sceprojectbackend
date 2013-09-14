@@ -87,17 +87,6 @@ public class DatabaseManager {
 		}
 	}
 	
-	public CacheToken saveToCache(Cachable obj, CacheToken token){
-		return DatabaseObjectCacheImpl.save(obj, token);
-	}
-	
-	public Cachable fetchFromCache(String cacheId){
-		return DatabaseObjectCacheImpl.fetch(cacheId);
-	}
-	
-	public void removeFromCache(String cacheId){
-		DatabaseObjectCacheImpl.remove(cacheId);
-	}
 	
 	
 }

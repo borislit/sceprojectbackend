@@ -17,6 +17,11 @@
 			org.springframework.web.context.ContextLoaderListener
 		</listener-class>
 	</listener>
+	<listener>
+		<listener-class>
+			sce.finalprojects.sceprojectbackend.config.ApplicationStartupListener
+		</listener-class>
+	</listener>
 
 	<servlet>
 		<servlet-name>CXFServlet</servlet-name>

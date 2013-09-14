@@ -1,4 +1,6 @@
 package sce.finalprojects.sceprojectbackend.database;
+import sce.finalprojects.sceprojectbackend.datatypes.Cachable;
+import sce.finalprojects.sceprojectbackend.datatypes.CacheToken;
 import sce.finalprojects.sceprojectbackend.datatypes.ClusterRepresentationDO;
 import sce.finalprojects.sceprojectbackend.datatypes.Comment;
 import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
@@ -456,6 +458,22 @@ public class DatabaseOperations {
 		
 		return null;
 		
+	}
+	
+	public static CacheToken saveToCache(Cachable obj, CacheToken token){
+		return DatabaseObjectCacheImpl.save(obj, token);
+	}
+	
+	public static Cachable fetchFromCache(String cacheId){
+		return DatabaseObjectCacheImpl.fetch(cacheId);
+	}
+	
+	public static void removeFromCache(String cacheId){
+		DatabaseObjectCacheImpl.remove(cacheId);
+	}
+	
+	public static void clearCache(){
+		DatabaseObjectCacheImpl.clearCache();
 	}
 	
 }
