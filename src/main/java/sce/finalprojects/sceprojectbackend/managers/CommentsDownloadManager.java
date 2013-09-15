@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+
 import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
 import sce.finalprojects.sceprojectbackend.utils.UrlHelper;
 
@@ -123,7 +124,7 @@ public class CommentsDownloadManager {
     	
     }
     
-	public String prepareCommentToTextProcessing(String comment)
+    public String prepareCommentToTextProcessing(String comment)
 	{
 		  String tempComment = comment;
 		  tempComment = tempComment.replaceAll("\\W", " ");
@@ -136,13 +137,19 @@ public class CommentsDownloadManager {
 			  if(!(Character.isDigit(tempComment.charAt(i))))
 					  temp.append(tempComment.charAt(i));
 			  else
-				  if(!(Character.isDigit(tempComment.charAt(i+1)))) {
-					  temp.append(tempComment.charAt(i));
+				  if(i == tempComment.length()-1)
 					  temp.append("a");
-				  }
 				  else
-					  temp.append(tempComment.charAt(i)); 
-		  tempComment = temp.toString() + ".";
+					  if(!(Character.isDigit(tempComment.charAt(i+1)))) {
+						  temp.append(tempComment.charAt(i));
+						  temp.append("a");
+					  }
+					  else
+						  temp.append(tempComment.charAt(i)); 
+		  tempComment = temp.toString();
+		  if(tempComment.matches("[ ]+"))
+			  tempComment = tempComment + "a";
+		  tempComment = tempComment + ".";
 		  tempComment = tempComment.replaceFirst("[ ]+\\.", ".");
 		  tempComment = tempComment.toLowerCase();
 		  
