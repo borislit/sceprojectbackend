@@ -103,6 +103,7 @@ public class TextProcessingManager {
 			vector = new ArrayList<Double>();
 			for(int j = 0; j < numOfWords; j++)
 				vector.add((double)matrix[j][i]);
+			vector.add((double)1);
 			commentsVectors.add(vector);
 		}
 		return commentsVectors;		
@@ -134,6 +135,7 @@ public class TextProcessingManager {
 				else
 					vector.add((double)0);
 			}
+			vector.add((double)1);
 			commentsVectors.add(vector);
 		}
 		return commentsVectors;
