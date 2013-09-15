@@ -1,6 +1,7 @@
 package sce.finalprojects.sceprojectbackend.managers;
 
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -23,7 +24,7 @@ public class MaintenanceDataManager {
 	 * @throws SQLException 
 	 * @throws FileNotFoundException 
 	 */
-	public static ArrayList<CommentEntityDS> gettingCommentsForMaintenance(String urlString, String articleId, int newNumOfComments, int lastComment, String[] htmlArr) throws SQLException, FileNotFoundException{
+	public static ArrayList<CommentEntityDS> gettingCommentsForMaintenance(String urlString, String articleId, int newNumOfComments, int lastComment, ArrayList<String> htmlArr) throws SQLException, FileNotFoundException{
 		commentsArray = new CommentEntityDS[newNumOfComments - lastComment];
 		int numOfThreads = HelperFunctions.getNumOfThreads(newNumOfComments, lastComment);
 		commentsString = new String[numOfThreads];
@@ -32,6 +33,9 @@ public class MaintenanceDataManager {
 				
 		//DatabaseOperations.setArticleNumOfComments(articleId, newNumOfComments);//TODO delete when the server is ready
 
+		PrintWriter out = new PrintWriter("C:\\\\vectors.txt"); ////TODO delete after testing
+
+		
 		try {
 			URL url = new URL(urlString);
 			HelperFunctions.buildThreads(url, newNumOfComments, numOfThreads, lastComment, null, new MaintenanceDataManager());
@@ -41,8 +45,8 @@ public class MaintenanceDataManager {
 		StringBuilder finalString = new StringBuilder();
 		if(htmlArr != null){
 			CommentsDownloadManager cdm = new CommentsDownloadManager();
-			for(int i=0; i<htmlArr.length; i++)
-				finalString.append(cdm.cleanTheCommentFromTheHtml(htmlArr[i]));
+			for(int i=0; i<htmlArr.size(); i++)
+				finalString.append(cdm.cleanTheCommentFromTheHtml(htmlArr.get(i)));
 		}
 		for(int i=0; i<numOfThreads; i++)
 			finalString.append(commentsString[i]);
@@ -55,6 +59,11 @@ public class MaintenanceDataManager {
 			
 			for(int i=0; i<commentsArray.length; i++){
 				commentsArray[i].setVector(commentsVectors.get(i + lastComment));
+				out.println(i+1 + ": " + commentsVectors.get(i));//TODO delete after testing
+				out.println();		
+				out.println();
+				
+				
 				arrayListOfComments.add(commentsArray[i]);
 			}
 		}
@@ -66,13 +75,18 @@ public class MaintenanceDataManager {
 			
 			for(int i=0; i<commentsArray.length; i++){
 				commentsArray[i].setVector(commentsVectors.get(i));
+				out.println(commentsArray[i].getId() + ": " + commentsVectors.get(i));//TODO delete after testing
+				out.println();		
+				out.println();
+				
+			
 				arrayListOfComments.add(commentsArray[i]);
 			}
 		}
 	
 		//DatabaseOperations.setArticleWords(articleId, TextProcessingManager.newWordsForTheArticle);//TODO delete when the server is ready
 		//DatabaseOperations.setComments(articleId, arrayListOfComments);//TODO delete when the server is ready
-	
+		out.close();
 		return arrayListOfComments;
 	}
 }

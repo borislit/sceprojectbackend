@@ -104,7 +104,6 @@ public class CommentsDownloadManager {
   	  	CommentEntityDS result = new CommentEntityDS();
   	  	result.setId("" + ((i-1) * 100 + initialOffset + j + 1));//set the id of the comment(Serial number)
 		result.setCommentHTML(html); //set the htmlComment from the array  
-		//DbHandler.setHtml(html);//delete
 		String clearComment = cleanTheCommentFromTheHtml(html);
 		writeCommentInFile(out, clearComment, i, j, initialOffset);//TODO delete
 		addCommentToString(clearComment);

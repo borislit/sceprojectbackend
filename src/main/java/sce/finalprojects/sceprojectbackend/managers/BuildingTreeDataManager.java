@@ -1,5 +1,7 @@
 package sce.finalprojects.sceprojectbackend.managers;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -9,7 +11,6 @@ import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
 import sce.finalprojects.sceprojectbackend.utils.HelperFunctions;
 import sce.finalprojects.sceprojectbackend.textProcessing.TextProcessingManager;
 import DataTypes.StatisticData;
-
 
 public class BuildingTreeDataManager {
 	
@@ -21,9 +22,10 @@ public class BuildingTreeDataManager {
 	 * @param url of the current article
 	 * @param articleId
 	 * @param numOfComments that the article have
+	 * @throws FileNotFoundException 
 	 * @throws SQLException 
 	 */
-	public static ArrayList<CommentEntityDS> gettingCommentsForTheFirstTime(String urlString, String articleId, int numOfComments){
+	public static ArrayList<CommentEntityDS> gettingCommentsForTheFirstTime(String urlString, String articleId, int numOfComments) throws FileNotFoundException{
 		//DatabaseOperations.addNewArticle(articleId, url.toString(), numOfComments); //TODO delete when the server is ready
 		commentsArray = new CommentEntityDS[numOfComments];
 		int numOfThreads = HelperFunctions.getNumOfThreads(numOfComments, 0);
@@ -45,15 +47,21 @@ public class BuildingTreeDataManager {
 		ArrayList<ArrayList<Double>> commentsVectors = cst.buildCommentsVector(wordCommentsMatrix, numOfComments);
 		
 		//DbHandler.setArticleWords(articleId, TextProcessingManager.wordsArray);//TODO delete when the server is ready
-		
+		PrintWriter out = new PrintWriter("C:\\\\vectors.txt"); ////TODO delete after testing
+
 		ArrayList<CommentEntityDS> arrayListOfComments = new ArrayList<CommentEntityDS>();
 		for(int i = 0; i < numOfComments; i++){
 			commentsArray[i].setVector(commentsVectors.get(i));
+			out.println(i+1 + ": " + commentsVectors.get(i));//TODO delete after testing
+			out.println();		
+			out.println();
+
+			//System.out.println(commentsVectors.get(i));
 			arrayListOfComments.add(commentsArray[i]);
 		}
 		
 		//DatabaseOperations.setComments(articleId, arrayListOfComments);//TODO delete when the server is ready
-	
+		out.close();//TODO delete after testing
 		return arrayListOfComments;
 	}
 }
