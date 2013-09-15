@@ -25,7 +25,7 @@ public class BuildingTreeDataManager {
 	 * @throws FileNotFoundException 
 	 * @throws SQLException 
 	 */
-	public static ArrayList<CommentEntityDS> gettingCommentsForTheFirstTime(String urlString, String articleId, int numOfComments) throws FileNotFoundException{
+	public static ArrayList<CommentEntityDS> gettingCommentsForTheFirstTime(String urlString, String articleId, int numOfComments){
 		//DatabaseOperations.addNewArticle(articleId, url.toString(), numOfComments); //TODO delete when the server is ready
 		commentsArray = new CommentEntityDS[numOfComments];
 		int numOfThreads = HelperFunctions.getNumOfThreads(numOfComments, 0);
@@ -47,21 +47,27 @@ public class BuildingTreeDataManager {
 		ArrayList<ArrayList<Double>> commentsVectors = cst.buildCommentsVector(wordCommentsMatrix, numOfComments);
 		
 		//DbHandler.setArticleWords(articleId, TextProcessingManager.wordsArray);//TODO delete when the server is ready
-		PrintWriter out = new PrintWriter("C:\\\\vectors.txt"); ////TODO delete after testing
-
 		ArrayList<CommentEntityDS> arrayListOfComments = new ArrayList<CommentEntityDS>();
-		for(int i = 0; i < numOfComments; i++){
-			commentsArray[i].setVector(commentsVectors.get(i));
-			out.println(i+1 + ": " + commentsVectors.get(i));//TODO delete after testing
-			out.println();		
-			out.println();
+		PrintWriter out;
+		try {
+			out = new PrintWriter("C:\\\\vectors.txt");
+			for(int i = 0; i < numOfComments; i++){
+				commentsArray[i].setVector(commentsVectors.get(i));
+				out.println(i+1 + ": " + commentsVectors.get(i));//TODO delete after testing
+				out.println();		
+				out.println();
+				//System.out.println(commentsVectors.get(i));
+				arrayListOfComments.add(commentsArray[i]);
+			}
+			
+			//DatabaseOperations.setComments(articleId, arrayListOfComments);//TODO delete when the server is ready
+			out.close();//TODO delete after testing
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} ////TODO delete after testing
 
-			//System.out.println(commentsVectors.get(i));
-			arrayListOfComments.add(commentsArray[i]);
-		}
-		
-		//DatabaseOperations.setComments(articleId, arrayListOfComments);//TODO delete when the server is ready
-		out.close();//TODO delete after testing
 		return arrayListOfComments;
 	}
 }
