@@ -11,7 +11,7 @@ public abstract class BaseFactory<T extends Cachable> {
 	private CacheManager cacheManager = CacheManager.getInstance();
 	
 	@SuppressWarnings("unchecked")
-	public final T get(String id) throws FileNotFoundException{
+	public final T get(String id){
 		Cachable cachedObject = cacheManager.fetch(id,  getType());
 		
 		//in case the object found
@@ -35,7 +35,7 @@ public abstract class BaseFactory<T extends Cachable> {
 		return cacheManager.save(obj, null);
 	}
 	
-	abstract protected T handle(String id) throws FileNotFoundException; 
+	abstract protected T handle(String id); 
 	
 	abstract protected CacheManager.ObjectType getType();
 

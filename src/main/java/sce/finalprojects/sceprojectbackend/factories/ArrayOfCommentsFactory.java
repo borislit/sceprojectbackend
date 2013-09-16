@@ -26,7 +26,7 @@ public class ArrayOfCommentsFactory extends BaseFactory<ArrayOfCommentsDO> {
 		if(arrayOfComments == null || arrayOfComments.size() == 0)
 		{
 			ArrayList<CommentEntityDS> commentsDSArray = BuildingTreeDataManager.gettingCommentsForTheFirstTime(DatabaseOperations.getUrl(articleId),articleId,DatabaseOperations.getArticleNumOfComments(articleId));
-			//this.checker(commentsDSArray); //TODO: remove it when sarit finish
+			//this.checker(commentsDSArray);
 			DatabaseOperations.setComments(articleId, commentsDSArray); //save the comments in the DB
 			//save the comments array in the cache
 			commentsDO = new ArrayOfCommentsDO(articleId, Comment.convertCommentsDStoCommentsArrayList(commentsDSArray));

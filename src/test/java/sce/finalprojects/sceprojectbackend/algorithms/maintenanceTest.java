@@ -2,19 +2,11 @@ package sce.finalprojects.sceprojectbackend.algorithms;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
-
 import org.junit.Before;
 import org.junit.Test;
-
-
-
-
-
-
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.Comment;
-import sce.finalprojects.sceprojectbackend.utils.CommentsDownloadTest;
-import commentsTreatment.Driver;
+
 
 
 public class maintenanceTest {
@@ -41,7 +33,7 @@ public class maintenanceTest {
 		
 		double[] ne = {1,0,1,0,0,1,0,0};
 		double[] vec = {0,0,0,0,0,0,0,0};
-		maint.addNewElementToHAC(new Comment("11",ne), "1",vec);
+		//maint.addNewElementToHAC(new Comment("11",ne), "1",vec);
 		
 	}
 	

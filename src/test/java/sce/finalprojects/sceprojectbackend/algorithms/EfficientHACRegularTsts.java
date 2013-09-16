@@ -13,7 +13,9 @@ import sce.finalprojects.sceprojectbackend.datatypes.Acell;
 import sce.finalprojects.sceprojectbackend.datatypes.ArrayOfCommentsDO;
 import sce.finalprojects.sceprojectbackend.datatypes.Cluster;
 import sce.finalprojects.sceprojectbackend.datatypes.Comment;
+import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
 import sce.finalprojects.sceprojectbackend.factories.ArrayOfCommentsFactory;
+import sce.finalprojects.sceprojectbackend.managers.MaintenanceDataManager;
 
 
 
@@ -25,13 +27,11 @@ public class EfficientHACRegularTsts {
 	private ArrayList<Comment> ArrayOfComments;
 	private double[] vectRep;
 	
-	@Before
+	//@Before
 	public void initGaacTests() throws SQLException{
 		
 		ArrayOfComments = DatabaseOperations.getAllComentsWithoutHTML("1");
 		vectRep = new double[9];
-
-
 	}
 	
 	
@@ -124,11 +124,12 @@ public class EfficientHACRegularTsts {
 	
 	
 	@Test
-	public void testDBsomeTest() throws Exception {
+	public void testInitiateFlow() throws Exception {
 		
 		int numOfCom = 600;
+		String url = "http://news.yahoo.com/_xhr/contentcomments/get_comments/?content_id=5dfccac3-8873-3941-845c-c9e1de3d20cc&_device=full&count=10&sortBy=highestRated&isNext=true&offset=10&pageNumber=1&_media.modules.content_comments.switches._enable_view_others=1&_media.modules.content_comments.switches._enable_mutecommenter=1&enable_collapsed_comment=1";
 		
-		DatabaseOperations.addNewArticle("123", "http://news.yahoo.com/_xhr/contentcomments/get_comments/?content_id=5dfccac3-8873-3941-845c-c9e1de3d20cc&_device=full&count=10&sortBy=highestRated&isNext=true&offset=10&pageNumber=1&_media.modules.content_comments.switches._enable_view_others=1&_media.modules.content_comments.switches._enable_mutecommenter=1&enable_collapsed_comment=1", numOfCom );
+		DatabaseOperations.addNewArticle("123", url, numOfCom );
 		
 		ArrayOfCommentsFactory commentsFactory = new ArrayOfCommentsFactory();
 		ArrayOfCommentsDO arrayOfComments = commentsFactory.get("123");
@@ -140,10 +141,12 @@ public class EfficientHACRegularTsts {
 		Maintenance maint = new Maintenance();
 		maint.mapXmlHacToClusters("123");
 		
-		System.out.println(DatabaseOperations.getXMLRepresentation("123"));
-		DatabaseOperations.getArticleMapping("123");
+		//ArrayList<CommentEntityDS> newList =  MaintenanceDataManager.gettingCommentsForMaintenance(DatabaseOperations.getUrl("123"), "123", 170, DatabaseOperations.getArticleNumOfComments("132"), DatabaseOperations.getAllArticleCommentsHtml("123"));
+
+		//maint.addNewElementsToHAC(newList, "132", new double [newList.get(0).getVector().size()]);
 		
 		
 	}
+	
 
 }

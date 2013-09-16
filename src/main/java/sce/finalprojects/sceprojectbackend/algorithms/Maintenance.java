@@ -132,7 +132,7 @@ public class Maintenance {
 	 * @param vector
 	 * @throws Exception
 	 */
-	public void addNewElementsToHAC(ArrayList<CommentEntityDS> neCommentDSArray/*ArrayList<Comment> neArray*/, String articleId, double[] vector) throws Exception {
+	public void addNewElementsToHAC(ArrayList<CommentEntityDS> neCommentDSArray, String articleId, double[] vector) throws Exception {
 	
 		//docFactory
 		DocFactory documentFactory = new DocFactory();

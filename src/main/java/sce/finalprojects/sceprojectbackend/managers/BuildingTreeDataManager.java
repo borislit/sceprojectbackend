@@ -46,27 +46,27 @@ public class BuildingTreeDataManager {
 		Double[][] wordCommentsMatrix = cst.buildWordCommentMatrix(sd, numOfComments);
 		ArrayList<ArrayList<Double>> commentsVectors = cst.buildCommentsVector(wordCommentsMatrix, numOfComments);
 		
-		//DbHandler.setArticleWords(articleId, TextProcessingManager.wordsArray);//TODO delete when the server is ready
+		DatabaseOperations.setArticleWords(articleId, TextProcessingManager.wordsArray);//TODO delete when the server is ready
 		ArrayList<CommentEntityDS> arrayListOfComments = new ArrayList<CommentEntityDS>();
-		PrintWriter out;
-		try {
-			out = new PrintWriter("C:\\\\vectors.txt");
+//		PrintWriter out;
+//		try {
+//			out = new PrintWriter("C:\\\\vectors.txt");
 			for(int i = 0; i < numOfComments; i++){
 				commentsArray[i].setVector(commentsVectors.get(i));
-				out.println(i+1 + ": " + commentsVectors.get(i));//TODO delete after testing
-				out.println();		
-				out.println();
+//				out.println(i+1 + ": " + commentsVectors.get(i));//TODO delete after testing
+//				out.println();		
+//				out.println();
 				//System.out.println(commentsVectors.get(i));
 				arrayListOfComments.add(commentsArray[i]);
 			}
 			
 			//DatabaseOperations.setComments(articleId, arrayListOfComments);//TODO delete when the server is ready
-			out.close();//TODO delete after testing
+//			out.close();//TODO delete after testing
 			
-		} catch (FileNotFoundException e) {
+//		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} ////TODO delete after testing
+//			e.printStackTrace();
+//		} ////TODO delete after testing
 
 		return arrayListOfComments;
 	}

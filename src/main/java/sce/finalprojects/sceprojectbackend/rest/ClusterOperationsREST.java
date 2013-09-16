@@ -5,15 +5,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import javax.validation.constraints.Min;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -64,7 +62,7 @@ public class ClusterOperationsREST {
 				and the ID's of its sub-clusters
 	 */
 	@GET
-	public Response getClusters(@NotEmpty @QueryParam("articleid") String articleID,@NotEmpty @QueryParam("level") int level,  @QueryParam("clusterid") List<String> requestedClusters){
+	public Response getClusters(@QueryParam("articleid") String articleID, @QueryParam("level") int level,  @QueryParam("clusterid") List<String> requestedClusters){
 
 		Set<ClusterRepresentationDO> clusterRepresentation = new HashSet<ClusterRepresentationDO>();
 

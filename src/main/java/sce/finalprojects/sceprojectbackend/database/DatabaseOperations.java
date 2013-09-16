@@ -65,12 +65,11 @@ public class DatabaseOperations {
 		//INSERT INTO `mydb`.`hacnodesmapping` (`articleid`, `commentid`, `node_mapping`) VALUES ('1', '12', 'dsa'), ('2', '12', 'dsa');
 		
 		Connection conn = DatabaseManager.getInstance().getConnection();
-		conn.setAutoCommit(false);
 		
-		PreparedStatement sqlQuerry = conn.prepareStatement("DELETE FROM HACNodesMapping WHERE article_id = ? ;");
-		sqlQuerry.setString(1, articleId);
-		sqlQuerry.execute();
-		
+		PreparedStatement sqlQuerryDel = conn.prepareStatement("DELETE FROM HACNodesMapping WHERE article_id = ? ;");
+		sqlQuerryDel.setString(1, articleId);
+		sqlQuerryDel.execute();
+
 		StringBuffer insertQuerry = new StringBuffer();
 		for (MapCell mapCell : mapping) {
 			insertQuerry.append("('").append(mapCell.getArticle_id()).append("','").append(mapCell.getComment_id()).append("','").append(mapCell.getMapping()).append("'),");
@@ -78,9 +77,9 @@ public class DatabaseOperations {
 		//insertQuerry = insertQuerry.substring(0, insertQuerry.length() - 1) + ";";
 		insertQuerry.replace(0, insertQuerry.length(), insertQuerry.substring(0, insertQuerry.length()-1));
 		
-		sqlQuerry = conn.prepareStatement("INSERT INTO HACNodesMapping (`article_id`, `comment_id`, `node_mapping`) VALUES "+insertQuerry);
+		PreparedStatement sqlQuerry = conn.prepareStatement("INSERT INTO HACNodesMapping (`article_id`, `comment_id`, `node_mapping`) VALUES "+insertQuerry);
+		//System.out.println(sqlQuerry);
 		sqlQuerry.execute();
-		
 		
 	}
 	
@@ -123,7 +122,7 @@ public class DatabaseOperations {
 	public static void setXmlRepresentation(String articleId, String xmlHacRepresentation) throws SQLException {
 		
 		Connection conn = DatabaseManager.getInstance().getConnection();
-		PreparedStatement sqlQuerry = conn.prepareStatement("UPDATE  articles SET xmlRepresentation = ?  WHERE  article_id = ? ;");
+		PreparedStatement sqlQuerry = conn.prepareStatement("UPDATE articles SET xmlRepresentation = ?  WHERE  article_id = ? ;");
 		sqlQuerry.setString(1, xmlHacRepresentation);
 		sqlQuerry.setString(2, articleId);
 
@@ -457,7 +456,6 @@ public class DatabaseOperations {
 		} catch (SQLException e) {e.printStackTrace();}
 		
 		return null;
-		
 	}
 	
 	public static CacheToken saveToCache(Cachable obj, CacheToken token){
