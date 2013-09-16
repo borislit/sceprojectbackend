@@ -1,5 +1,9 @@
 package sce.finalprojects.sceprojectbackend.rest;
 
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ScheduledFuture;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -10,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.ArticleSetupRequestDO;
+import sce.finalprojects.sceprojectbackend.datatypes.ClusterRepresentationDO;
+import sce.finalprojects.sceprojectbackend.managers.LifecycleScheduleManager;
 
 
 /*
@@ -38,14 +44,30 @@ public class ArticleOperationsREST {
 	@POST
 	@Path("/setup")
 	public Response setupArticle(ArticleSetupRequestDO request){
-		
+		Set<ClusterRepresentationDO> response = null;
 		if(DatabaseOperations.checkArticleExitanceByID(request.getArticleID())){
-			//DatabaseOperations.getClustersRepresentationByIDs(clusterIDs, 0, request.getArticleID())
+			
+			response = DatabaseOperations.getHACRootID(request.getArticleID());
+			
 		}else{
+			
+			ScheduledFuture<?> task = LifecycleScheduleManager.createLifecycleForArticle(request);
+			
+			try {
+				
+				response = (Set<ClusterRepresentationDO>) task.get();
+				
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 		}
 		
-		return Response.ok(request).build();
+		return Response.ok(response).build();
 	}
 	//http://www.sce.ac.il/article/setup
 	

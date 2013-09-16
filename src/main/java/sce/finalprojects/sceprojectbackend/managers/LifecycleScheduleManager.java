@@ -7,8 +7,10 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import sce.finalprojects.sceprojectbackend.datatypes.ArticleSetupRequestDO;
 import sce.finalprojects.sceprojectbackend.datatypes.LifecycleStageDO;
 import sce.finalprojects.sceprojectbackend.runnables.LifecycleSchedulerRunnable;
 
@@ -29,15 +31,15 @@ public class LifecycleScheduleManager {
 
 	}
 	
-	public static void createLifecycleForArticle(String articleID){
-		LifecycleSchedulerRunnable lsr = new LifecycleSchedulerRunnable(articleID);
+	public static ScheduledFuture<?> createLifecycleForArticle(ArticleSetupRequestDO request){
+		LifecycleSchedulerRunnable lsr = new LifecycleSchedulerRunnable(request);
 		
-		scheduleRun(lsr, (long)stages.get(0).getInterval());
+		return scheduleRun(lsr, (long)stages.get(0).getInterval());
 		
 	}
 	
-	public static void scheduleRun(LifecycleSchedulerRunnable lsr, long delay){
-		scheduler.schedule(lsr, delay , TimeUnit.SECONDS);
+	public static ScheduledFuture<?> scheduleRun(LifecycleSchedulerRunnable lsr, long delay){
+		 return scheduler.schedule(lsr, delay , TimeUnit.SECONDS);
 	}
 	
 	private static void populateStages(){

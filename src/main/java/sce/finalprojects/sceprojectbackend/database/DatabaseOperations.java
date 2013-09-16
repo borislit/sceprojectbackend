@@ -1,13 +1,4 @@
 package sce.finalprojects.sceprojectbackend.database;
-import sce.finalprojects.sceprojectbackend.datatypes.Cachable;
-import sce.finalprojects.sceprojectbackend.datatypes.CacheToken;
-import sce.finalprojects.sceprojectbackend.datatypes.ClusterRepresentationDO;
-import sce.finalprojects.sceprojectbackend.datatypes.Comment;
-import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
-import sce.finalprojects.sceprojectbackend.datatypes.MapCell;
-import  sce.finalprojects.sceprojectbackend.managers.DatabaseManager;
-import sce.finalprojects.sceprojectbackend.utils.MarkupUtility;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,6 +11,15 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+
+import sce.finalprojects.sceprojectbackend.datatypes.Cachable;
+import sce.finalprojects.sceprojectbackend.datatypes.CacheToken;
+import sce.finalprojects.sceprojectbackend.datatypes.ClusterRepresentationDO;
+import sce.finalprojects.sceprojectbackend.datatypes.Comment;
+import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
+import sce.finalprojects.sceprojectbackend.datatypes.MapCell;
+import sce.finalprojects.sceprojectbackend.managers.DatabaseManager;
+import sce.finalprojects.sceprojectbackend.utils.MarkupUtility;
 
 
 public class DatabaseOperations {
@@ -161,7 +161,7 @@ public class DatabaseOperations {
 	 * @param words
 	 * @throws SQLException
 	 */
-
+//TODO First delete the content of article words before proceeding
 	public static void setArticleWords(String articleId , ArrayList<String> words) {
 		Connection conn;
 		try {
@@ -212,22 +212,25 @@ public class DatabaseOperations {
 	 * @param numOfComments
 	 * @throws SQLException
 	 */
-	public static void addNewArticle(String articleId, String articleUrl, int numOfComments) throws SQLException {
-
-    	Connection conn = DatabaseManager.getInstance().getConnection();
-		PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO articles (article_id,url,number_of_comments,last_update) VALUES (?,?,?,?) ;");
-		sqlQuerry.setString(1, articleId);
-		sqlQuerry.setString(2, articleUrl);
-		sqlQuerry.setInt(3, numOfComments);
-		
-		java.text.SimpleDateFormat sdf = 
-		     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-		sqlQuerry.setString(4, sdf.format(new java.util.Date()));
-		
-		sqlQuerry.execute();
-		
-            //set in the table: article id, article url and the number of the comment we get the first time
+	public static void addNewArticle(String articleId, String articleUrl, int numOfComments) {
+		try{
+	    	Connection conn = DatabaseManager.getInstance().getConnection();
+			PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO articles (article_id,url,number_of_comments,last_update) VALUES (?,?,?,?) ;");
+			sqlQuerry.setString(1, articleId);
+			sqlQuerry.setString(2, articleUrl);
+			sqlQuerry.setInt(3, numOfComments);
+			
+			java.text.SimpleDateFormat sdf = 
+			     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
+			sqlQuerry.setString(4, sdf.format(new java.util.Date()));
+			
+			sqlQuerry.execute();
+			
+	            //set in the table: article id, article url and the number of the comment we get the first time
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
     }
 	
 	/**
@@ -448,7 +451,7 @@ public class DatabaseOperations {
 			ArrayList<String> returnArray = new ArrayList<String>();
 			
 			while(rs.next()) {
-				returnArray.add(rs.getString("hmtl"));
+				returnArray.add(StringEscapeUtils.unescapeHtml4(rs.getString("hmtl")));
 			}
 			
 			return returnArray;
@@ -473,5 +476,43 @@ public class DatabaseOperations {
 	public static void clearCache(){
 		DatabaseObjectCacheImpl.clearCache();
 	}
+	
+	public static Set<ClusterRepresentationDO> getHACRootID(String articleID){
+		Connection conn;
+		try {
+			conn = DatabaseManager.getInstance().getConnection();
+
+	    	PreparedStatement qry = conn.prepareStatement("SELECT comment_id FROM HACNodeMapping WHERE node_mapping = CONCAT(comment_id,'_','0') AND article_id = ?");
+			qry.setString(1, articleID);
+			ResultSet rs = qry.executeQuery();
+			
+			List<String> clustersID =new  ArrayList<String>();
+			
+			
+			while(rs.next()){
+				clustersID.add(rs.getString("comment_id"));
+				return getClustersRepresentationByIDs(clustersID, 0, articleID);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return new HashSet<ClusterRepresentationDO>();
+		
+	}
+	
+	public static int getWordsCountForArticle(String articleID){
+		
+		//TODO Implement
+		
+		return 0;
+	}
+	
+	public static long getArticleCreationDate(String articleID){
+		//TODO Add new column articles table. Column type - Timestamp. Argument NOW()
+		return 0;
+	}
+	
 	
 }

@@ -1,42 +1,39 @@
 package sce.finalprojects.sceprojectbackend.runnables;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.Callable;
+
+import sce.finalprojects.sceprojectbackend.algorithms.EfficientHAC;
+import sce.finalprojects.sceprojectbackend.algorithms.Maintenance;
+import sce.finalprojects.sceprojectbackend.algorithms.xmlGenerator;
+import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
+import sce.finalprojects.sceprojectbackend.datatypes.ArrayOfCommentsDO;
 import sce.finalprojects.sceprojectbackend.datatypes.ArticleDO;
+import sce.finalprojects.sceprojectbackend.datatypes.ArticleSetupRequestDO;
+import sce.finalprojects.sceprojectbackend.datatypes.ClusterRepresentationDO;
+import sce.finalprojects.sceprojectbackend.datatypes.Comment;
+import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
 import sce.finalprojects.sceprojectbackend.datatypes.LifecycleStageDO;
+import sce.finalprojects.sceprojectbackend.factories.ArrayOfCommentsFactory;
 import sce.finalprojects.sceprojectbackend.factories.ArticlesFactory;
 import sce.finalprojects.sceprojectbackend.managers.LifecycleScheduleManager;
+import sce.finalprojects.sceprojectbackend.managers.MaintenanceDataManager;
 
-public class LifecycleSchedulerRunnable implements Runnable{
-	private ArticleDO article;
+public class LifecycleSchedulerRunnable implements Callable<Set<ClusterRepresentationDO>>{
 	private String articleID;
+	private String articleUrl;
+	private int runsCounter;
+	private int amountOfComments;
 	
-	public LifecycleSchedulerRunnable(String articleID) {
-		this.articleID = articleID;
-	}
 
-	@Override
-	public void run() {
-		
-/*		if(this.token != null){
-			this.article = (ArticleDO)CacheManager.getInstance().fetch(this.articleID, ObjectType.ARTICLE);
-		}else{
-			this.article = new ArticleDO(articleID); //TODO Stub
-		}
-*/
-		
-		ArticlesFactory factory = new ArticlesFactory();
-		
-		this.article = factory.get(this.articleID);
-		
-		System.out.println("Running "+this.articleID);
-		
-		factory.save(this.article);
-		
-		setupNextRun();
-		
-		complete();
-		
+	public LifecycleSchedulerRunnable(ArticleSetupRequestDO request) {
+		super();
+		this.articleID = request.getArticleID();
+		this.articleUrl = request.getUrl();
+		this.amountOfComments = request.getCommentsCount();
 
-		
 	}
 	
 	private void setupNextRun(){
@@ -58,7 +55,55 @@ public class LifecycleSchedulerRunnable implements Runnable{
 	}
 	
 	private void complete(){
-		this.article = null;
+		this.runsCounter++;
+	}
+
+	@Override
+	public Set<ClusterRepresentationDO> call() throws Exception {
+		try{
+		if(runsCounter == 0){
+			
+			DatabaseOperations.addNewArticle(this.articleID, this.articleUrl, this.amountOfComments);
+			ArrayOfCommentsFactory commentFactory = new ArrayOfCommentsFactory();
+			ArrayOfCommentsDO articleCommentsArray = commentFactory.get(this.articleID);
+			commentFactory.save(articleCommentsArray);
+			EfficientHAC effHAC = new EfficientHAC(articleCommentsArray.arrayOfComment, articleCommentsArray.vect);
+			effHAC.runAlgorithm();
+			xmlGenerator xmlGen = new xmlGenerator(this.articleID, effHAC.a, this.amountOfComments);
+			Maintenance maintenance = new Maintenance();
+			maintenance.mapXmlHacToClusters(this.articleID);
+			
+			return DatabaseOperations.getHACRootID(this.articleID);
+
+		}else{
+			if(runsCounter%3 == 0){
+				ArrayList<String> articleCommentsMarkup = DatabaseOperations.getAllArticleCommentsHtml(this.articleID);
+				int latestCommentsCount = 0;
+				ArrayList<CommentEntityDS> updatedArticleComments =  MaintenanceDataManager.gettingCommentsForMaintenance(this.articleUrl, this.articleID, latestCommentsCount, DatabaseOperations.getArticleNumOfComments(this.articleID), articleCommentsMarkup);
+				ArrayOfCommentsDO commentsDO = new ArrayOfCommentsDO(this.articleID, Comment.convertCommentsDStoCommentsArrayList(updatedArticleComments));
+				ArrayOfCommentsFactory commentFactory = new ArrayOfCommentsFactory();
+				commentFactory.save(commentsDO);
+				EfficientHAC effHAC = new EfficientHAC(commentsDO.arrayOfComment, commentsDO.vect);
+				effHAC.runAlgorithm();
+				xmlGenerator xmlGen = new xmlGenerator(this.articleID, effHAC.a, this.amountOfComments);
+				Maintenance maintenance = new Maintenance();
+				maintenance.mapXmlHacToClusters(this.articleID);
+				
+			}else{
+				
+			}
+		}
+		
+
+		setupNextRun();
+		
+		complete();
+		
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return new HashSet<ClusterRepresentationDO>();
 	}
 	
 	
