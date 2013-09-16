@@ -24,7 +24,7 @@ public class MaintenanceDataManager {
 	 * @throws SQLException 
 	 * @throws FileNotFoundException 
 	 */
-	public static ArrayList<CommentEntityDS> gettingCommentsForMaintenance(String urlString, String articleId, int newNumOfComments, int lastComment, ArrayList<String> htmlArr) throws SQLException, FileNotFoundException{
+	public static ArrayList<CommentEntityDS> gettingCommentsForMaintenance(String urlString, String articleId, int newNumOfComments, int lastComment, ArrayList<String> htmlArr) throws SQLException{
 		
 		int amountOfComments = newNumOfComments - lastComment;
 		commentsArray = new CommentEntityDS[amountOfComments];
@@ -33,11 +33,8 @@ public class MaintenanceDataManager {
 		ArrayList<ArrayList<Double>> commentsVectors = new ArrayList<ArrayList<Double>>();
 		ArrayList<CommentEntityDS> arrayListOfComments = new ArrayList<CommentEntityDS>();
 				
-		//DatabaseOperations.setArticleNumOfComments(articleId, newNumOfComments);//TODO delete when the server is ready
+		DatabaseOperations.setArticleNumOfComments(articleId, newNumOfComments);
 
-		PrintWriter out = new PrintWriter("C:\\\\vectors.txt"); ////TODO delete after testing
-
-		
 		try {
 			URL url = new URL(urlString);
 			HelperFunctions.buildThreads(url, newNumOfComments, numOfThreads, lastComment, null, new MaintenanceDataManager());
@@ -62,34 +59,25 @@ public class MaintenanceDataManager {
 			
 			for(int i=0; i<amountOfComments; i++){
 				commentsArray[i].setVector(commentsVectors.get(i + lastComment));
-				out.println(i+1 + ": " + commentsVectors.get(i));//TODO delete after testing
-				out.println();		
-				out.println();
-				
-				
 				arrayListOfComments.add(commentsArray[i]);
 			}
+			
+			DatabaseOperations.setArticleWords(articleId, TextProcessingManager.wordsArray);
 		}
 		else{
 			TextProcessingManager cst = new TextProcessingManager();
 			StatisticData[][] sd = cst.getTextResult(finalString.toString(),newNumOfComments - lastComment);
 			ArrayList<String> newWordsArray = TextProcessingManager.wordsArray;
-			commentsVectors = cst.vectorsCompletionForMaintenance(newWordsArray, sd, newNumOfComments - lastComment);
+			commentsVectors = cst.vectorsCompletionForMaintenance(newWordsArray, sd, (newNumOfComments - lastComment), articleId);
 			
 			for(int i=0; i<amountOfComments; i++){
 				commentsArray[i].setVector(commentsVectors.get(i));
-				out.println(commentsArray[i].getId() + ": " + commentsVectors.get(i));//TODO delete after testing
-				out.println();		
-				out.println();
-				
-			
 				arrayListOfComments.add(commentsArray[i]);
 			}
+			
+			//the words saved in the data base in the method vectorsCompletionForMaintenance
 		}
-	
-		//DatabaseOperations.setArticleWords(articleId, TextProcessingManager.newWordsForTheArticle);//TODO delete when the server is ready
-		//DatabaseOperations.setComments(articleId, arrayListOfComments);//TODO delete when the server is ready
-		out.close();
+		
 		return arrayListOfComments;
 	}
 }

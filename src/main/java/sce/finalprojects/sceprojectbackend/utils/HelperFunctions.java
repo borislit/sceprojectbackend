@@ -87,10 +87,10 @@ public class HelperFunctions {
 			}
 	}
 	
-	public static ArrayList<String> addNewWordsToOldWords(ArrayList<String> newWordsArray) throws SQLException{
+	public static ArrayList<String> addNewWordsToOldWords(ArrayList<String> newWordsArray, String articleId) throws SQLException{
 		ArrayList<String> result = new ArrayList<String>();
 		
-		String oldWords[] = DatabaseOperations.getArticleWords("aaa");
+		String oldWords[] = DatabaseOperations.getArticleWords(articleId);
 		boolean isWordExist;
 		int sizeOfOldWords = oldWords.length;
 		int sizeOfNewWords = newWordsArray.size();
@@ -111,6 +111,6 @@ public class HelperFunctions {
 				TextProcessingManager.newWordsForTheArticle.add(newWordsArray.get(i));
 			}
 		}
-		return result;
+		return result; //the array with all the words of the article
 	}
 }

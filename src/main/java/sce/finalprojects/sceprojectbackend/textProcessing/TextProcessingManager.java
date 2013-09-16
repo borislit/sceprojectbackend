@@ -110,8 +110,9 @@ public class TextProcessingManager {
 		return commentsVectors;		
 	}
 	
-	public ArrayList<ArrayList<Double>> vectorsCompletionForMaintenance(ArrayList<String> newWordsArray, StatisticData[][] sd, int numOfComments) throws SQLException{
-		ArrayList<String> wordArray = HelperFunctions.addNewWordsToOldWords(newWordsArray);
+	public ArrayList<ArrayList<Double>> vectorsCompletionForMaintenance(ArrayList<String> newWordsArray, StatisticData[][] sd, int numOfComments, String articleId) throws SQLException{
+		ArrayList<String> wordArray = HelperFunctions.addNewWordsToOldWords(newWordsArray, articleId);
+		DatabaseOperations.setArticleWords(articleId, wordArray);
 		ArrayList<ArrayList<Double>> commentsVectors = new ArrayList<ArrayList<Double>>();
 		ArrayList<Double> vector;
 		boolean flag = false;

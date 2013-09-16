@@ -26,7 +26,7 @@ public class BuildingTreeDataManager {
 	 * @throws SQLException 
 	 */
 	public static ArrayList<CommentEntityDS> gettingCommentsForTheFirstTime(String urlString, String articleId, int numOfComments){
-		//DatabaseOperations.addNewArticle(articleId, url.toString(), numOfComments); //TODO delete when the server is ready
+
 		commentsArray = new CommentEntityDS[numOfComments];
 		int numOfThreads = HelperFunctions.getNumOfThreads(numOfComments, 0);
 		commentsString = new String[numOfThreads];
@@ -37,6 +37,7 @@ public class BuildingTreeDataManager {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
+		
 		StringBuilder finalString = new StringBuilder();
 		for(int i = 0; i < numOfThreads; i++)
 			finalString.append(commentsString[i]);
@@ -46,27 +47,13 @@ public class BuildingTreeDataManager {
 		Double[][] wordCommentsMatrix = cst.buildWordCommentMatrix(sd, numOfComments);
 		ArrayList<ArrayList<Double>> commentsVectors = cst.buildCommentsVector(wordCommentsMatrix, numOfComments);
 		
-		DatabaseOperations.setArticleWords(articleId, TextProcessingManager.wordsArray);//TODO delete when the server is ready
+		DatabaseOperations.setArticleWords(articleId, TextProcessingManager.wordsArray);
 		ArrayList<CommentEntityDS> arrayListOfComments = new ArrayList<CommentEntityDS>();
-//		PrintWriter out;
-//		try {
-//			out = new PrintWriter("C:\\\\vectors.txt");
-			for(int i = 0; i < numOfComments; i++){
-				commentsArray[i].setVector(commentsVectors.get(i));
-//				out.println(i+1 + ": " + commentsVectors.get(i));//TODO delete after testing
-//				out.println();		
-//				out.println();
-				//System.out.println(commentsVectors.get(i));
-				arrayListOfComments.add(commentsArray[i]);
-			}
-			
-			//DatabaseOperations.setComments(articleId, arrayListOfComments);//TODO delete when the server is ready
-//			out.close();//TODO delete after testing
-			
-//		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} ////TODO delete after testing
+
+		for(int i = 0; i < numOfComments; i++){
+			commentsArray[i].setVector(commentsVectors.get(i));
+			arrayListOfComments.add(commentsArray[i]);
+		}
 
 		return arrayListOfComments;
 	}
