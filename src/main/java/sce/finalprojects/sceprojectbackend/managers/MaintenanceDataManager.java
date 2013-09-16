@@ -25,7 +25,9 @@ public class MaintenanceDataManager {
 	 * @throws FileNotFoundException 
 	 */
 	public static ArrayList<CommentEntityDS> gettingCommentsForMaintenance(String urlString, String articleId, int newNumOfComments, int lastComment, ArrayList<String> htmlArr) throws SQLException, FileNotFoundException{
-		commentsArray = new CommentEntityDS[newNumOfComments - lastComment];
+		
+		int amountOfComments = newNumOfComments - lastComment;
+		commentsArray = new CommentEntityDS[amountOfComments];
 		int numOfThreads = HelperFunctions.getNumOfThreads(newNumOfComments, lastComment);
 		commentsString = new String[numOfThreads];
 		ArrayList<ArrayList<Double>> commentsVectors = new ArrayList<ArrayList<Double>>();
@@ -45,7 +47,8 @@ public class MaintenanceDataManager {
 		StringBuilder finalString = new StringBuilder();
 		if(htmlArr != null){
 			CommentsDownloadManager cdm = new CommentsDownloadManager();
-			for(int i=0; i<htmlArr.size(); i++)
+			int htmlArrSize = htmlArr.size();
+			for(int i=0; i<htmlArrSize; i++)
 				finalString.append(cdm.cleanTheCommentFromTheHtml(htmlArr.get(i)));
 		}
 		for(int i=0; i<numOfThreads; i++)
@@ -57,7 +60,7 @@ public class MaintenanceDataManager {
 			Double[][] wordCommentsMatrix = cst.buildWordCommentMatrix(sd, newNumOfComments);
 			commentsVectors = cst.buildCommentsVector(wordCommentsMatrix, newNumOfComments);
 			
-			for(int i=0; i<commentsArray.length; i++){
+			for(int i=0; i<amountOfComments; i++){
 				commentsArray[i].setVector(commentsVectors.get(i + lastComment));
 				out.println(i+1 + ": " + commentsVectors.get(i));//TODO delete after testing
 				out.println();		
@@ -73,7 +76,7 @@ public class MaintenanceDataManager {
 			ArrayList<String> newWordsArray = TextProcessingManager.wordsArray;
 			commentsVectors = cst.vectorsCompletionForMaintenance(newWordsArray, sd, newNumOfComments - lastComment);
 			
-			for(int i=0; i<commentsArray.length; i++){
+			for(int i=0; i<amountOfComments; i++){
 				commentsArray[i].setVector(commentsVectors.get(i));
 				out.println(commentsArray[i].getId() + ": " + commentsVectors.get(i));//TODO delete after testing
 				out.println();		

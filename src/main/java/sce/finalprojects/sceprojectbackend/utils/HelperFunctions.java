@@ -79,7 +79,7 @@ public class HelperFunctions {
 			}
 		}
 
-		for(int i = 0; i < threadsArray.length; i++)
+		for(int i = 0; i < numOfThreads; i++)
 			try {
 				threadsArray[i].join();
 			} catch (InterruptedException e) {
@@ -92,13 +92,16 @@ public class HelperFunctions {
 		
 		String oldWords[] = DatabaseOperations.getArticleWords("aaa");
 		boolean isWordExist;
+		int sizeOfOldWords = oldWords.length;
+		int sizeOfNewWords = newWordsArray.size();
 		
-		for(int i = 0;i < oldWords.length;i++)
+		for(int i = 0; i < sizeOfOldWords; i++)
 			result.add(oldWords[i]);
 		
-		for(int i = 0; i < newWordsArray.size(); i++){
+		for(int i = 0; i < sizeOfNewWords; i++){
 			isWordExist = false;
-			for(int j = 0; j < result.size(); j++)
+			int resultSize = result.size();
+			for(int j = 0; j < resultSize; j++)
 				if(result.get(j).equals(newWordsArray.get(i))){
 					isWordExist = true;
 					break;

@@ -41,7 +41,8 @@ public class CommentsDownloadManager {
 		}
 		
 		CommentEntityDS result;
-		for(int i = beginningComment; i < htmlArr.length && i < numOfComments + beginningComment; i++){
+		int htmlArraySize = htmlArr.length;
+		for(int i = beginningComment; i < htmlArraySize && i < numOfComments + beginningComment; i++){
 			try {
 				result = getCommentEntityFromHtml(htmlArr[i], out, threadId, i, initialOffset);
 				if (btdm != null)
@@ -75,13 +76,14 @@ public class CommentsDownloadManager {
 	            if (nextLine != null){
 	            	result = "" + nextLine;
 	                htmlComments = result.split("js-item comment ");
-	                for(int i=1; i<htmlComments.length; i++){
+	                int htmlCommentsSize = htmlComments.length;
+	                for(int i=1; i<htmlCommentsSize; i++){
 	                	htmlComments[i] = "<li class=\"js-item comment" + htmlComments[i];
                 		String temp[] = htmlComments[i].split("li>");
     	                htmlComments[i] = temp[0] + "li>";
 	                }
-	                String tempHtml[] = new String[htmlComments.length-1];
-	                for(int i = 1; i < htmlComments.length; i++)
+	                String tempHtml[] = new String[htmlCommentsSize-1];
+	                for(int i = 1; i < htmlCommentsSize; i++)
 	                	tempHtml[i-1] = htmlComments[i];
 	                return tempHtml;
 	            }
@@ -133,11 +135,12 @@ public class CommentsDownloadManager {
 		  tempComment = tempComment.replaceAll("( br )", "");
 		  
 		  StringBuilder temp = new StringBuilder();
-		  for(int i = 0; i < tempComment.length(); i++)
+		  int commentSize = tempComment.length();
+		  for(int i = 0; i < commentSize; i++)
 			  if(!(Character.isDigit(tempComment.charAt(i))))
 					  temp.append(tempComment.charAt(i));
 			  else
-				  if(i == tempComment.length()-1)
+				  if(i == commentSize-1)
 					  temp.append("a");
 				  else
 					  if(!(Character.isDigit(tempComment.charAt(i+1)))) {

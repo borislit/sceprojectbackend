@@ -76,8 +76,9 @@ public class TextProcessingManager {
 		Vector<Integer> commentVector;
 		
 		for(int i = 0; i < numOfWords; i++){
-			commentVector = sd[0][i].getListOfSentenceIndeces();			
-			for(int j = 0; j < commentVector.size(); j++)
+			commentVector = sd[0][i].getListOfSentenceIndeces();
+			int sizeOfVector = commentVector.size();
+			for(int j = 0; j < sizeOfVector; j++)
 				commentsMatrix[i][commentVector.get(j)] = (double)1;
 		}
 		
@@ -114,16 +115,19 @@ public class TextProcessingManager {
 		ArrayList<ArrayList<Double>> commentsVectors = new ArrayList<ArrayList<Double>>();
 		ArrayList<Double> vector;
 		boolean flag = false;
+		int wordsArraySize = wordArray.size();
+		int newWordsSize = sd[0].length;
 		
 		for(int i = 0; i < numOfComments; i++){
 			vector = new ArrayList<Double>();
-			for(int j = 0; j < wordArray.size(); j++){
+			for(int j = 0; j < wordsArraySize; j++){
 				flag=false;
 				Vector<Integer> vectorOfTheComment;
-				for(int t = 0; t < sd[0].length; t++){
+				for(int t = 0; t < newWordsSize; t++){
 					if(sd[0][t].getTerm().equals(wordArray.get(j))){
 						vectorOfTheComment = sd[0][t].getListOfSentenceIndeces();
-						for(int k = 0; k < vectorOfTheComment.size(); k++)
+						int sizeOfVector = vectorOfTheComment.size();
+						for(int k = 0; k < sizeOfVector; k++)
 							if(vectorOfTheComment.get(k) == i){
 								flag =true;
 								break;

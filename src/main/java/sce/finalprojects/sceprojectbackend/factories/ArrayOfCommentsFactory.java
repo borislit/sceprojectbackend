@@ -1,5 +1,6 @@
 package sce.finalprojects.sceprojectbackend.factories;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.ArrayOfCommentsDO;
@@ -30,19 +31,19 @@ public class ArrayOfCommentsFactory extends BaseFactory<ArrayOfCommentsDO> {
 			DatabaseOperations.setComments(articleId, commentsDSArray); //save the comments in the DB
 			//save the comments array in the cache
 			commentsDO = new ArrayOfCommentsDO(articleId, Comment.convertCommentsDStoCommentsArrayList(commentsDSArray));
-			setVector(commentsDO);
+			setVector(commentsDO,articleId);
 			return commentsDO;
 		}
 
 		commentsDO = new ArrayOfCommentsDO(articleId, arrayOfComments);
 
-		setVector(commentsDO);
+		setVector(commentsDO,articleId);
 
 		return commentsDO; // new ArrayOfCommentsDO(articleId);
 	}
 
-	private void setVector(ArrayOfCommentsDO com) {
-		com.vect = new double[com.arrayOfComment.get(0).vector.size()];
+	private void setVector(ArrayOfCommentsDO com,String articleId) {
+		com.vect= new double[DatabaseOperations.getWordsCountForArticle(articleId)]; //TODO yuval
 	}
 	
 	@Override
