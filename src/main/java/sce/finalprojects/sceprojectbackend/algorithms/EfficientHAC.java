@@ -69,7 +69,7 @@ public class EfficientHAC {
 	 *  
 	 */
 	private void initiateEfficientHACForUse() throws Exception {
-		
+		System.out.println("STARTING initiateEfficientHACForUse AT: "+System.currentTimeMillis());
 		numberOfElements = clustersArray.size();
 		
 		this.p = new ArrayList<PriorityQueue<Ccell>>();
@@ -98,6 +98,7 @@ public class EfficientHAC {
 		}
 		a = new ArrayList<Acell>();
 		initiated = true;
+		System.out.println("FINISHNG initiateEfficientHACForUse AT: "+System.currentTimeMillis());
 	}
 	
 	/**
@@ -105,7 +106,7 @@ public class EfficientHAC {
 	 * @throws Exception
 	 */
 	public void runAlgorithm () throws Exception{
-		
+		System.out.println("STARTING runAlgorithm AT: "+System.currentTimeMillis());
 		if(!initiated)
 		{
 			throw new Exception("The algorithm is not initiated, please initiate the algorithem or make another instance");
@@ -143,6 +144,8 @@ public class EfficientHAC {
 		}
 			
 		calculated = true;
+		
+		System.out.println("FINISH runAlgorithm AT: "+System.currentTimeMillis());
 	}
 	
 	/**

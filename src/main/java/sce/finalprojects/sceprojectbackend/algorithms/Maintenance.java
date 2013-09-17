@@ -96,7 +96,7 @@ public class Maintenance {
 					//add the entry to the map for each comment that belongs to the child cluster
 
 					for (Comment comment : childcluster.innerComments) {
-						mapping.add(new MapCell(articleId , comment.comment_id, fatherElement.getAttribute(XmlElement.ELEMENT_ID)+"_"+currentLevel));
+						mapping.add(new MapCell(articleId , comment.comment_id, fatherElement.getAttribute(XmlElement.ELEMENT_ID)+"_"+currentLevel,isDirectSun(comment.comment_id, tempChild)));
 					}
 					//merge the children into the father cluster
 					fatherCluster.mergeWithCluster(childcluster);
@@ -106,6 +106,14 @@ public class Maintenance {
 			}	
 		}
 		DatabaseOperations.setArticleMapping(articleId,mapping);
+	}
+	
+	private int isDirectSun(String id , Element father) {
+		
+		if(father.getAttribute(XmlElement.ELEMENT_ID).equals(id))
+			return 1;
+		return 0;
+		
 	}
 	
 	/**
@@ -151,7 +159,7 @@ public class Maintenance {
 		for (Comment ne : neArray) {
 			Comment.nomalizeCommentVector(ne);
 			addNewElementToHAC(ne, articleId, vector, document, mappingArray, arrayOfCommentsDO.arrayOfComment);
-			//save the comments array with the ne to the cache (to start a new add element with the last added element)
+			//save the comments array with the newElement to the cache (to start a new add element with the last added element)
 			arrayOfCommentsDO.arrayOfComment.add(ne);
 			commentsArrayFactory.save(arrayOfCommentsDO);			
 		}
@@ -212,7 +220,7 @@ public class Maintenance {
 					//adding to XML
 					fatherElement.appendChild(newXMLElement); 
 					//adding to mapping array
-					mappingArray.add(new MapCell(articleId, newElement.cluster_id,""+fatherElement.getAttribute(XmlElement.ELEMENT_ID)+"_"+fatherElement.getAttribute(XmlElement.ELEMENT_LEVEL) ));
+					mappingArray.add(new MapCell(articleId, newElement.cluster_id,""+fatherElement.getAttribute(XmlElement.ELEMENT_ID)+"_"+fatherElement.getAttribute(XmlElement.ELEMENT_LEVEL),isDirectSun(newElement.cluster_id, fatherElement)));
 					fatherElement = newXMLElement;
 
 				}
@@ -284,7 +292,7 @@ public class Maintenance {
 					//adding to XML
 					fatherElement.appendChild(newXMLElement); 
 					//adding to mapping array
-					mappingArray.add(new MapCell(articleId, newElement.cluster_id,""+fatherElement.getAttribute(XmlElement.ELEMENT_ID)+"_"+fatherElement.getAttribute(XmlElement.ELEMENT_LEVEL) ));
+					mappingArray.add(new MapCell(articleId, newElement.cluster_id,""+fatherElement.getAttribute(XmlElement.ELEMENT_ID)+"_"+fatherElement.getAttribute(XmlElement.ELEMENT_LEVEL),isDirectSun(newElement.cluster_id, fatherElement)));
 					fatherElement = newXMLElement;
 				}
 				while(maxlevel > Integer.parseInt(fatherElement.getAttribute(XmlElement.ELEMENT_LEVEL))); 
