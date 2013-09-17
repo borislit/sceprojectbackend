@@ -31,10 +31,7 @@ public class DatabaseOperations {
 	 * @throws SQLException 
 	 */
 	public static ArrayList<Comment> getAllComentsWithoutHTML(String articleID){
-		
-		//TODO: check what is the impact if the order is changed when returning the entries from the DB (when building the Mapping or XML )
-		//SELECT vector FROM comments WHERE article_id = 'articleID'
-		
+	
 		Connection conn;
 		ArrayList<Comment> ArrayOfComments = null;
 		try {
@@ -161,11 +158,14 @@ public class DatabaseOperations {
 	 * @param words
 	 * @throws SQLException
 	 */
-//TODO First delete the content of article words before proceeding
 	public static void setArticleWords(String articleId , ArrayList<String> words) {
 		Connection conn;
 		try {
 			conn = DatabaseManager.getInstance().getConnection();
+			PreparedStatement delStmt = conn.prepareStatement("DELETE * FROM article_words WHERE article_id = ? ");
+			delStmt.setString(1, articleId);
+			delStmt.execute();
+						
 			StringBuilder insertQuerry = new StringBuilder();
 			int i=0;
 			for (String word : words) {
@@ -173,7 +173,7 @@ public class DatabaseOperations {
 			}
 			insertQuerry.replace(0, insertQuerry.length()-1, insertQuerry.substring(0, insertQuerry.length()-2));
 			
-			PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO article_words (`article_id`,`word`,`order`) VALUES " + insertQuerry + ";");
+			PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO article_words (`article_id`,`word`,`order` VALUES " + insertQuerry + ";");
 			
 			sqlQuerry.execute();
 		} catch (SQLException e) {e.printStackTrace();}
@@ -215,7 +215,7 @@ public class DatabaseOperations {
 	public static void addNewArticle(String articleId, String articleUrl, int numOfComments) {
 		try{
 	    	Connection conn = DatabaseManager.getInstance().getConnection();
-			PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO articles (article_id,url,number_of_comments,last_update) VALUES (?,?,?,?) ;");
+			PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO articles (article_id,url,number_of_comments,last_update,creation_time) VALUES (?,?,?,?,NOW()) ;");
 			sqlQuerry.setString(1, articleId);
 			sqlQuerry.setString(2, articleUrl);
 			sqlQuerry.setInt(3, numOfComments);
@@ -488,7 +488,6 @@ public class DatabaseOperations {
 			
 			List<String> clustersID =new  ArrayList<String>();
 			
-			
 			while(rs.next()){
 				clustersID.add(rs.getString("comment_id"));
 				return getClustersRepresentationByIDs(clustersID, 0, articleID);
@@ -502,15 +501,39 @@ public class DatabaseOperations {
 		
 	}
 	
-	public static int getWordsCountForArticle(String articleID){
+	/**
+	 * return the number of the words that stored in the db for a given article
+	 * @param articleId
+	 * @return
+	 */
+	public static int getWordsCountForArticle(String articleId){
 		
-		//TODO Implement
+		try {
+			Connection conn = DatabaseManager.getInstance().getConnection();
+			PreparedStatement qry = conn.prepareStatement("SELECT * FROM articles WHERE article_id = ?");
+			qry.setString(1, articleId);
+			
+			ResultSet rs  = qry.executeQuery();
+			
+			rs.last();
+			
+			return rs.getRow();
+			
+		} catch (SQLException e) {e.printStackTrace();}
 		
 		return 0;
 	}
 	
 	public static long getArticleCreationDate(String articleID){
-		//TODO Add new column articles table. Column type - Timestamp. Argument NOW()
+		try{
+			Connection conn = DatabaseManager.getInstance().getConnection();
+			PreparedStatement qry = conn.prepareStatement("SELECT creation_time FROM articles WHERE article_id = ?");
+			qry.setString(1, articleID);
+			ResultSet rs = qry.executeQuery();
+			while(rs.next())
+				rs.getLong("creation_time");
+		}
+		catch(SQLException e) {e.printStackTrace();}
 		return 0;
 	}
 	

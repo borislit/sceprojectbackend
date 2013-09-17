@@ -1,7 +1,4 @@
 package sce.finalprojects.sceprojectbackend.factories;
-
-import java.io.FileNotFoundException;
-
 import sce.finalprojects.sceprojectbackend.datatypes.Cachable;
 import sce.finalprojects.sceprojectbackend.datatypes.CacheToken;
 import sce.finalprojects.sceprojectbackend.managers.CacheManager;

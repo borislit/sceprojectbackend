@@ -43,7 +43,7 @@ public class ArrayOfCommentsFactory extends BaseFactory<ArrayOfCommentsDO> {
 	}
 
 	private void setVector(ArrayOfCommentsDO com,String articleId) {
-		com.vect= new double[DatabaseOperations.getWordsCountForArticle(articleId)]; //TODO yuval
+		com.vect= new double[DatabaseOperations.getWordsCountForArticle(articleId)];
 	}
 	
 	@Override
@@ -51,26 +51,26 @@ public class ArrayOfCommentsFactory extends BaseFactory<ArrayOfCommentsDO> {
 		return CacheManager.ObjectType.ARRAYOFCOMMENTS;
 	}
 	
-	public void checker(ArrayList<CommentEntityDS> ca){
-		boolean flag = false;
-		for (CommentEntityDS commentEntityDS : ca) {
-			flag = true;
-			ArrayList<Double> vec = commentEntityDS.getVector();
-			for (Double dub : vec) {
-				if(dub != 0)
-				{
-					flag = false;
-					break;
-				}	
-			}
-			if (flag)
-			{
-				commentEntityDS.getVector().set(0, (double) 1);
-				System.out.println(commentEntityDS.getId());
-			}
-		}
-		
-	}
+//	public void checker(ArrayList<CommentEntityDS> ca){
+//		boolean flag = false;
+//		for (CommentEntityDS commentEntityDS : ca) {
+//			flag = true;
+//			ArrayList<Double> vec = commentEntityDS.getVector();
+//			for (Double dub : vec) {
+//				if(dub != 0)
+//				{
+//					flag = false;
+//					break;
+//				}	
+//			}
+//			if (flag)
+//			{
+//				commentEntityDS.getVector().set(0, (double) 1);
+//				System.out.println(commentEntityDS.getId());
+//			}
+//		}
+//		
+//	}
 
 
 }

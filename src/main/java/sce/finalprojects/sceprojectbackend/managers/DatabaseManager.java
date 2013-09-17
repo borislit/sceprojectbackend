@@ -46,7 +46,6 @@ public class DatabaseManager {
 	    
 	    try {
 	    	Class.forName("com.mysql.jdbc.Driver");
-			 //TODO move this to dedicated config object
 			prop.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(ConfigurationManager.DB_CONFIG_FILE));
 	    
 		    String serverName = prop.getProperty("server");
