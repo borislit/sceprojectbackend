@@ -17,6 +17,10 @@ import org.jsoup.select.Elements;
 
 public class MarkupUtility {
 	
+	private final static String COMMENTS_AMOUNT_MARKUP_JSON_VAR = "module";
+	private final static String COMMENTS_AMOUNT_CONTAINER_SELECTOR = "#collapsed-comments-show";
+	private final static String USER_AGENT = "Mozilla/5.0";
+	
 	public static String  getCommentBodyFromMarkup(String markup){
 		Document doc = Jsoup.parse(markup);
 		Elements matchingElements  = doc.select(".comment-content");
@@ -39,7 +43,7 @@ public class MarkupUtility {
                 con.setRequestMethod("GET");
                
                 //add request header
-                con.setRequestProperty("User-Agent", "Mozilla/5.0");
+                con.setRequestProperty("User-Agent", USER_AGENT);
 
                 int responseCode = con.getResponseCode();
 
@@ -55,10 +59,10 @@ public class MarkupUtility {
                
                 JSONObject jsonObject = (JSONObject) parser.parse(response.toString());
                
-                String commentsMarkup = (String) jsonObject.get("module");
+                String commentsMarkup = (String) jsonObject.get(COMMENTS_AMOUNT_MARKUP_JSON_VAR);
                
                 Document doc = Jsoup.parse(commentsMarkup);
-                Elements elem =  doc.select("#collapsed-comments-show");
+                Elements elem =  doc.select(COMMENTS_AMOUNT_CONTAINER_SELECTOR);
                 String rawCommentAmount = elem.get(0).text();
                 Pattern p = Pattern.compile("\\d+");
                 Matcher m = p.matcher(rawCommentAmount);
