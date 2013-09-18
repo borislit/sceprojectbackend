@@ -69,12 +69,12 @@ public class DatabaseOperations {
 
 		StringBuffer insertQuerry = new StringBuffer();
 		for (MapCell mapCell : mapping) {
-			insertQuerry.append("('").append(mapCell.getArticle_id()).append("','").append(mapCell.getComment_id()).append("','").append(mapCell.getMapping()).append("'),");
+			insertQuerry.append("('").append(mapCell.getArticle_id()).append("','").append(mapCell.getComment_id()).append("','").append(mapCell.getMapping()).append("','").append(mapCell.getDirect()).append("'),");
 		}
 		//insertQuerry = insertQuerry.substring(0, insertQuerry.length() - 1) + ";";
 		insertQuerry.replace(0, insertQuerry.length(), insertQuerry.substring(0, insertQuerry.length()-1));
 		
-		PreparedStatement sqlQuerry = conn.prepareStatement("INSERT INTO HACNodesMapping (`article_id`, `comment_id`, `node_mapping`) VALUES "+insertQuerry);
+		PreparedStatement sqlQuerry = conn.prepareStatement("INSERT INTO HACNodesMapping (`article_id`, `comment_id`, `node_mapping`,`direct`) VALUES "+insertQuerry);
 		//System.out.println(sqlQuerry);
 		sqlQuerry.execute();
 		
@@ -142,7 +142,7 @@ public class DatabaseOperations {
 		ArrayList<MapCell> returnarray = new ArrayList<MapCell>();
 		
 		while(rs.next()) {
-			returnarray.add(new MapCell(rs.getString("article_id"),rs.getString("comment_id"),rs.getString("node_mapping")));
+			returnarray.add(new MapCell(rs.getString("article_id"),rs.getString("comment_id"),rs.getString("node_mapping"),rs.getInt("direct")));
 		}
 		
 		return returnarray;
@@ -162,7 +162,7 @@ public class DatabaseOperations {
 		Connection conn;
 		try {
 			conn = DatabaseManager.getInstance().getConnection();
-			PreparedStatement delStmt = conn.prepareStatement("DELETE * FROM article_words WHERE article_id = ? ");
+			PreparedStatement delStmt = conn.prepareStatement("DELETE FROM article_words WHERE article_id = ? ");
 			delStmt.setString(1, articleId);
 			delStmt.execute();
 						
@@ -173,7 +173,7 @@ public class DatabaseOperations {
 			}
 			insertQuerry.replace(0, insertQuerry.length()-1, insertQuerry.substring(0, insertQuerry.length()-2));
 			
-			PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO article_words (`article_id`,`word`,`order` VALUES " + insertQuerry + ";");
+			PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO article_words (`article_id`,`word`,`order`) VALUES " + insertQuerry + ";");
 			
 			sqlQuerry.execute();
 		} catch (SQLException e) {e.printStackTrace();}
@@ -510,7 +510,7 @@ public class DatabaseOperations {
 		
 		try {
 			Connection conn = DatabaseManager.getInstance().getConnection();
-			PreparedStatement qry = conn.prepareStatement("SELECT * FROM articles WHERE article_id = ?");
+			PreparedStatement qry = conn.prepareStatement("SELECT * FROM article_words WHERE article_id = ?");
 			qry.setString(1, articleId);
 			
 			ResultSet rs  = qry.executeQuery();
@@ -537,5 +537,19 @@ public class DatabaseOperations {
 		return 0;
 	}
 	
-	
+	public static void cleaArticleFromDB(String articleId) {
+		
+		try {
+			Connection conn = DatabaseManager.getInstance().getConnection();
+			PreparedStatement stmt1 = conn.prepareStatement("DELETE FROM article_words WHERE 1");
+			stmt1.execute();
+			PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM HACNodesMapping WHERE 1");
+			stmt2.execute();
+			PreparedStatement stmt3 = conn.prepareStatement("DELETE FROM comments WHERE 1");
+			stmt3.execute();
+			PreparedStatement stmt4 = conn.prepareStatement("DELETE FROM articles WHERE 1");
+			stmt4.execute();
+			
+		} catch (SQLException e) {e.printStackTrace();}
+	}
 }

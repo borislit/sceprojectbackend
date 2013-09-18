@@ -43,7 +43,7 @@ public class ArrayOfCommentsFactory extends BaseFactory<ArrayOfCommentsDO> {
 	}
 
 	private void setVector(ArrayOfCommentsDO com,String articleId) {
-		com.vect= new double[DatabaseOperations.getWordsCountForArticle(articleId)];
+		com.vect= new double[DatabaseOperations.getWordsCountForArticle(articleId) + 1];  //plus 1 -  the artificial number
 	}
 	
 	@Override

@@ -126,6 +126,7 @@ public class EfficientHACRegularTsts {
 	@Test
 	public void testInitiateFlow() throws Exception {
 		
+		DatabaseOperations.cleaArticleFromDB("123");
 		int numOfCom = 600;
 		String url = "http://news.yahoo.com/_xhr/contentcomments/get_comments/?content_id=5dfccac3-8873-3941-845c-c9e1de3d20cc&_device=full&count=10&sortBy=highestRated&isNext=true&offset=10&pageNumber=1&_media.modules.content_comments.switches._enable_view_others=1&_media.modules.content_comments.switches._enable_mutecommenter=1&enable_collapsed_comment=1";
 		
