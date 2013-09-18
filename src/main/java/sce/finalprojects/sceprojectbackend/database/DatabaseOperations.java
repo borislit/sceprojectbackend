@@ -311,7 +311,7 @@ public class DatabaseOperations {
 			conn = DatabaseManager.getInstance().getConnection();
 			StringBuffer insertQuerry = new StringBuffer();
 	    	for (CommentEntityDS comm : commments) {   
-				insertQuerry.append("(").append(comm.getId()).append(",").append(articleId).append(",'").append(StringEscapeUtils.escapeHtml4(comm.getCommentHTML()).replace('\'', ' ')).append("',\"").append(comm.vectorToString()).append("\") , ");
+				insertQuerry.append("(").append(comm.getId()).append(",").append(articleId).append(",'").append(StringEscapeUtils.escapeHtml4(comm.getCommentHTML()).replace('\'', ' ')).append("',\"").append(CommentEntityDS.vectorToString(comm.getVector())).append("\") , ");
 			}
 	    	insertQuerry.replace(0, insertQuerry.length()-1, insertQuerry.substring(0, insertQuerry.length()-2)); 
 	    	String querry = insertQuerry.toString();
@@ -537,6 +537,10 @@ public class DatabaseOperations {
 		return 0;
 	}
 	
+	/**
+	 * clear al the information about the article from the DB
+	 * @param articleId
+	 */
 	public static void cleaArticleFromDB(String articleId) {
 		
 		try {
@@ -550,6 +554,45 @@ public class DatabaseOperations {
 			PreparedStatement stmt4 = conn.prepareStatement("DELETE FROM articles WHERE 1");
 			stmt4.execute();
 			
+		} catch (SQLException e) {e.printStackTrace();}
+	}
+	
+	/**
+	 * replace the vectors for the existing comments
+	 * @param articleId
+	 * @param replacedVector
+	 */
+	public static void replaceVectorsForComments(String articleId, ArrayList<ArrayList<Double>> replacedVector) {
+		try {
+		Connection conn = DatabaseManager.getInstance().getConnection();
+		///the place in the array of each vector belongs to the +1 comment id
+		
+		StringBuffer whenCases = new StringBuffer();
+		StringBuffer whereCase = new StringBuffer("WHERE `article_id` = ").append(articleId).append(" AND `comment_id` IN (");
+		
+		int i=1;
+		for (ArrayList<Double> arrayList : replacedVector) {
+			whenCases.append("WHEN ").append(i).append(" THEN ").append("\"").append(CommentEntityDS.vectorToString(arrayList)).append("\"\n");
+			whereCase.append(i).append(",");
+			i++;
+		}	
+		
+		whereCase = whereCase.replace(0, whereCase.length(), whereCase.substring(0, whereCase.length() - 1));
+		whereCase.append(")");
+		
+		PreparedStatement query = conn.prepareStatement("UPDATE comments SET `vector` = CASE `comment_id` "+whenCases+" \nEND \n "+whereCase);
+		
+		query.execute();
+		
+//			UPDATE comments
+//		    SET vector = CASE comment_id
+//		        WHEN 1 THEN 'one'
+//		        WHEN 2 THEN 'two'
+//		        WHEN 3 THEN 'three'
+//		    END
+//		WHERE comment_id IN (1,2,3)
+//		}
+		
 		} catch (SQLException e) {e.printStackTrace();}
 	}
 }
