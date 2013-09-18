@@ -49,6 +49,7 @@ public class CommentsDownloadManager {
 					BuildingTreeDataManager.commentsArray[Integer.parseInt(result.getId()) - 1] = result;
 				else
 					MaintenanceDataManager.commentsArray[Integer.parseInt(result.getId()) - lastComment - 1] = result;
+
 			} catch (FileNotFoundException e) {
 						e.printStackTrace();
 			}	

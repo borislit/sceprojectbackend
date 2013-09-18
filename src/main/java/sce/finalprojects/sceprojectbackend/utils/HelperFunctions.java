@@ -90,13 +90,13 @@ public class HelperFunctions {
 	public static ArrayList<String> addNewWordsToOldWords(ArrayList<String> newWordsArray, String articleId) throws SQLException{
 		ArrayList<String> result = new ArrayList<String>();
 		
-		String oldWords[] = DatabaseOperations.getArticleWords(articleId);
+		ArrayList<String> oldWords = DatabaseOperations.getArticleWords(articleId);
 		boolean isWordExist;
-		int sizeOfOldWords = oldWords.length;
+		int sizeOfOldWords = oldWords.size();
 		int sizeOfNewWords = newWordsArray.size();
 		
 		for(int i = 0; i < sizeOfOldWords; i++)
-			result.add(oldWords[i]);
+			result.add(oldWords.get(i));
 		
 		for(int i = 0; i < sizeOfNewWords; i++){
 			isWordExist = false;
