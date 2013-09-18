@@ -564,35 +564,30 @@ public class DatabaseOperations {
 	 */
 	public static void replaceVectorsForComments(String articleId, ArrayList<ArrayList<Double>> replacedVector) {
 		try {
-		Connection conn = DatabaseManager.getInstance().getConnection();
-		///the place in the array of each vector belongs to the +1 comment id
-		
-		StringBuffer whenCases = new StringBuffer();
-		StringBuffer whereCase = new StringBuffer("WHERE `article_id` = ").append(articleId).append(" AND `comment_id` IN (");
-		
-		int i=1;
-		for (ArrayList<Double> arrayList : replacedVector) {
-			whenCases.append("WHEN ").append(i).append(" THEN ").append("\"").append(CommentEntityDS.vectorToString(arrayList)).append("\"\n");
-			whereCase.append(i).append(",");
-			i++;
-		}	
-		
-		whereCase = whereCase.replace(0, whereCase.length(), whereCase.substring(0, whereCase.length() - 1));
-		whereCase.append(")");
-		
-		PreparedStatement query = conn.prepareStatement("UPDATE comments SET `vector` = CASE `comment_id` "+whenCases+" \nEND \n "+whereCase);
-		
-		query.execute();
-		
-//			UPDATE comments
-//		    SET vector = CASE comment_id
-//		        WHEN 1 THEN 'one'
-//		        WHEN 2 THEN 'two'
-//		        WHEN 3 THEN 'three'
-//		    END
-//		WHERE comment_id IN (1,2,3)
-//		}
-		
+			Connection conn = DatabaseManager.getInstance().getConnection();
+			StringBuffer whenCases = new StringBuffer();
+			StringBuffer whereCase = new StringBuffer("WHERE `article_id` = ").append(articleId).append(" AND `comment_id` IN (");
+			int i=1;
+			for (ArrayList<Double> arrayList : replacedVector) {
+				whenCases.append("WHEN ").append(i).append(" THEN ").append("\"").append(CommentEntityDS.vectorToString(arrayList)).append("\"\n");
+				whereCase.append(i).append(",");
+				i++;
+			}	
+			whereCase = whereCase.replace(0, whereCase.length(), whereCase.substring(0, whereCase.length() - 1));
+			whereCase.append(")");
+			
+			PreparedStatement query = conn.prepareStatement("UPDATE comments SET `vector` = CASE `comment_id` "+whenCases+" \nEND \n "+whereCase);
+			query.execute();
+
+			//			UPDATE comments
+			//		    SET vector = CASE comment_id
+			//		        WHEN 1 THEN 'one'
+			//		        WHEN 2 THEN 'two'
+			//		        WHEN 3 THEN 'three'
+			//		    END
+			//		WHERE comment_id IN (1,2,3)
+			//		}
+
 		} catch (SQLException e) {e.printStackTrace();}
 	}
 }

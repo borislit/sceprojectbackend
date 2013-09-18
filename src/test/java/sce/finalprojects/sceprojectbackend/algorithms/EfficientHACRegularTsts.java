@@ -26,7 +26,7 @@ import sce.finalprojects.sceprojectbackend.managers.MaintenanceDataManager;
 public class EfficientHACRegularTsts {
 
 	private EfficientHAC efh;
-	private ArrayList<Comment> ArrayOfComments;
+	private ArrayList<Comment> ArrayOfComment22s;
 	private double[] vectRep;
 	
 	//@Before
@@ -154,15 +154,21 @@ public class EfficientHACRegularTsts {
 	public void testReConstructHACFlow() throws Exception {
 		String articleID = "123";
 		String articleUrl = DatabaseOperations.getUrl(articleID);
-		
 		ArrayList<String> articleCommentsMarkup = DatabaseOperations.getAllArticleCommentsHtml(articleID);
-		int newNumOfComments = /*getLatestNumberOfCommentsInTheArticle()*/ 20;
-		//Retrieve only the new comments
-		//TODO : save the new comments
+		int newNumOfComments = /*getLatestNumberOfCommentsInTheArticle()*/ 10;
+		
+		//1.Retrieve only the new comments + replace the old vectors + set the new words (SARIT)
 		ArrayList<CommentEntityDS> updatedArticleComments =  MaintenanceDataManager.gettingCommentsForMaintenance(articleUrl, articleID, newNumOfComments, DatabaseOperations.getArticleNumOfComments(articleID), articleCommentsMarkup);
-		ArrayOfCommentsDO commentsDO = new ArrayOfCommentsDO(articleID, Comment.convertCommentsDStoCommentsArrayList(updatedArticleComments));
+		//2.save to DB the new comments
+		DatabaseOperations.setComments(articleID, updatedArticleComments);
+		//3.save the newNumberOfComments to article table
+		DatabaseOperations.setArticleNumOfComments(articleID, newNumOfComments);
+		//4.retrieve all the comments from DB
+		ArrayOfCommentsDO commentsDO = new ArrayOfCommentsDO(articleID,DatabaseOperations.getAllComentsWithoutHTML(articleID));
+		//5.save to cache
 		ArrayOfCommentsFactory commentFactory = new ArrayOfCommentsFactory();
 		commentFactory.save(commentsDO);
+		//6.run efficient	
 		EfficientHAC effHAC = new EfficientHAC(commentsDO.arrayOfComment, commentsDO.vect);
 		effHAC.runAlgorithm();
 		xmlGenerator xmlGen = new xmlGenerator(articleID, effHAC.a, newNumOfComments);
