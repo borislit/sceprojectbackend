@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.xml.crypto.Data;
+
 import org.apache.poi.hssf.record.DBCellRecord;
 import org.junit.Before;
 import org.junit.Test;
@@ -155,7 +157,8 @@ public class EfficientHACRegularTsts {
 		
 		ArrayList<String> articleCommentsMarkup = DatabaseOperations.getAllArticleCommentsHtml(articleID);
 		int newNumOfComments = /*getLatestNumberOfCommentsInTheArticle()*/ 20;
-		//retrive only the new comments
+		//Retrieve only the new comments
+		//TODO : save the new comments
 		ArrayList<CommentEntityDS> updatedArticleComments =  MaintenanceDataManager.gettingCommentsForMaintenance(articleUrl, articleID, newNumOfComments, DatabaseOperations.getArticleNumOfComments(articleID), articleCommentsMarkup);
 		ArrayOfCommentsDO commentsDO = new ArrayOfCommentsDO(articleID, Comment.convertCommentsDStoCommentsArrayList(updatedArticleComments));
 		ArrayOfCommentsFactory commentFactory = new ArrayOfCommentsFactory();
@@ -165,6 +168,21 @@ public class EfficientHACRegularTsts {
 		xmlGenerator xmlGen = new xmlGenerator(articleID, effHAC.a, newNumOfComments);
 		Maintenance maintenance = new Maintenance();
 		maintenance.mapXmlHacToClusters(articleID);
+		
+	}
+	
+	@Test
+	public void testDBfunc(){
+		
+		ArrayList<ArrayList<Double>> replacedVector = new ArrayList<ArrayList<Double>>();
+		ArrayList<Double> nea = new ArrayList<Double>();
+		nea.add(0.0);
+		nea.add(1.1);
+		replacedVector.add(nea);
+		nea.add(3.5);
+		replacedVector.add(nea);
+		DatabaseOperations.replaceVectorsForComments("123", replacedVector);
+		
 		
 	}
 

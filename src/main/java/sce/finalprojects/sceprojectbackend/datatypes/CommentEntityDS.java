@@ -38,9 +38,9 @@ public class CommentEntityDS {
 	{
 		this.commentHTML = html;
 	}
-	public String vectorToString() {
+	public static String vectorToString(ArrayList<Double> vector) {
 		StringBuffer svector = new StringBuffer();
-		svector.append(this.vector.toString());
+		svector.append(vector.toString());
 		svector.replace(0, svector.length(), svector.substring(1,svector.length()-1));
 		return svector.toString();
 	}

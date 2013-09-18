@@ -22,6 +22,11 @@ public class ArrayOfCommentsDO extends Cachable{
 	 private double[] setVector(String articleId) {
 		return new double[DatabaseOperations.getWordsCountForArticle(articleId) + 1];  //plus 1 -  the artificial number
 	}
+	 
+	 //TODO: check if it does the job
+	 private void addNewCommentsToOldCommentsArray(ArrayList<Comment> newComments) {
+		 this.arrayOfComment.addAll(newComments);
+	 }
 
 	/**
 	 * 
