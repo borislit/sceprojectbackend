@@ -215,15 +215,15 @@ public class DatabaseOperations {
 	public static void addNewArticle(String articleId, String articleUrl, int numOfComments) {
 		try{
 	    	Connection conn = DatabaseManager.getInstance().getConnection();
-			PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO articles (article_id,url,number_of_comments,last_update,creation_time) VALUES (?,?,?,?,NOW()) ;");
+			PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO articles (article_id,url,number_of_comments,creation_time) VALUES (?,?,?,NOW()) ;");
 			sqlQuerry.setString(1, articleId);
 			sqlQuerry.setString(2, articleUrl);
 			sqlQuerry.setInt(3, numOfComments);
 			
-			java.text.SimpleDateFormat sdf = 
-			     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	
-			sqlQuerry.setString(4, sdf.format(new java.util.Date()));
+//			java.text.SimpleDateFormat sdf = 
+//			     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//	
+//			sqlQuerry.setString(4, sdf.format(new java.util.Date()));
 			
 			sqlQuerry.execute();
 			

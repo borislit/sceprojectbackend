@@ -31,19 +31,11 @@ public class ArrayOfCommentsFactory extends BaseFactory<ArrayOfCommentsDO> {
 			DatabaseOperations.setComments(articleId, commentsDSArray); //save the comments in the DB
 			//save the comments array in the cache
 			commentsDO = new ArrayOfCommentsDO(articleId, Comment.convertCommentsDStoCommentsArrayList(commentsDSArray));
-			setVector(commentsDO,articleId);
 			return commentsDO;
 		}
 
 		commentsDO = new ArrayOfCommentsDO(articleId, arrayOfComments);
-
-		setVector(commentsDO,articleId);
-
 		return commentsDO; // new ArrayOfCommentsDO(articleId);
-	}
-
-	private void setVector(ArrayOfCommentsDO com,String articleId) {
-		com.vect= new double[DatabaseOperations.getWordsCountForArticle(articleId) + 1];  //plus 1 -  the artificial number
 	}
 	
 	@Override
