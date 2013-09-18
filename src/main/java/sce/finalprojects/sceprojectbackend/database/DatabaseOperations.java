@@ -185,11 +185,11 @@ public class DatabaseOperations {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static String[] getArticleWords(String articleId) {
+	public static ArrayList<String> getArticleWords(String articleId) {
 		Connection conn;
 		try {
 			conn = DatabaseManager.getInstance().getConnection();
-			PreparedStatement sqlQuerry = conn.prepareStatement("SELECT * FROM articel_words WHERE article_id = ? ORDER BY order ASC;");
+			PreparedStatement sqlQuerry = conn.prepareStatement("SELECT * FROM article_words WHERE article_id = ? ORDER BY `order` ASC;");
 			sqlQuerry.setString(1, articleId);
 			ResultSet rs = sqlQuerry.executeQuery();
 			
@@ -199,7 +199,7 @@ public class DatabaseOperations {
 				arrayOfWords.add(rs.getString("word"));
 			}
 			
-			return (String[]) arrayOfWords.toArray();
+			return arrayOfWords;
 		} catch (SQLException e) {e.printStackTrace();}
 		
 		return null;
