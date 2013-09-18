@@ -57,12 +57,25 @@ public class MaintenanceDataManager {
 			Double[][] wordCommentsMatrix = cst.buildWordCommentMatrix(sd, newNumOfComments);
 			commentsVectors = cst.buildCommentsVector(wordCommentsMatrix, newNumOfComments);
 			
+			ArrayList<ArrayList<Double>> oldCommentsVectors = new ArrayList<ArrayList<Double>>();
+			for(int i=0; i<lastComment;i++)
+				oldCommentsVectors.add(commentsVectors.get(i));
+			DatabaseOperations.replaceVectorsForComments(articleId, oldCommentsVectors);
+			
 			for(int i=0; i<amountOfComments; i++){
 				commentsArray[i].setVector(commentsVectors.get(i + lastComment));
 				arrayListOfComments.add(commentsArray[i]);
 			}
+			ArrayList<String> a = DatabaseOperations.getArticleWords(articleId);
 			
 			DatabaseOperations.setArticleWords(articleId, TextProcessingManager.wordsArray);
+			System.out.println(a);
+			System.out.println(TextProcessingManager.wordsArray);
+			
+//			for(int i=0; i<a.size();i++)
+//				if(!(a.get(i).equals(TextProcessingManager.wordsArray.get(i))))
+//					System.out.println("not equals");
+					
 		}
 		else{
 			TextProcessingManager cst = new TextProcessingManager();
@@ -80,4 +93,6 @@ public class MaintenanceDataManager {
 		
 		return arrayListOfComments;
 	}
+	
+	
 }
