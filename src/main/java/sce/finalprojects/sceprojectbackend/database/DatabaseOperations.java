@@ -451,7 +451,7 @@ public class DatabaseOperations {
 			ArrayList<String> returnArray = new ArrayList<String>();
 			
 			while(rs.next()) {
-				returnArray.add(StringEscapeUtils.unescapeHtml4(rs.getString("hmtl")));
+				returnArray.add(StringEscapeUtils.unescapeHtml4(rs.getString("html")));
 			}
 			
 			return returnArray;

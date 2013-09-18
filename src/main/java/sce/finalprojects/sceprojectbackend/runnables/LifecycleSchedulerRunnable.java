@@ -25,14 +25,14 @@ public class LifecycleSchedulerRunnable implements Callable<Set<ClusterRepresent
 	private String articleID;
 	private String articleUrl;
 	private int runsCounter;
-	private int amountOfComments;
+	private int intialAmountOfComments;
 	
 
 	public LifecycleSchedulerRunnable(ArticleSetupRequestDO request) {
 		super();
 		this.articleID = request.getArticleID();
 		this.articleUrl = request.getUrl();
-		this.amountOfComments = request.getCommentsCount();
+		this.intialAmountOfComments = request.getCommentsCount();
 
 	}
 	
@@ -63,13 +63,13 @@ public class LifecycleSchedulerRunnable implements Callable<Set<ClusterRepresent
 		try{
 		if(runsCounter == 0){
 			
-			DatabaseOperations.addNewArticle(this.articleID, this.articleUrl, this.amountOfComments);
+			DatabaseOperations.addNewArticle(this.articleID, this.articleUrl, this.intialAmountOfComments);
 			ArrayOfCommentsFactory commentFactory = new ArrayOfCommentsFactory();
 			ArrayOfCommentsDO articleCommentsArray = commentFactory.get(this.articleID);
 			commentFactory.save(articleCommentsArray);
 			EfficientHAC effHAC = new EfficientHAC(articleCommentsArray.arrayOfComment, articleCommentsArray.vect);
 			effHAC.runAlgorithm();
-			xmlGenerator xmlGen = new xmlGenerator(this.articleID, effHAC.a, this.amountOfComments);
+			xmlGenerator xmlGen = new xmlGenerator(this.articleID, effHAC.a, this.intialAmountOfComments);
 			Maintenance maintenance = new Maintenance();
 			maintenance.mapXmlHacToClusters(this.articleID);
 			
@@ -85,7 +85,7 @@ public class LifecycleSchedulerRunnable implements Callable<Set<ClusterRepresent
 				commentFactory.save(commentsDO);
 				EfficientHAC effHAC = new EfficientHAC(commentsDO.arrayOfComment, commentsDO.vect);
 				effHAC.runAlgorithm();
-				xmlGenerator xmlGen = new xmlGenerator(this.articleID, effHAC.a, this.amountOfComments);
+				xmlGenerator xmlGen = new xmlGenerator(this.articleID, effHAC.a, this.intialAmountOfComments);
 				Maintenance maintenance = new Maintenance();
 				maintenance.mapXmlHacToClusters(this.articleID);
 				

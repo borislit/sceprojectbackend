@@ -44,7 +44,6 @@ public class Maintenance {
 	 */
 	public void mapXmlHacToClusters(String articleId) throws Exception {
 		
-		//TODO add a new sign for each element if it's a direct sun of his father or belongs to the cluster
 		DocFactory DocumentFactory = new DocFactory();
 		DocDO document = DocumentFactory.get(articleId);
 		ArrayOfCommentsFactory commentsFactory = new ArrayOfCommentsFactory();

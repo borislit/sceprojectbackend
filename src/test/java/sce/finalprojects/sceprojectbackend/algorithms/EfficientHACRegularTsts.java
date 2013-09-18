@@ -127,7 +127,7 @@ public class EfficientHACRegularTsts {
 	public void testInitiateFlow() throws Exception {
 		
 		DatabaseOperations.cleaArticleFromDB("123");
-		int numOfCom = 600;
+		int numOfCom = 10;
 		String url = "http://news.yahoo.com/_xhr/contentcomments/get_comments/?content_id=5dfccac3-8873-3941-845c-c9e1de3d20cc&_device=full&count=10&sortBy=highestRated&isNext=true&offset=10&pageNumber=1&_media.modules.content_comments.switches._enable_view_others=1&_media.modules.content_comments.switches._enable_mutecommenter=1&enable_collapsed_comment=1";
 		
 		DatabaseOperations.addNewArticle("123", url, numOfCom );
@@ -145,9 +145,27 @@ public class EfficientHACRegularTsts {
 		//ArrayList<CommentEntityDS> newList =  MaintenanceDataManager.gettingCommentsForMaintenance(DatabaseOperations.getUrl("123"), "123", 170, DatabaseOperations.getArticleNumOfComments("132"), DatabaseOperations.getAllArticleCommentsHtml("123"));
 
 		//maint.addNewElementsToHAC(newList, "132", new double [newList.get(0).getVector().size()]);
-		
-		
+				
 	}
 	
+	@Test
+	public void testReConstructHACFlow() throws Exception {
+		String articleID = "123";
+		String articleUrl = DatabaseOperations.getUrl(articleID);
+		
+		ArrayList<String> articleCommentsMarkup = DatabaseOperations.getAllArticleCommentsHtml(articleID);
+		int newNumOfComments = /*getLatestNumberOfCommentsInTheArticle()*/ 20;
+		//retrive only the new comments
+		ArrayList<CommentEntityDS> updatedArticleComments =  MaintenanceDataManager.gettingCommentsForMaintenance(articleUrl, articleID, newNumOfComments, DatabaseOperations.getArticleNumOfComments(articleID), articleCommentsMarkup);
+		ArrayOfCommentsDO commentsDO = new ArrayOfCommentsDO(articleID, Comment.convertCommentsDStoCommentsArrayList(updatedArticleComments));
+		ArrayOfCommentsFactory commentFactory = new ArrayOfCommentsFactory();
+		commentFactory.save(commentsDO);
+		EfficientHAC effHAC = new EfficientHAC(commentsDO.arrayOfComment, commentsDO.vect);
+		effHAC.runAlgorithm();
+		xmlGenerator xmlGen = new xmlGenerator(articleID, effHAC.a, newNumOfComments);
+		Maintenance maintenance = new Maintenance();
+		maintenance.mapXmlHacToClusters(articleID);
+		
+	}
 
 }
