@@ -9,8 +9,6 @@ import javax.ws.rs.core.Response;
 
 import org.springframework.stereotype.Service;
 
-import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
-import sce.finalprojects.sceprojectbackend.datatypes.GetClusterCommentsResponse;
 
 /*
  * This REST exposes operations that can be performed on comments of the given cluster
@@ -32,7 +30,6 @@ public class CommentsOperationsREST {
 	@GET
 	@Path("/more")
 	public Response getClusterComments(@QueryParam("articleid") String articleId, @QueryParam("clusterid") String clusterID, @QueryParam("level") int level, @QueryParam("from") int from, @QueryParam("to") int to){
-		GetClusterCommentsResponse response = new GetClusterCommentsResponse();
 		//response.setMarkup(DatabaseOperations.getCommentsForGivenCluster(articleId, clusterID, level, from, to));
 		return Response.ok(clusterID).build();
 	}

@@ -7,10 +7,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import sce.finalprojects.sceprojectbackend.database.DatabaseObjectCacheImpl;
-import sce.finalprojects.sceprojectbackend.datatypes.Cachable;
-import sce.finalprojects.sceprojectbackend.datatypes.CacheToken;
-
 public class DatabaseManager {
 	
 	

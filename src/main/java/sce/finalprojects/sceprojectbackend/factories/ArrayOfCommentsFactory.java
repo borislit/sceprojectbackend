@@ -1,6 +1,5 @@
 package sce.finalprojects.sceprojectbackend.factories;
 import java.util.ArrayList;
-import java.util.Vector;
 
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.ArrayOfCommentsDO;

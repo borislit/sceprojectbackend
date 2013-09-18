@@ -1,7 +1,6 @@
 package sce.finalprojects.sceprojectbackend.managers;
 
 import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
