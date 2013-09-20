@@ -130,7 +130,7 @@ public class EfficientHACRegularTsts {
 	public void testInitiateFlow() throws Exception {
 		
 		DatabaseOperations.cleaArticleFromDB("123");
-		int numOfCom = 200;
+		int numOfCom = 10;
 		String url = "http://news.yahoo.com/_xhr/contentcomments/get_comments/?content_id=5ba15d36-0b2f-34bd-8950-11e69eab2ba0&_device=full&count=10&sortBy=highestRated&isNext=true&offset=10&pageNumber=1&_media.modules.content_comments.switches._enable_view_others=1&_media.modules.content_comments.switches._enable_mutecommenter=1&enable_collapsed_comment=1";
 		
 		DatabaseOperations.addNewArticle("123", url, numOfCom,"dummy" );
@@ -153,7 +153,7 @@ public class EfficientHACRegularTsts {
 		String articleUrl = DatabaseOperations.getUrl(articleID);
 		String newNumUrl = DatabaseOperations.getNewNumberOfCommentsUrl(articleID);
 		ArrayList<String> articleCommentsMarkup = DatabaseOperations.getAllArticleCommentsHtml(articleID);
-		int newNumOfComments = MarkupUtility.getLatestCommentAmount(newNumUrl);// 10;
+		int newNumOfComments = /*MarkupUtility.getLatestCommentAmount(newNumUrl);*/ 15;
 		
 		//1.Retrieve only the new comments + replace the old vectors + set the new words (SARIT)
 		ArrayList<CommentEntityDS> updatedArticleComments =  MaintenanceDataManager.gettingCommentsForMaintenance(articleUrl, articleID, newNumOfComments, DatabaseOperations.getArticleNumOfComments(articleID), articleCommentsMarkup);
@@ -191,8 +191,8 @@ public class EfficientHACRegularTsts {
 	@Test
 	public void testDBfunc(){
 		
-		int a = MarkupUtility.getLatestCommentAmount("http://news.yahoo.com/_xhr/contentcomments/get_all/?5dfccac3-8873-3941-845c-c9e1de3d20cc&_device=full&done=http%3A%2F%2Fnews.yahoo.com%2Fobama-boehner-locked-another-budget-battle-deadlines-loom-004717091.html&_media.modules.content_comments.switches._enable_view_others=1&_media.modules.content_comments.switches._enable_mutecommenter=1&enable_collapsed_comment=1");
-		System.out.println(a);
+		//int a = MarkupUtility.getLatestCommentAmount("http://news.yahoo.com/_xhr/contentcomments/get_all/?5dfccac3-8873-3941-845c-c9e1de3d20cc&_device=full&done=http%3A%2F%2Fnews.yahoo.com%2Fobama-boehner-locked-another-budget-battle-deadlines-loom-004717091--business.html&_media.modules.content_comments.switches._enable_view_others=1&_media.modules.content_comments.switches._enable_mutecommenter=1&enable_collapsed_comment=1");
+		//System.out.println(a);
 		ArrayList<ArrayList<Double>> replacedVector = new ArrayList<ArrayList<Double>>();
 		ArrayList<Double> nea = new ArrayList<Double>();
 		nea.add(0.0);

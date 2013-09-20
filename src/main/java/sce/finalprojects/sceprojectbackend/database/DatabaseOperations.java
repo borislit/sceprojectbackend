@@ -270,12 +270,12 @@ public class DatabaseOperations {
     	Connection conn;
 		try {
 			conn = DatabaseManager.getInstance().getConnection();
-			PreparedStatement sqlQuerry = conn.prepareStatement("SELECT comments_amount_url FROM articles WHERE article_id = ? ;");
+			PreparedStatement sqlQuerry = conn.prepareStatement("SELECT `comments_amount_url` FROM articles WHERE article_id = ? ;");
 			sqlQuerry.setString(1, articleId);
 			ResultSet rs = sqlQuerry.executeQuery();
 			
 			while(rs.next()) {
-				return rs.getString("url");
+				return rs.getString("comments_amount_url");
 			}
 		} catch (SQLException e) {e.printStackTrace();}
 		
