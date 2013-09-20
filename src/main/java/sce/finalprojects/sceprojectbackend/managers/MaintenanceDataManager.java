@@ -66,11 +66,11 @@ public class MaintenanceDataManager {
 				commentsArray[i].setVector(commentsVectors.get(i + lastComment));
 				arrayListOfComments.add(commentsArray[i]);
 			}
-			ArrayList<String> a = DatabaseOperations.getArticleWords(articleId);
+			//ArrayList<String> a = DatabaseOperations.getArticleWords(articleId);
 			
 			DatabaseOperations.setArticleWords(articleId, TextProcessingManager.wordsArray);
-			System.out.println(a);
-			System.out.println(TextProcessingManager.wordsArray);
+//			System.out.println(a);
+//			System.out.println(TextProcessingManager.wordsArray);
 			
 //			for(int i=0; i<a.size();i++)
 //				if(!(a.get(i).equals(TextProcessingManager.wordsArray.get(i))))

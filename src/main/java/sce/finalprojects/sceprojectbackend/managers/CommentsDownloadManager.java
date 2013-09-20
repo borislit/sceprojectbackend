@@ -130,6 +130,7 @@ public class CommentsDownloadManager {
     public String prepareCommentToTextProcessing(String comment)
 	{
 		  String tempComment = comment;
+		  tempComment = tempComment.replaceAll("(&#39;)", "");
 		  tempComment = tempComment.replaceAll("\\W", " ");
 		  tempComment = tempComment.replaceAll("( quot )", "");
 		  tempComment = tempComment.replaceAll("( n )", "");
