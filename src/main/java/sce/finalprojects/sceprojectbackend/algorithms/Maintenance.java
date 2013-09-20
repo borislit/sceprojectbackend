@@ -140,7 +140,7 @@ public class Maintenance {
 	 * @param vector
 	 * @throws Exception
 	 */
-	public void addNewElementsToHAC(ArrayList<CommentEntityDS> neCommentDSArray, String articleId, double[] vector) throws Exception {
+	public void addNewElementsToHAC(ArrayList<CommentEntityDS> neCommentDSArray, String articleId) throws Exception {
 	
 		//docFactory
 		DocFactory documentFactory = new DocFactory();
@@ -152,6 +152,9 @@ public class Maintenance {
 		ArrayOfCommentsFactory commentsArrayFactory = new ArrayOfCommentsFactory();
 		ArrayOfCommentsDO arrayOfCommentsDO = new ArrayOfCommentsDO(articleId, null);
 		arrayOfCommentsDO = commentsArrayFactory.get(articleId);
+		
+		//create the vector
+		double[] vector = new double[DatabaseOperations.getWordsCountForArticle(articleId)];
 		
 		ArrayList<Comment> neArray = Comment.convertCommentsDStoCommentsArrayList(neCommentDSArray);
 		

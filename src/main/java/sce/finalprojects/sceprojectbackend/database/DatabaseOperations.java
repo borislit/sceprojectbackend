@@ -215,7 +215,7 @@ public class DatabaseOperations {
 	public static void addNewArticle(String articleId, String articleUrl, int numOfComments, String commentsAmountURL) {
 		try{
 	    	Connection conn = DatabaseManager.getInstance().getConnection();
-			PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO articles (article_id,url,number_of_comments,creation_time) VALUES (?,?,?,?,NOW()) ;");
+			PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO articles (article_id,url,number_of_comments,comments_amount_url,creation_time) VALUES (?,?,?,?,NOW()) ;");
 			sqlQuerry.setString(1, articleId);
 			sqlQuerry.setString(2, articleUrl);
 			sqlQuerry.setInt(3, numOfComments);
@@ -264,6 +264,30 @@ public class DatabaseOperations {
      * @return
      * @throws SQLException
      */
+    public static String getNewNumberOfCommentsUrl(String articleId)
+    {
+    	//TODO check that method
+    	Connection conn;
+		try {
+			conn = DatabaseManager.getInstance().getConnection();
+			PreparedStatement sqlQuerry = conn.prepareStatement("SELECT comments_amount_url FROM articles WHERE article_id = ? ;");
+			sqlQuerry.setString(1, articleId);
+			ResultSet rs = sqlQuerry.executeQuery();
+			
+			while(rs.next()) {
+				return rs.getString("url");
+			}
+		} catch (SQLException e) {e.printStackTrace();}
+		
+		return null;
+    }
+    
+    /**
+     * return the URL of given Article_id
+     * @param articleId
+     * @return
+     * @throws SQLException
+     */
     public static String getUrl(String articleId)
     {
     	//TODO check that method
@@ -290,7 +314,7 @@ public class DatabaseOperations {
      */
     public static void setArticleNumOfComments(String articleId, int numberOfComments) throws SQLException
     {
-    	//TODO check that method
+
     	Connection conn = DatabaseManager.getInstance().getConnection();
 		PreparedStatement sqlQuerry = conn.prepareStatement("UPDATE articles SET number_of_comments = ? WHERE article_id = ? ;");
 		sqlQuerry.setInt(1, numberOfComments);
