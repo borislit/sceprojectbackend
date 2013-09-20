@@ -5,9 +5,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
 import sce.finalprojects.sceprojectbackend.utils.HelperFunctions;
+import sce.finalprojects.sceprojectbackend.utils.MarkupUtility;
 import sce.finalprojects.sceprojectbackend.textProcessing.TextProcessingManager;
 import DataTypes.StatisticData;
 
@@ -45,7 +47,8 @@ public class MaintenanceDataManager {
 			CommentsDownloadManager cdm = new CommentsDownloadManager();
 			int htmlArrSize = htmlArr.size();
 			for(int i=0; i<htmlArrSize; i++)
-				finalString.append(cdm.cleanTheCommentFromTheHtml(htmlArr.get(i)));
+				finalString.append(cdm.prepareCommentToTextProcessing(MarkupUtility.getCommentBodyFromMarkup(htmlArr.get(i))) + " ");
+
 		}
 		for(int i=0; i<numOfThreads; i++)
 			finalString.append(commentsString[i]);

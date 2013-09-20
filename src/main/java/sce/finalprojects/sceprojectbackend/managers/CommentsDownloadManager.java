@@ -116,13 +116,13 @@ public class CommentsDownloadManager {
     }
     
     public String cleanTheCommentFromTheHtml(String html){
-    	String[] splitComment = html.split("comment-content");//get and set the clear comment from the html 
+    	String[] splitComment = html.split("comment-content");//get the clear comment from the html 
 		splitComment = splitComment[1].split("p>");
 		String clearComment = splitComment[0];
 		clearComment = clearComment.replaceAll("[ ]+", " ");
 		clearComment = (clearComment.substring(6, clearComment.length() - 6));
 		clearComment = prepareCommentToTextProcessing(clearComment);
-		
+				
 		return clearComment;
     	
     }
@@ -131,6 +131,7 @@ public class CommentsDownloadManager {
 	{
 		  String tempComment = comment;
 		  tempComment = tempComment.replaceAll("(&#39;)", "");
+		  tempComment = tempComment.replaceAll("(')", "");		  
 		  tempComment = tempComment.replaceAll("\\W", " ");
 		  tempComment = tempComment.replaceAll("( quot )", "");
 		  tempComment = tempComment.replaceAll("( n )", "");
@@ -157,7 +158,8 @@ public class CommentsDownloadManager {
 		  tempComment = tempComment + ".";
 		  tempComment = tempComment.replaceFirst("[ ]+\\.", ".");
 		  tempComment = tempComment.toLowerCase();
-		  
+		  		  
+		  System.out.println(tempComment);
 		  return tempComment;
 	}
 	
