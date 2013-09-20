@@ -20,7 +20,7 @@ public class ArrayOfCommentsDO extends Cachable{
 	}
 	
 	 private double[] setVector(String articleId) {
-		return new double[DatabaseOperations.getWordsCountForArticle(articleId) + 1];  //plus 1 -  the artificial number
+		return new double[DatabaseOperations.getWordsCountForArticle(articleId) + 1];  //plus 1 -  the artificial number 
 	}
 	 
 	 //TODO: check if it does the job

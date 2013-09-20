@@ -13,6 +13,7 @@ public class Comment {
 
 	public ArrayList<Double> vector;
 
+	private static final long serialVersionUID = -4583735157048203313L;
 
 	/**
 	 * constructor that get id of comment and vector arry and create a comment from it

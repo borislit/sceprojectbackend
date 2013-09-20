@@ -178,7 +178,7 @@ public class EfficientHACRegularTsts {
 	@Test
 	public void testMaintenanceFlow() throws Exception {
 		String articleID = "123";
-		int newNumOfComments = /*getLatestNumberOfCommentsInTheArticle()*/ 10;
+		int newNumOfComments = /*getLatestNumberOfCommentsInTheArticle()*/ 12;
 		//1. get the new comments
 		//2. get the old comments
 		//3.get the mapping that existing

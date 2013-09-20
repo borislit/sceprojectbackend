@@ -153,8 +153,8 @@ public class Maintenance {
 		ArrayOfCommentsDO arrayOfCommentsDO = new ArrayOfCommentsDO(articleId, null);
 		arrayOfCommentsDO = commentsArrayFactory.get(articleId);
 		
-		//create the vector
-		double[] vector = new double[DatabaseOperations.getWordsCountForArticle(articleId)];
+		//copy the vector
+		double[] vector = arrayOfCommentsDO.vect;
 		
 		ArrayList<Comment> neArray = Comment.convertCommentsDStoCommentsArrayList(neCommentDSArray);
 		
