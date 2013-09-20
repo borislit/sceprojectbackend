@@ -41,6 +41,7 @@ public class ArticleOperationsREST {
 	 * Kicks off article lifecycle within the sytem. Receives an object, with all information required for the setup
 	 * This is the article's entry point into the system
 	 */
+	@SuppressWarnings("unchecked")
 	@POST
 	@Path("/setup")
 	public Response setupArticle(ArticleSetupRequestDO request){

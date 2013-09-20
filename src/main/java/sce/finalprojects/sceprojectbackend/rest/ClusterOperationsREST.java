@@ -14,14 +14,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
-
-import com.sun.istack.NotNull;
-
-import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.ClusterRepresentationDO;
-import sce.finalprojects.sceprojectbackend.datatypes.GetClustersResponse;
-import sce.finalprojects.sceprojectbackend.utils.MarkupUtility;
+
 
 
 /*

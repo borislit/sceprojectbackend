@@ -3,7 +3,7 @@ package sce.finalprojects.sceprojectbackend.datatypes;
 import java.util.ArrayList;
 
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
-import sce.finalprojects.sceprojectbackend.factories.ArrayOfCommentsFactory;
+
 import sce.finalprojects.sceprojectbackend.managers.CacheManager;
 
 public class ArrayOfCommentsDO extends Cachable{

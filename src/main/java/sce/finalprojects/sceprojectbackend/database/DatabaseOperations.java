@@ -212,13 +212,14 @@ public class DatabaseOperations {
 	 * @param numOfComments
 	 * @throws SQLException
 	 */
-	public static void addNewArticle(String articleId, String articleUrl, int numOfComments) {
+	public static void addNewArticle(String articleId, String articleUrl, int numOfComments, String commentsAmountURL) {
 		try{
 	    	Connection conn = DatabaseManager.getInstance().getConnection();
-			PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO articles (article_id,url,number_of_comments,creation_time) VALUES (?,?,?,NOW()) ;");
+			PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO articles (article_id,url,number_of_comments,creation_time) VALUES (?,?,?,?,NOW()) ;");
 			sqlQuerry.setString(1, articleId);
 			sqlQuerry.setString(2, articleUrl);
 			sqlQuerry.setInt(3, numOfComments);
+			sqlQuerry.setString(4, commentsAmountURL);
 			
 //			java.text.SimpleDateFormat sdf = 
 //			     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
