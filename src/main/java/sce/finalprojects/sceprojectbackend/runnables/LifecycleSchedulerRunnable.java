@@ -77,6 +77,7 @@ public class LifecycleSchedulerRunnable implements Callable<Set<ClusterRepresent
 			maintenance.mapXmlHacToClusters(this.articleID);
 			
 			return DatabaseOperations.getHACRootID(this.articleID);
+		
 
 		}else{
 			if(runsCounter%3 == 0){

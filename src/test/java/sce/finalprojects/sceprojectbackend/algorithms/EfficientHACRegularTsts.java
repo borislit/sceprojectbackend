@@ -130,7 +130,7 @@ public class EfficientHACRegularTsts {
 	public void testInitiateFlow() throws Exception {
 		
 		DatabaseOperations.cleaArticleFromDB("123");
-		int numOfCom = 10;
+		int numOfCom = 1;
 		String url = "http://news.yahoo.com/_xhr/contentcomments/get_comments/?content_id=5ba15d36-0b2f-34bd-8950-11e69eab2ba0&_device=full&count=10&sortBy=highestRated&isNext=true&offset=10&pageNumber=1&_media.modules.content_comments.switches._enable_view_others=1&_media.modules.content_comments.switches._enable_mutecommenter=1&enable_collapsed_comment=1";
 		
 		DatabaseOperations.addNewArticle("123", url, numOfCom,"dummy" );
@@ -153,7 +153,7 @@ public class EfficientHACRegularTsts {
 		String articleUrl = DatabaseOperations.getUrl(articleID);
 		String newNumUrl = DatabaseOperations.getNewNumberOfCommentsUrl(articleID);
 		ArrayList<String> articleCommentsMarkup = DatabaseOperations.getAllArticleCommentsHtml(articleID);
-		int newNumOfComments = /*MarkupUtility.getLatestCommentAmount(newNumUrl);*/ 15;
+		int newNumOfComments = /*MarkupUtility.getLatestCommentAmount(newNumUrl);*/ 620;
 		
 		//1.Retrieve only the new comments + replace the old vectors + set the new words (SARIT)
 		ArrayList<CommentEntityDS> updatedArticleComments =  MaintenanceDataManager.gettingCommentsForMaintenance(articleUrl, articleID, newNumOfComments, DatabaseOperations.getArticleNumOfComments(articleID), articleCommentsMarkup);
@@ -178,7 +178,7 @@ public class EfficientHACRegularTsts {
 	@Test
 	public void testMaintenanceFlow() throws Exception {
 		String articleID = "123";
-		int newNumOfComments = /*getLatestNumberOfCommentsInTheArticle()*/ 12;
+		int newNumOfComments = /*getLatestNumberOfCommentsInTheArticle()*/ 420;
 		//1. get the new comments
 		//2. get the old comments
 		//3.get the mapping that existing

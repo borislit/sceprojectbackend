@@ -13,14 +13,9 @@ public class GetClusterCommentsResponse {
 		return markup;
 	}
 
-	public void setMarkup(List<String> markupList) {
+	public void setMarkup(String markup) {
 		
-		StringBuilder sb = new StringBuilder();
-		
-		for(String tmpMarkup: markupList)
-			sb.append(tmpMarkup);
-		
-		markup = sb.toString();
+		this.markup = markup;
 	}
 
 }

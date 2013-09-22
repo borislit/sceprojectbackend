@@ -9,6 +9,14 @@ public class ArticleSetupRequestDO {
 	
 	String url;
 	int commentsCount;
+	public ArticleSetupRequestDO(String url, int commentsCount,
+			String articleID, String commentsAmountRetrievalURL) {
+		super();
+		this.url = url;
+		this.commentsCount = commentsCount;
+		this.articleID = articleID;
+		this.commentsAmountRetrievalURL = commentsAmountRetrievalURL;
+	}
 	String articleID;
 	String commentsAmountRetrievalURL;
 	

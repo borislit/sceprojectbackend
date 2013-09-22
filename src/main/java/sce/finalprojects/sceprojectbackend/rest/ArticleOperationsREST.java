@@ -5,9 +5,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledFuture;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.springframework.stereotype.Service;
@@ -42,17 +44,21 @@ public class ArticleOperationsREST {
 	 * This is the article's entry point into the system
 	 */
 	@SuppressWarnings("unchecked")
-	@POST
+	@GET
 	@Path("/setup")
-	public Response setupArticle(ArticleSetupRequestDO request){
+	public Response setupArticle(@QueryParam("url") String URL, @QueryParam("count") int count, @QueryParam("articleid")String articleID, @QueryParam("commentscountrest") String commentAmountURL){
+		ArticleSetupRequestDO setupRequest = new ArticleSetupRequestDO(URL, count, articleID, commentAmountURL);
 		Set<ClusterRepresentationDO> response = null;
-		if(DatabaseOperations.checkArticleExitanceByID(request.getArticleID())){
+		
+		DatabaseOperations.cleaArticleFromDB(articleID);
+		
+		if(DatabaseOperations.checkArticleExitanceByID(setupRequest.getArticleID())){
 			
-			response = DatabaseOperations.getHACRootID(request.getArticleID());
+			response = DatabaseOperations.getHACRootID(setupRequest.getArticleID());
 			
 		}else{
 			
-			ScheduledFuture<?> task = LifecycleScheduleManager.createLifecycleForArticle(request);
+			ScheduledFuture<?> task = LifecycleScheduleManager.createLifecycleForArticle(setupRequest);
 			
 			try {
 				

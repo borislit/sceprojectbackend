@@ -19,8 +19,6 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
 
    <jaxrs:server id="services" address="/">
     <jaxrs:serviceBeans>
-      <bean class="sce.finalprojects.sceprojectbackend.HelloWorld" />
-      <bean class="sce.finalprojects.sceprojectbackend.rest.ExampleRest" />
       <bean class="sce.finalprojects.sceprojectbackend.rest.ArticleOperationsREST" />
       <bean class="sce.finalprojects.sceprojectbackend.rest.CommentsOperationsREST" />
       <bean class="sce.finalprojects.sceprojectbackend.rest.ClusterOperationsREST" />
