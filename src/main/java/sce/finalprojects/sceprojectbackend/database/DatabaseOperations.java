@@ -354,7 +354,7 @@ public class DatabaseOperations {
     	try {
 			Connection conn = DatabaseManager.getInstance().getConnection();
 			Map<String, String> childrenIDs = new HashMap<String, String>();
-			String qryString = "SELECT comms.comment_id,html FROM comments comms, HACNodesMapping mapping WHERE comms.comment_id=mapping.comment_id AND mapping.article_id=? AND mapping.node_mapping = \""+clusterID+"_"+level+"\" AND direct=1";
+			String qryString = "SELECT comms.comment_id,html FROM comments comms, HACNodesMapping mapping WHERE comms.comment_id=mapping.comment_id AND comms.article_id=mapping.article_id AND mapping.article_id=? AND mapping.node_mapping = \""+clusterID+"_"+level+"\" AND direct=1";
 	    	PreparedStatement qry = conn.prepareStatement(qryString);
 			qry.setString(1, articleID);
 			ResultSet rs = qry.executeQuery();
@@ -418,7 +418,7 @@ public class DatabaseOperations {
     		
     		conn = DatabaseManager.getInstance().getConnection();
 
-	    	String qryString = "SELECT html FROM comments comms, HACNodesMapping mapping WHERE comms.comment_id=mapping.comment_id AND mapping.article_id=? AND mapping.node_mapping = ? LIMIT ?,?";
+	    	String qryString = "SELECT html FROM comments comms, HACNodesMapping mapping WHERE comms.comment_id=mapping.comment_id AND mapping.article_id=comms.article_id AND mapping.article_id=? AND mapping.node_mapping = ? LIMIT ?,?";
 	    	
 	    
 	    	PreparedStatement qry = conn.prepareStatement(qryString);
