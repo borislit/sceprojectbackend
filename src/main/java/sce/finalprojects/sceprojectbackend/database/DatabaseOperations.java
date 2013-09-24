@@ -591,7 +591,7 @@ public class DatabaseOperations {
 		try {
 			Connection conn = DatabaseManager.getInstance().getConnection();
 			StringBuffer whenCases = new StringBuffer();
-			StringBuffer whereCase = new StringBuffer("WHERE `article_id` = ").append(articleId).append(" AND `comment_id` IN (");
+			StringBuffer whereCase = new StringBuffer("WHERE `article_id` = '").append(articleId).append("' AND `comment_id` IN (");
 			int i=1;
 			for (ArrayList<Double> arrayList : replacedVector) {
 				whenCases.append("WHEN ").append(i).append(" THEN ").append("\"").append(CommentEntityDS.vectorToString(arrayList)).append("\"\n");
