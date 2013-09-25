@@ -57,7 +57,6 @@ public class LifecycleSchedulerRunnable implements Callable<Set<ClusterRepresent
 	}
 	
 	private void complete(){
-		this.runsCounter++;
 		this.intialAmountOfComments = 0;
 	}
 
@@ -76,6 +75,8 @@ public class LifecycleSchedulerRunnable implements Callable<Set<ClusterRepresent
 				Maintenance maintenance = new Maintenance();
 				maintenance.mapXmlHacToClusters(this.articleID);
 				
+				this.runsCounter++;
+				
 				return DatabaseOperations.getHACRootID(this.articleID);
 			
 	
@@ -84,7 +85,12 @@ public class LifecycleSchedulerRunnable implements Callable<Set<ClusterRepresent
 				int newNumOfComments = MarkupUtility.getLatestCommentAmount(newNumUrl);
 				int currentAmountOfComments = DatabaseOperations.getArticleNumOfComments(articleID);
 				
-				if(currentAmountOfComments >= newNumOfComments) return null;
+				if(currentAmountOfComments >= newNumOfComments){
+					System.out.println("LIFECYCLE: No new comments. Nothing to do");
+					return null;
+				}
+				
+				this.runsCounter++;
 				
 				if(runsCounter%3 == 0){
 					System.out.println("LIFECYCLE: Rebuild run");
@@ -115,11 +121,12 @@ public class LifecycleSchedulerRunnable implements Callable<Set<ClusterRepresent
 					
 				}else{
 					System.out.println("LIFECYCLE: Maintenance run");
-
 					Maintenance maint = new Maintenance();
 					maint.addNewElementsToHAC(MaintenanceDataManager.gettingCommentsForMaintenance(DatabaseOperations.getUrl(articleID), articleID, newNumOfComments, currentAmountOfComments, null), articleID);
 					
 				}
+				
+				
 			}
 			
 		
