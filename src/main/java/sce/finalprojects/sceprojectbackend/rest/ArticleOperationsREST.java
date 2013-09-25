@@ -50,8 +50,6 @@ public class ArticleOperationsREST {
 		ArticleSetupRequestDO setupRequest = new ArticleSetupRequestDO(URL, count, articleID, commentAmountURL);
 		Set<ClusterRepresentationDO> response = null;
 		
-		DatabaseOperations.cleaArticleFromDB(articleID);
-		
 		if(DatabaseOperations.checkArticleExitanceByID(setupRequest.getArticleID())){
 			
 			response = DatabaseOperations.getHACRootID(setupRequest.getArticleID());

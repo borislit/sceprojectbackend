@@ -566,17 +566,17 @@ public class DatabaseOperations {
 	 * clear al the information about the article from the DB
 	 * @param articleId
 	 */
-	public static void cleaArticleFromDB(String articleId) {
+	public static void cleaArticleFromDB() {
 		
 		try {
 			Connection conn = DatabaseManager.getInstance().getConnection();
-			PreparedStatement stmt1 = conn.prepareStatement("DELETE FROM article_words WHERE article_id=\""+articleId+"\"");
+			PreparedStatement stmt1 = conn.prepareStatement("DELETE FROM article_words WHERE 1");
 			stmt1.execute();
-			PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM HACNodesMapping WHERE article_id=\""+articleId+"\"");
+			PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM HACNodesMapping WHERE 1");
 			stmt2.execute();
-			PreparedStatement stmt3 = conn.prepareStatement("DELETE FROM comments WHERE article_id=\""+articleId+"\"");
+			PreparedStatement stmt3 = conn.prepareStatement("DELETE FROM comments WHERE 1");
 			stmt3.execute();
-			PreparedStatement stmt4 = conn.prepareStatement("DELETE FROM articles WHERE article_id=\""+articleId+"\"");
+			PreparedStatement stmt4 = conn.prepareStatement("DELETE FROM articles WHERE 1");
 			stmt4.execute();
 			
 		} catch (SQLException e) {e.printStackTrace();}

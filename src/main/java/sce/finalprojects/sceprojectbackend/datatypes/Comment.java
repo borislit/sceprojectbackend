@@ -1,5 +1,7 @@
 package sce.finalprojects.sceprojectbackend.datatypes;
 import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -7,7 +9,7 @@ import java.util.ArrayList;
  * @author Yuval Simhon
  *
  */
-public class Comment {
+public class Comment implements Serializable{
 
 	public String comment_id;  ///the inner serial number
 

@@ -3,6 +3,7 @@ package sce.finalprojects.sceprojectbackend.config;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.managers.CacheManager;
 import sce.finalprojects.sceprojectbackend.managers.ConfigurationManager;
 
@@ -19,8 +20,15 @@ public class ApplicationStartupListener implements ServletContextListener {
 		if(ConfigurationManager.cacheConfig.isInvalidateCache()){
 			CacheManager.clearCache();
 		}else{
-			System.out.println("Cache kept");
+			System.out.println("STARTUP:Cache kept");
 		}
+		
+		if(ConfigurationManager.dbConfig.isClearDB()){
+			System.out.println("STARTUP: Database Cleared");
+			DatabaseOperations.cleaArticleFromDB();
+		}
+		
+		
 	}
 
 }
