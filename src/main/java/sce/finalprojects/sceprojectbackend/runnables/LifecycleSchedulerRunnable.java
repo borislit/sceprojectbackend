@@ -23,6 +23,7 @@ public class LifecycleSchedulerRunnable implements Callable<Set<ClusterRepresent
 	private String articleID;
 	private String articleUrl;
 	private String commentsAmountURL;
+	private String maintenanceURL;
 	private int runsCounter;
 	private int intialAmountOfComments;
 	private long createTimestamp;
@@ -35,6 +36,7 @@ public class LifecycleSchedulerRunnable implements Callable<Set<ClusterRepresent
 		this.intialAmountOfComments = request.getCommentsCount();
 		this.commentsAmountURL = request.getCommentsAmountRetrievalURL();
 		this.createTimestamp = System.currentTimeMillis();
+		this.maintenanceURL = request.getMaintenanceURL();
 
 	}
 	
