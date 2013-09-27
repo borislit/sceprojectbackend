@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -18,7 +19,9 @@ import org.jsoup.select.Elements;
 public class MarkupUtility {
 	
 	private final static String COMMENTS_AMOUNT_MARKUP_JSON_VAR = "module";
+	private final static String PAGINATION_KEY_MARKUP_JSON_VAR = "more";
 	private final static String COMMENTS_AMOUNT_CONTAINER_SELECTOR = "#collapsed-comments-show";
+	private final static String PAGINATION_KEY_CONTAINER_SELECTOR = ".generic-button .int";
 	private final static String USER_AGENT = "Mozilla/5.0";
 	
 	public static String  getCommentBodyFromMarkup(String markup){
@@ -84,6 +87,37 @@ public class MarkupUtility {
 		}
         
         return -1;
+	}
+	
+	public static String getNextPaginationKey(String jsonResponse){
+		
+		try{
+	    		JSONParser parser = new JSONParser();
+	            JSONObject jsonObject;
+	    			jsonObject = (JSONObject) parser.parse(jsonResponse);
+
+	            
+	    	        String commentsMarkup = (String) jsonObject.get(PAGINATION_KEY_MARKUP_JSON_VAR);
+	    	       
+	    	        Document doc = Jsoup.parse(commentsMarkup);
+	    	        Elements selectedElements =  doc.select(PAGINATION_KEY_CONTAINER_SELECTOR);
+	    	        Element elem = selectedElements.get(0);
+	    	        String queryParams = elem.attr("data-query");
+	    	        Pattern pattern = Pattern.compile("%3A[a-zA-Z0-9-%]+&");
+	    	        Matcher matcher = pattern.matcher(queryParams);
+	    	        
+	    	        matcher.find();
+	    	        
+	    	        return matcher.group();
+	    		
+	       
+	        } catch (org.json.simple.parser.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				
+			}
+	        
+	        return null;
 	}
 
 }

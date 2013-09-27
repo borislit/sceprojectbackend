@@ -7,24 +7,28 @@ public class ArticleSetupRequestDO {
 	
 	//{ url: composedUrl, count: ct.getCommnetsCount(), articleid:  content_id}
 	
-	String url;
+	String buildingURL;
+	String maintenanceURL;
 	int commentsCount;
-	public ArticleSetupRequestDO(String url, int commentsCount,
-			String articleID, String commentsAmountRetrievalURL) {
-		super();
-		this.url = url;
-		this.commentsCount = commentsCount;
-		this.articleID = articleID;
-		this.commentsAmountRetrievalURL = commentsAmountRetrievalURL;
-	}
 	String articleID;
 	String commentsAmountRetrievalURL;
 	
+	public ArticleSetupRequestDO(String url, String maintenanceURL, String commentsAmountRetrievalURL, int commentsCount,
+			String articleID) {
+		super();
+		this.buildingURL = url;
+		this.commentsCount = commentsCount;
+		this.articleID = articleID;
+		this.commentsAmountRetrievalURL = commentsAmountRetrievalURL;
+		this.maintenanceURL = maintenanceURL;
+	}
+
+	
 	public String getUrl() {
-		return url;
+		return buildingURL;
 	}
 	public void setUrl(String url) {
-		this.url = url;
+		this.buildingURL = url;
 	}
 
 	public String getArticleID() {
@@ -44,6 +48,26 @@ public class ArticleSetupRequestDO {
 	}
 	public void setCommentsAmountRetrievalURL(String commentsAmountRetrievalURL) {
 		this.commentsAmountRetrievalURL = commentsAmountRetrievalURL;
+	}
+
+
+	public String getBuildingURL() {
+		return buildingURL;
+	}
+
+
+	public void setBuildingURL(String buildingURL) {
+		this.buildingURL = buildingURL;
+	}
+
+
+	public String getMaintenanceURL() {
+		return maintenanceURL;
+	}
+
+
+	public void setMaintenanceURL(String maintenanceURL) {
+		this.maintenanceURL = maintenanceURL;
 	}
 
 }

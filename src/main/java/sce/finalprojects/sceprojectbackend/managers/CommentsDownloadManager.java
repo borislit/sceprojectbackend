@@ -29,14 +29,16 @@ public class CommentsDownloadManager {
 				
 		if(lastComment == 0)
 			do{
-				htmlArr = getHtmlCommentsFromYahoo(uh.getFixUrl(uh.buildUrl(url), (threadId-1) * 100));			
+				URL getCommentsURL = uh.getFixUrl(uh.buildUrl(url), (threadId-1) * 100);
+				htmlArr = getHtmlCommentsFromYahoo(getCommentsURL);			
 			}while(htmlArr == null);
 		else{
 			initialOffset = (lastComment/100) * 100;
 			if(threadId == 1)
 				beginningComment = lastComment - initialOffset;			
 			do{
-				htmlArr = getHtmlCommentsFromYahoo(uh.getFixUrl(uh.buildUrl(url), ((threadId-1) * 100) + initialOffset));	
+				URL getCommentsURL = uh.getFixUrl(uh.buildUrl(url), ((threadId-1) * 100) + initialOffset);
+				htmlArr = getHtmlCommentsFromYahoo(getCommentsURL);	
 			}while(htmlArr == null);
 		}
 		

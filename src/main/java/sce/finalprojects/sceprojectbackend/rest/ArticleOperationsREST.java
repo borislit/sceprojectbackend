@@ -46,8 +46,8 @@ public class ArticleOperationsREST {
 	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/setup")
-	public Response setupArticle(@QueryParam("url") String URL, @QueryParam("count") int count, @QueryParam("articleid")String articleID, @QueryParam("commentscountrest") String commentAmountURL){
-		ArticleSetupRequestDO setupRequest = new ArticleSetupRequestDO(URL, count, articleID, commentAmountURL);
+	public Response setupArticle(@QueryParam("building_url") String buildingUrl, @QueryParam("maintenance_url") String maintenanceUrl, @QueryParam("comments_amount_url") String commentAmountURL, @QueryParam("count") int count, @QueryParam("articleid")String articleID){
+		ArticleSetupRequestDO setupRequest = new ArticleSetupRequestDO(buildingUrl, maintenanceUrl, commentAmountURL, count, articleID );
 		Set<ClusterRepresentationDO> response = null;
 		
 		if(DatabaseOperations.checkArticleExitanceByID(setupRequest.getArticleID())){
