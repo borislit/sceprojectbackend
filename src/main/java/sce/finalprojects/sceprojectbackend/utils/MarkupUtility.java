@@ -21,7 +21,7 @@ public class MarkupUtility {
 	private final static String COMMENTS_AMOUNT_MARKUP_JSON_VAR = "module";
 	private final static String PAGINATION_KEY_MARKUP_JSON_VAR = "more";
 	private final static String COMMENTS_AMOUNT_CONTAINER_SELECTOR = "#collapsed-comments-show";
-	private final static String PAGINATION_KEY_CONTAINER_SELECTOR = ".generic-button .int";
+	private final static String PAGINATION_KEY_CONTAINER_SELECTOR = ".generic-button";
 	private final static String USER_AGENT = "Mozilla/5.0";
 	
 	public static String  getCommentBodyFromMarkup(String markup){
