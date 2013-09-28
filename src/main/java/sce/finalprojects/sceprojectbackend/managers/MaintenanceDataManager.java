@@ -36,8 +36,21 @@ public class MaintenanceDataManager {
 		cdm = new CommentsDownloadManager();
 		int numOfKeys = newNumOfComments/100 + 1;
 		arrayOfKeys = new String[numOfKeys]; 
-						
+		
+		if(lastComment <= 110)		
 		arrayOfKeys[0] = getKeyFromURL(urlString);
+		
+		else{
+			String tempUrl = urlString;
+			for(int i=0; i<lastComment; i++)
+			{
+				if(i == 0){
+					arrayOfKeys[i] = cdm.getJsonObjectFromYahoo(tempUrl);
+				}
+				
+			}
+		}
+		
 		//TODO get all the keys if the last comment is larger then 100
 		
 
@@ -96,7 +109,6 @@ public class MaintenanceDataManager {
 		}
 		//the words saved in the data base in the method vectorsCompletionForMaintenance
 
-		//TODO check how to save the new num of comments, the num of comments that save in the DB + the size of the array
 		DatabaseOperations.setArticleNumOfComments(articleId, (DatabaseOperations.getArticleNumOfComments(articleId) + arrayListOfComments.size()));
 
 		return arrayListOfComments;
@@ -189,7 +201,6 @@ public class MaintenanceDataManager {
 		
 		DatabaseOperations.setArticleWords(articleId, TextProcessingManager.wordsArray);
 
-		//TODO check how to save the new num of comments, the num of comments that save in the DB + the size of the array
 		DatabaseOperations.setArticleNumOfComments(articleId, (DatabaseOperations.getArticleNumOfComments(articleId) + arrayListOfComments.size()));
 
 		return arrayListOfComments;
@@ -197,7 +208,7 @@ public class MaintenanceDataManager {
 	
 	public static String getKeyFromURL(String url)
 	{
-		String[] temp = url.split("sortBy=oldest&");
+		String[] temp = url.split("exprKey=Ascending");
 		temp = temp[1].split("isNext=true");
 		
 		return temp[0];
