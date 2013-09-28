@@ -30,16 +30,22 @@ public class CommentsDownloadManager {
 				
 		if(lastComment == 0)
 			do{
+<<<<<<< HEAD
 				System.out.println(uh.getFixUrl(uh.buildUrl(url), (threadId-1) * 100));
 				htmlArr = getHtmlCommentsFromYahoo(uh.getFixUrl(uh.buildUrl(url), (threadId-1) * 100));		
 				//htmlArr = getHtmlCommentsFromYahoo(uh.getFixUrl(uh.buildUrl(url), String key, int pageNumber);
+=======
+				URL getCommentsURL = uh.getFixUrl(uh.buildUrl(url), (threadId-1) * 100);
+				htmlArr = getHtmlCommentsFromYahoo(getCommentsURL);			
+>>>>>>> 3dd46f7c4f064d6bf9c39618d706dd736caba9d9
 			}while(htmlArr == null);
 		else{
 			initialOffset = (lastComment/100) * 100;
 			if(threadId == 1)
 				beginningComment = lastComment - initialOffset;			
 			do{
-				htmlArr = getHtmlCommentsFromYahoo(uh.getFixUrl(uh.buildUrl(url), ((threadId-1) * 100) + initialOffset));	
+				URL getCommentsURL = uh.getFixUrl(uh.buildUrl(url), ((threadId-1) * 100) + initialOffset);
+				htmlArr = getHtmlCommentsFromYahoo(getCommentsURL);	
 			}while(htmlArr == null);
 		}
 		

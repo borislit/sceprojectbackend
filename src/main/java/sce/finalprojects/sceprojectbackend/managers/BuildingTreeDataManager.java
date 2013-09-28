@@ -18,7 +18,7 @@ public class BuildingTreeDataManager {
 
 	/**
 	 * this function called the first time we want to build the HAC tree, by the plug in
-	 * @param url of the current article
+	 * @param buildingURL of the current article
 	 * @param articleId
 	 * @param numOfComments that the article have
 	 * @throws FileNotFoundException 
