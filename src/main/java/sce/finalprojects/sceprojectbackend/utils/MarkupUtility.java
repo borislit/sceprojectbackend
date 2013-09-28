@@ -98,7 +98,9 @@ public class MarkupUtility {
 
 	            
 	    	        String commentsMarkup = (String) jsonObject.get(PAGINATION_KEY_MARKUP_JSON_VAR);
-	    	       
+	    	        
+	    	        if(commentsMarkup == null || commentsMarkup.length() == 0) return null;
+	    	        
 	    	        Document doc = Jsoup.parse(commentsMarkup);
 	    	        Elements selectedElements =  doc.select(PAGINATION_KEY_CONTAINER_SELECTOR);
 	    	        Element elem = selectedElements.get(0);
