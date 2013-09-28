@@ -197,7 +197,7 @@ public class MaintenanceDataManager {
 	
 	public static String getKeyFromURL(String url)
 	{
-		String[] temp = url.split("sortBy=latest&");
+		String[] temp = url.split("sortBy=oldest&");
 		temp = temp[1].split("isNext=true");
 		
 		return temp[0];
