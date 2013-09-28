@@ -61,8 +61,8 @@ public class UrlHelper {
    
         qry = qry.replaceAll("count=[0-9]+&", placeholders[0]);
         qry = qry.replaceAll("pageNumber=[0-9]+&", placeholders[1]);
-        //qry = qry.replaceAll("exprKey=Ascending%3A[a-zA-Z0-9-%]+&", placeholders[2]);
-        qry = qry.replaceAll("%3A[a-zA-Z0-9-%]+&", placeholders[2]);
+        qry = qry.replaceAll("exprKey=Ascending%3A[a-zA-Z0-9-%]+&", placeholders[2]);
+        //qry = qry.replaceAll("%3A[a-zA-Z0-9-%]+&", placeholders[2]);
 
 
         try {
