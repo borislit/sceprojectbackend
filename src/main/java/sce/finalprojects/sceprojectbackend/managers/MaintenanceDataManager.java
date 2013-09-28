@@ -97,6 +97,7 @@ public class MaintenanceDataManager {
 		//the words saved in the data base in the method vectorsCompletionForMaintenance
 
 		//TODO check how to save the new num of comments, the num of comments that save in the DB + the size of the array
+		DatabaseOperations.setArticleNumOfComments(articleId, (DatabaseOperations.getArticleNumOfComments(articleId) + arrayListOfComments.size()));
 
 		return arrayListOfComments;
 		
@@ -189,6 +190,7 @@ public class MaintenanceDataManager {
 		DatabaseOperations.setArticleWords(articleId, TextProcessingManager.wordsArray);
 
 		//TODO check how to save the new num of comments, the num of comments that save in the DB + the size of the array
+		DatabaseOperations.setArticleNumOfComments(articleId, (DatabaseOperations.getArticleNumOfComments(articleId) + arrayListOfComments.size()));
 
 		return arrayListOfComments;
 	}
