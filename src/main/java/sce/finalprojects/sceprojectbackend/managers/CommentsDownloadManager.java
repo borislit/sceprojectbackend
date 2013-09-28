@@ -139,7 +139,7 @@ public class CommentsDownloadManager {
 	        	nextLine = buff.readLine(); 
 	            if (nextLine != null){
 	            	result = "" + nextLine; //contain the jason object
-	            	if(mdm != null)
+	            	if(mdm != null && threadId < MaintenanceDataManager.arrayOfKeys.length)
 	            		MaintenanceDataManager.arrayOfKeys[threadId] = MarkupUtility.getNextPaginationKey(result);
 	                htmlComments = result.split("js-item comment ");
 	                int htmlCommentsSize = htmlComments.length;

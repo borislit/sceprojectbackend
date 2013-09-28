@@ -60,9 +60,9 @@ public class UrlHelper {
         String[] placeholders = {"{{COUNT_ARG}}", "{{PAGE_NUM_ARG}}", "{{PAGINATION_KEY_ARG}}"};
    
         qry = qry.replaceAll("count=[0-9]+&", placeholders[0]);
-        qry = qry.replaceAll("pageNumber=[0-9]+&", placeholders[1]);
-        qry = qry.replaceAll("exprKey=Ascending%3A[a-zA-Z0-9-%]+&", placeholders[2]);
-        //qry = qry.replaceAll("%3A[a-zA-Z0-9-%]+&", placeholders[2]);
+        qry = qry.replaceAll("pageNumber=[0-9]+", placeholders[1]);
+        //qry = qry.replaceAll("exprKey=Ascending%3A[a-zA-Z0-9-%]+&", placeholders[2]);
+        qry = qry.replaceAll("%3A[a-zA-Z0-9-%]+&", placeholders[2]);
 
 
         try {
@@ -87,7 +87,7 @@ public class UrlHelper {
         String pathUrl = url.getPath();
         String qry = url.getQuery();
         qry = qry.replace("{{COUNT_ARG}}", "count=100&");
-        qry = qry.replace("{{PAGE_NUM_ARG}}", "pageNumber=" + pageNumber + "&" );
+        qry = qry.replace("{{PAGE_NUM_ARG}}", "pageNumber=" + pageNumber);
         //qry = qry.replace("{{PAGINATION_KEY_ARG}}","exprKey=Ascending" + paginationKey );
         qry = qry.replace("{{PAGINATION_KEY_ARG}}", paginationKey );
 
