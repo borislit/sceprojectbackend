@@ -215,21 +215,16 @@ public class DatabaseOperations {
 	public static void addNewArticle(String articleId, String articleUrl, int numOfComments, String commentsAmountURL, String maintenanceURL) {
 		try{
 	    	Connection conn = DatabaseManager.getInstance().getConnection();
-			PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO articles (article_id,url,number_of_comments,comments_amount_url,creation_time) VALUES (?,?,?,?,?,NOW()) ;");
+			PreparedStatement sqlQuerry = conn.prepareStatement("INSERT IGNORE INTO articles (article_id,url,number_of_comments,comments_amount_url,creation_time,maintenance_url) VALUES (?,?,?,?,NOW(),?) ;");
 			sqlQuerry.setString(1, articleId);
 			sqlQuerry.setString(2, articleUrl);
 			sqlQuerry.setInt(3, numOfComments);
 			sqlQuerry.setString(4, commentsAmountURL);
 			sqlQuerry.setString(5, maintenanceURL);
-			
-//			java.text.SimpleDateFormat sdf = 
-//			     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//	
-//			sqlQuerry.setString(4, sdf.format(new java.util.Date()));
-			
+						
 			sqlQuerry.execute();
 			
-	            //set in the table: article id, article url and the number of the comment we get the first time
+	         //set in the table: article id, article url and the number of the comment we get the first time
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
@@ -267,7 +262,6 @@ public class DatabaseOperations {
      */
     public static String getNewNumberOfCommentsUrl(String articleId)
     {
-    	//TODO check that method
     	Connection conn;
 		try {
 			conn = DatabaseManager.getInstance().getConnection();
@@ -291,7 +285,6 @@ public class DatabaseOperations {
      */
     public static String getUrl(String articleId)
     {
-    	//TODO check that method
     	Connection conn;
 		try {
 			conn = DatabaseManager.getInstance().getConnection();
@@ -550,6 +543,11 @@ public class DatabaseOperations {
 		return 0;
 	}
 	
+	/**
+	 * return article number of comments
+	 * @param articleID
+	 * @return
+	 */
 	public static long getArticleCreationDate(String articleID){
 		try{
 			Connection conn = DatabaseManager.getInstance().getConnection();
@@ -561,6 +559,24 @@ public class DatabaseOperations {
 		}
 		catch(SQLException e) {e.printStackTrace();}
 		return 0;
+	}
+	
+	/**
+	 * return the maintenance url
+	 * @param articleID
+	 * @return
+	 */
+	public static String getMaintenanceUrl(String articleID){
+		try{
+			Connection conn = DatabaseManager.getInstance().getConnection();
+			PreparedStatement qry = conn.prepareStatement("SELECT `maintenance_url` FROM articles WHERE article_id = ?");
+			qry.setString(1, articleID);
+			ResultSet rs = qry.executeQuery();
+			while(rs.next())
+				rs.getLong("maintenance_url");
+		}
+		catch(SQLException e) {e.printStackTrace();}
+		return "";
 	}
 	
 	/**

@@ -98,17 +98,16 @@ public class LifecycleSchedulerRunnable implements Callable<Set<ClusterRepresent
 					System.out.println("LIFECYCLE: Rebuild run");
 				
 					
-					String articleUrl = DatabaseOperations.getUrl(this.articleID);
+					//String articleUrl = DatabaseOperations.getUrl(this.articleID);
 					ArrayList<String> articleCommentsMarkup = DatabaseOperations.getAllArticleCommentsHtml(this.articleID);
+					String maintenanceUrl = DatabaseOperations.getMaintenanceUrl(this.articleID);
 
-					
-						
 					//1.Retrieve only the new comments + replace the old vectors + set the new words (SARIT)
-					ArrayList<CommentEntityDS> updatedArticleComments =  MaintenanceDataManager.gettingCommentsForMaintenance(articleUrl, articleID, newNumOfComments, currentAmountOfComments, articleCommentsMarkup);
+					ArrayList<CommentEntityDS> updatedArticleComments =  MaintenanceDataManager.gettingCommentsForReBuilding(maintenanceUrl, articleID, newNumOfComments, currentAmountOfComments, articleCommentsMarkup);
 					//2.save to DB the new comments
 					DatabaseOperations.setComments(this.articleID, updatedArticleComments);
 					//3.save the newNumberOfComments to article table
-					DatabaseOperations.setArticleNumOfComments(this.articleID, newNumOfComments);
+					//DatabaseOperations.setArticleNumOfComments(this.articleID, newNumOfComments);
 					//4.retrieve all the comments from DB
 					ArrayOfCommentsDO commentsDO = new ArrayOfCommentsDO(this.articleID,DatabaseOperations.getAllComentsWithoutHTML(this.articleID));
 					//5.save to cache
@@ -124,7 +123,7 @@ public class LifecycleSchedulerRunnable implements Callable<Set<ClusterRepresent
 				}else{
 					System.out.println("LIFECYCLE: Maintenance run");
 					Maintenance maint = new Maintenance();
-					maint.addNewElementsToHAC(MaintenanceDataManager.gettingCommentsForMaintenance(DatabaseOperations.getUrl(articleID), articleID, newNumOfComments, currentAmountOfComments, null), articleID);
+					maint.addNewElementsToHAC(MaintenanceDataManager.gettingCommentsForMaintenance(DatabaseOperations.getMaintenanceUrl(articleID), articleID, newNumOfComments, currentAmountOfComments), articleID);
 					
 				}
 				
