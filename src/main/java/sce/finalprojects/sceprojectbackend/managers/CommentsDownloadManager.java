@@ -22,6 +22,7 @@ public class CommentsDownloadManager {
 	 * this function is the main function that get all the comments by the given URL
 	 */
 	public void getCommentsByUrl(URL url, int numOfComments, int threadId, int lastComment, BuildingTreeDataManager btdm, MaintenanceDataManager mdm) throws FileNotFoundException{	
+		System.out.println(url); //TODO delete
 		String htmlArr[];
 		PrintWriter out = new PrintWriter("C:\\\\comments" + threadId + "_" + lastComment + ".txt"); ////TODO delete after testing
 		int initialOffset = 0;
@@ -29,7 +30,9 @@ public class CommentsDownloadManager {
 				
 		if(lastComment == 0)
 			do{
-				htmlArr = getHtmlCommentsFromYahoo(uh.getFixUrl(uh.buildUrl(url), (threadId-1) * 100));			
+				System.out.println(uh.getFixUrl(uh.buildUrl(url), (threadId-1) * 100));
+				htmlArr = getHtmlCommentsFromYahoo(uh.getFixUrl(uh.buildUrl(url), (threadId-1) * 100));		
+				//htmlArr = getHtmlCommentsFromYahoo(uh.getFixUrl(uh.buildUrl(url), String key, int pageNumber);
 			}while(htmlArr == null);
 		else{
 			initialOffset = (lastComment/100) * 100;

@@ -64,9 +64,14 @@ public class MaintenanceDataManager {
 				oldCommentsVectors.add(commentsVectors.get(i));
 			DatabaseOperations.replaceVectorsForComments(articleId, oldCommentsVectors);
 			
+			System.out.println("array: " + commentsArray.length + "numOfComments: " + amountOfComments + "  vectors: " + commentsVectors.size());
 			for(int i=0; i<amountOfComments; i++){
-				commentsArray[i].setVector(commentsVectors.get(i + lastComment));
-				arrayListOfComments.add(commentsArray[i]);
+				if(commentsArray[i] != null){
+					commentsArray[i].setVector(commentsVectors.get(i + lastComment));
+					arrayListOfComments.add(commentsArray[i]);
+				}
+				else 
+					System.out.println("null");
 			}
 			//ArrayList<String> a = DatabaseOperations.getArticleWords(articleId);
 			
@@ -85,14 +90,20 @@ public class MaintenanceDataManager {
 			ArrayList<String> newWordsArray = TextProcessingManager.wordsArray;
 			commentsVectors = cst.vectorsCompletionForMaintenance(newWordsArray, sd, (newNumOfComments - lastComment), articleId);
 			
+			System.out.println("array: " + commentsArray.length + "numOfComments: " + amountOfComments + "  vectors: " + commentsVectors.size());
 			for(int i=0; i<amountOfComments; i++){
-				commentsArray[i].setVector(commentsVectors.get(i));
-				arrayListOfComments.add(commentsArray[i]);
+				if(commentsArray[i] != null){
+					commentsArray[i].setVector(commentsVectors.get(i));
+					arrayListOfComments.add(commentsArray[i]);
+				}
+				else 
+					System.out.println("null");
 			}
 			
 			//the words saved in the data base in the method vectorsCompletionForMaintenance
 		}
 		
+		//TODO check hoe to save the new num of comments
 		return arrayListOfComments;
 	}
 	

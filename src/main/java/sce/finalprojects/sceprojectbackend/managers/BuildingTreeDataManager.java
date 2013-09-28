@@ -49,9 +49,21 @@ public class BuildingTreeDataManager {
 		DatabaseOperations.setArticleWords(articleId, TextProcessingManager.wordsArray);
 		ArrayList<CommentEntityDS> arrayListOfComments = new ArrayList<CommentEntityDS>();
 
+		System.out.println("array: " + commentsArray.length + "numOfComments: " + numOfComments + "  vectors: " + commentsVectors.size());
 		for(int i = 0; i < numOfComments; i++){
-			commentsArray[i].setVector(commentsVectors.get(i));
-			arrayListOfComments.add(commentsArray[i]);
+			if(commentsArray[i] != null){
+				commentsArray[i].setVector(commentsVectors.get(i));
+				arrayListOfComments.add(commentsArray[i]);
+			}
+			else 
+				System.out.println("null");
+		}
+		//TODO set the num of comments in the DB by the sizze of the arrayListOfComments
+		try {
+			DatabaseOperations.setArticleNumOfComments(articleId, arrayListOfComments.size());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		return arrayListOfComments;
