@@ -554,7 +554,7 @@ public class DatabaseOperations {
 			qry.setString(1, articleID);
 			ResultSet rs = qry.executeQuery();
 			while(rs.next())
-				rs.getLong("creation_time");
+				return rs.getLong("creation_time");
 		}
 		catch(SQLException e) {e.printStackTrace();}
 		return 0;
@@ -572,7 +572,7 @@ public class DatabaseOperations {
 			qry.setString(1, articleID);
 			ResultSet rs = qry.executeQuery();
 			while(rs.next())
-				rs.getString("maintenance_url");
+				return rs.getString("maintenance_url");
 		}
 		catch(SQLException e) {e.printStackTrace();}
 		return "";
