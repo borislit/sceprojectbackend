@@ -150,13 +150,12 @@ public class Maintenance {
 		
 		//set the cached comments array into the new cached DO
 		ArrayOfCommentsFactory commentsArrayFactory = new ArrayOfCommentsFactory();
-		ArrayOfCommentsDO arrayOfCommentsDO = new ArrayOfCommentsDO(articleId, null);
+		ArrayOfCommentsDO arrayOfCommentsDO = null;
 		arrayOfCommentsDO = commentsArrayFactory.get(articleId);
-		
-		//copy the vector
-		double[] vector = arrayOfCommentsDO.vect;
-		
+			
 		ArrayList<Comment> neArray = Comment.convertCommentsDStoCommentsArrayList(neCommentDSArray);
+		//copy the vector
+		double[] vector = new double[DatabaseOperations.getWordsCountForArticle(articleId) + 1] ;
 		
 		for (Comment ne : neArray) {
 			Comment.nomalizeCommentVector(ne);
