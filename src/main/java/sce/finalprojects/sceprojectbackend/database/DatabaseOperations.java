@@ -308,7 +308,6 @@ public class DatabaseOperations {
      */
     public static void setArticleNumOfComments(String articleId, int numberOfComments) throws SQLException
     {
-
     	Connection conn = DatabaseManager.getInstance().getConnection();
 		PreparedStatement sqlQuerry = conn.prepareStatement("UPDATE articles SET number_of_comments = ? WHERE article_id = ? ;");
 		sqlQuerry.setInt(1, numberOfComments);
@@ -573,7 +572,7 @@ public class DatabaseOperations {
 			qry.setString(1, articleID);
 			ResultSet rs = qry.executeQuery();
 			while(rs.next())
-				rs.getLong("maintenance_url");
+				rs.getString("maintenance_url");
 		}
 		catch(SQLException e) {e.printStackTrace();}
 		return "";
