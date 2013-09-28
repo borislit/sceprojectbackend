@@ -139,7 +139,7 @@ public class CommentsDownloadManager {
 	        	nextLine = buff.readLine(); 
 	            if (nextLine != null){
 	            	result = "" + nextLine; //contain the jason object
-	            	if(mdm != null && threadId < MaintenanceDataManager.arrayOfKeys.length)
+	            	if(mdm != null && threadId < MaintenanceDataManager.arrayOfKeys.length)//TODO check if null
 	            		MaintenanceDataManager.arrayOfKeys[threadId] = MarkupUtility.getNextPaginationKey(result);
 	                htmlComments = result.split("js-item comment ");
 	                int htmlCommentsSize = htmlComments.length;
@@ -233,7 +233,7 @@ public class CommentsDownloadManager {
 		  tempComment = tempComment.replaceFirst("[ ]+\\.", ".");
 		  tempComment = tempComment.toLowerCase();
 		  		  
-		  System.out.println(tempComment);
+		  //System.out.println(tempComment);
 		  return tempComment;
 	}
 	
