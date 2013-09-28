@@ -37,19 +37,19 @@ public class MaintenanceDataManager {
 		int numOfKeys = newNumOfComments/100 + 1;
 		arrayOfKeys = new String[numOfKeys]; 
 		
-		if(lastComment <= 110)		
+//		if(lastComment <= 110)		
 		arrayOfKeys[0] = getKeyFromURL(urlString);
 		
-		else{
-			String tempUrl = urlString;
-			for(int i=0; i<lastComment; i++)
-			{
-				if(i == 0){
-					arrayOfKeys[i] = cdm.getJsonObjectFromYahoo(tempUrl);
-				}
-				
-			}
-		}
+//		else{
+//			String tempUrl = urlString;
+//			for(int i=0; i<lastComment; i++)
+//			{
+//				if(i == 0){
+//					arrayOfKeys[i] = cdm.getJsonObjectFromYahoo(tempUrl);
+//				}
+//				
+//			}
+//		}
 		
 		//TODO get all the keys if the last comment is larger then 100
 		
