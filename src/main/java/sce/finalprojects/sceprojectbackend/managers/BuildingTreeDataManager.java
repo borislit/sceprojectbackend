@@ -4,7 +4,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
 import sce.finalprojects.sceprojectbackend.utils.HelperFunctions;
@@ -31,7 +30,6 @@ public class BuildingTreeDataManager {
 
 		try { //get the data from yahoo site by threads
 			URL url = new URL(urlString);
-//			HelperFunctions.buildThreads(url, numOfComments, numOfThreads, 0, new BuildingTreeDataManager(), null);
 			HelperFunctions.buildThreads(url, numOfComments, numOfThreads);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -49,7 +47,6 @@ public class BuildingTreeDataManager {
 		DatabaseOperations.setArticleWords(articleId, TextProcessingManager.wordsArray);//save the word of the article in the DB
 		
 		ArrayList<CommentEntityDS> arrayListOfComments = new ArrayList<CommentEntityDS>();
-//		System.out.println("array: " + commentsArray.length + "numOfComments: " + numOfComments + "  vectors: " + commentsVectors.size());
 		for(int i = 0; i < numOfComments; i++){
 			if(commentsArray[i] != null){
 				commentsArray[i].setVector(commentsVectors.get(i));

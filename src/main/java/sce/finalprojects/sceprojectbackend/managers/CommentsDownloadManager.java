@@ -8,13 +8,11 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-
 import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
 import sce.finalprojects.sceprojectbackend.utils.MarkupUtility;
 import sce.finalprojects.sceprojectbackend.utils.UrlHelper;
 
 public class CommentsDownloadManager {
-	
 	
 	UrlHelper uh = new UrlHelper();
 	private StringBuilder commentString = new StringBuilder();
@@ -65,15 +63,12 @@ public class CommentsDownloadManager {
 		int initialOffset = 0;
 		int beginningComment = 0;
 				
-		
 		initialOffset = (lastComment/100) * 100;
 		if(threadId == 1)
 			beginningComment = lastComment - initialOffset - 10;			
 		do{
-			//htmlArr = getHtmlCommentsFromYahoo(uh.getFixUrl(uh.buildUrl(url), ((threadId-1) * 100) + initialOffset););	
-			htmlArr = getHtmlCommentsFromYahoo(uh.getFixUrlForMaintenance(uh.buildUrlForMaintenance(url), key, threadId), new MaintenanceDataManager(), threadId);	
+			htmlArr = getHtmlCommentsFromYahoo(uh.getFixUrlForMaintenance(uh.buildUrlForMaintenance(url), key), new MaintenanceDataManager(), threadId);	
 		}while(htmlArr == null);
-		
 		
 		CommentEntityDS result;
 		int htmlArraySize = htmlArr.length;
@@ -139,8 +134,11 @@ public class CommentsDownloadManager {
 	        	nextLine = buff.readLine(); 
 	            if (nextLine != null){
 	            	result = "" + nextLine; //contain the jason object
-	            	if(mdm != null && threadId < MaintenanceDataManager.arrayOfKeys.length)//TODO check if null
-	            		MaintenanceDataManager.arrayOfKeys[threadId] = MarkupUtility.getNextPaginationKey(result);
+		            if(mdm != null && threadId < MaintenanceDataManager.arrayOfKeys.length){//TODO check if null
+		            	String key = MarkupUtility.getNextPaginationKey(result);
+		            	if(key != null)
+		            		MaintenanceDataManager.arrayOfKeys[threadId] = key ;
+		            }
 	                htmlComments = result.split("js-item comment ");
 	                int htmlCommentsSize = htmlComments.length;
 	                for(int i=1; i<htmlCommentsSize; i++){
@@ -233,7 +231,6 @@ public class CommentsDownloadManager {
 		  tempComment = tempComment.replaceFirst("[ ]+\\.", ".");
 		  tempComment = tempComment.toLowerCase();
 		  		  
-		  //System.out.println(tempComment);
 		  return tempComment;
 	}
 	

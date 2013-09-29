@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.textProcessing.TextProcessingManager;
 
-
 public class HelperFunctions {
 	
 	/**
@@ -30,11 +29,7 @@ public class HelperFunctions {
 	 * this function runs all the threads we neet to get all the comments we asking, each threads asks 100 comments max
 	 * @param url
 	 * @param numOfComments we asking from yahoo
-	 * @param articleId
 	 * @param numOfThreads
-	 * @param lastComment - the number of comments that we already got and have in the DB
-	 * @param btdm an object that show us that this is the first time we asking comments from yahoo
-	 * @param mdm an object that we asking comments for maintenance
 	 */
 	public static void buildThreads(URL url, int numOfComments, int numOfThreads){
 		CommentsWorkerThread[] threadsArray = new CommentsWorkerThread[numOfThreads];
@@ -57,56 +52,15 @@ public class HelperFunctions {
 				e.printStackTrace();
 			}
 	}
-//	public static void buildThreads(URL url, int numOfComments, int numOfThreads, int lastComment, BuildingTreeDataManager btdm, MaintenanceDataManager mdm){
-//		CommentsWorkerThread[] threadsArray = new CommentsWorkerThread[numOfThreads];
-//		int num;
-//		
-//		if(btdm != null){//building the HAC
-//			num = numOfComments;
-//			for(int i = 0; i < numOfThreads; i++){
-//				if(num > 100){
-//					num -= 100;
-//					threadsArray[i] = new CommentsWorkerThread(i+1, url, 100, new BuildingTreeDataManager(), null, 0);
-//				}
-//				else
-//					threadsArray[i] = new CommentsWorkerThread(i+1, url, num, new BuildingTreeDataManager(), null, 0);
-//				threadsArray[i].start();
-//			}
-//		}
-//		else{//maintenance
-//			if((numOfComments / 100) == (lastComment / 100)){
-//				threadsArray[0] = new CommentsWorkerThread(1, url, (numOfComments - lastComment), null, new MaintenanceDataManager(), lastComment);
-//				threadsArray[0].start();
-//			}
-//			else{
-//				num = numOfComments - lastComment;
-//				for(int i = 0; i < numOfThreads; i++){
-//					if(i == 0){
-//						int temp = ((lastComment/100) + 1) * 100;
-//						threadsArray[0] = new CommentsWorkerThread(1, url, (temp - lastComment), null, new MaintenanceDataManager(), lastComment);
-//						num -= (temp - lastComment);
-//					}
-//					else{
-//						if(num > 100){
-//							num -= 100;
-//							threadsArray[i] = new CommentsWorkerThread(i+1, url, 100, null, new MaintenanceDataManager(), lastComment);
-//						}
-//						else
-//							threadsArray[i] = new CommentsWorkerThread(i+1, url, num, null, new MaintenanceDataManager(), lastComment);	
-//					}
-//					threadsArray[i].start();
-//				}
-//			}
-//		}
-//
-//		for(int i = 0; i < numOfThreads; i++)
-//			try {
-//				threadsArray[i].join();
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//	}
 	
+	/**
+	 * the function add the new words that returned from the text processing
+	 * in the maintenance stage to the old words of the article that saved in the DB
+	 * @param newWordsArray ncludes the new words from the new comments
+	 * @param articleId
+	 * @return array list that contain all the words of the article
+	 * @throws SQLException
+	 */
 	public static ArrayList<String> addNewWordsToOldWords(ArrayList<String> newWordsArray, String articleId) throws SQLException{
 		ArrayList<String> result = new ArrayList<String>();
 		

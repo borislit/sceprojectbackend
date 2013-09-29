@@ -5,11 +5,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
 import sce.finalprojects.sceprojectbackend.utils.HelperFunctions;
 import sce.finalprojects.sceprojectbackend.utils.MarkupUtility;
+import sce.finalprojects.sceprojectbackend.utils.UrlHelper;
 import sce.finalprojects.sceprojectbackend.textProcessing.TextProcessingManager;
 import DataTypes.StatisticData;
 
@@ -36,33 +36,26 @@ public class MaintenanceDataManager {
 		cdm = new CommentsDownloadManager();
 		int numOfKeys = newNumOfComments/100 + 1;
 		arrayOfKeys = new String[numOfKeys]; 
-		
-//		if(lastComment <= 110)		
-		arrayOfKeys[0] = getKeyFromURL(urlString);
-		
-//		else{
-//			String tempUrl = urlString;
-//			for(int i=0; i<lastComment; i++)
-//			{
-//				if(i == 0){
-//					arrayOfKeys[i] = cdm.getJsonObjectFromYahoo(tempUrl);
-//				}
-//				
-//			}
-//		}
-		
-		//TODO get all the keys if the last comment is larger then 100
-		
-
+		UrlHelper uh = new UrlHelper();
+				
 		try {
 			URL url = new URL(urlString);
-			int num;
+			
+			arrayOfKeys[0] = getKeyFromURL(urlString);
+			if(lastComment >= 110)	
+				for(int i = 0; i < (lastComment / 100); i++){
+					String tempKey = MarkupUtility.getNextPaginationKey(cdm.getJsonObjectFromYahoo(uh.getFixUrlForMaintenance(uh.buildUrlForMaintenance(url), arrayOfKeys[0])));
+					if(tempKey != null)
+						arrayOfKeys[0] = tempKey;
+				}
+			
+			
 			if((newNumOfComments / 100) == (lastComment / 100)){
 				cdm.getCommentsByUrlForMaintenance(url, newNumOfComments, 1, lastComment, arrayOfKeys[0]);
 				commentsString[0] = cdm.getCommentString();
 			}
 			else{
-				num = newNumOfComments - lastComment;
+				int num = newNumOfComments - lastComment;
 				for(int i = 0; i < numOfThreads; i++){
 					if(i == 0){
 						int temp = ((lastComment/100) + 1) * 100;
@@ -97,22 +90,19 @@ public class MaintenanceDataManager {
 		ArrayList<String> newWordsArray = TextProcessingManager.wordsArray;
 		commentsVectors = cst.vectorsCompletionForMaintenance(newWordsArray, sd, (newNumOfComments - lastComment), articleId);
 		
-		System.out.println("array: " + commentsArray.length + "numOfComments: " + amountOfComments + "  vectors: " + commentsVectors.size());
-
 		for(int i=0; i<commentsArray.length; i++){
 			if(commentsArray[i] != null){
 				commentsArray[i].setVector(commentsVectors.get(i));
 				arrayListOfComments.add(commentsArray[i]);
 			}
 			else
-				System.out.println(i + ": null");
+				System.out.println(i + ": null"); //TODO delete
 		}
 		//the words saved in the data base in the method vectorsCompletionForMaintenance
 
 		DatabaseOperations.setArticleNumOfComments(articleId, (DatabaseOperations.getArticleNumOfComments(articleId) + arrayListOfComments.size()));
 
-		return arrayListOfComments;
-		
+		return arrayListOfComments;	
 	}
 	
 	
@@ -133,19 +123,27 @@ public class MaintenanceDataManager {
 		cdm = new CommentsDownloadManager();
 		int numOfKeys = newNumOfComments/100 + 1;
 		arrayOfKeys = new String[numOfKeys]; 
+		UrlHelper uh = new UrlHelper();
 						
 		arrayOfKeys[0] = getKeyFromURL(urlString);
-		//TODO get all the keys if the last comment is larger then 100
 		
 		try {
 			URL url = new URL(urlString);
-			int num;
+
+			arrayOfKeys[0] = getKeyFromURL(urlString);
+			if(lastComment >= 110)	
+				for(int i = 0; i < (lastComment / 100); i++){
+					String tempKey = MarkupUtility.getNextPaginationKey(cdm.getJsonObjectFromYahoo(uh.getFixUrlForMaintenance(uh.buildUrlForMaintenance(url), arrayOfKeys[0])));
+					if(tempKey != null)
+						arrayOfKeys[0] = tempKey;
+				}
+			
 			if((newNumOfComments / 100) == (lastComment / 100)){
 				cdm.getCommentsByUrlForMaintenance(url, newNumOfComments, 1, lastComment, arrayOfKeys[0]);
 				commentsString[0] = cdm.getCommentString();
 			}
 			else{
-				num = newNumOfComments - lastComment;
+				int num = newNumOfComments - lastComment;
 				for(int i = 0; i < numOfThreads; i++){
 					if(i == 0){
 						int temp = ((lastComment/100) + 1) * 100;
@@ -196,7 +194,7 @@ public class MaintenanceDataManager {
 				arrayListOfComments.add(commentsArray[i]);
 			}
 			else 
-				System.out.println("null");
+				System.out.println(i + ": null"); //TODO delete
 		}
 		
 		DatabaseOperations.setArticleWords(articleId, TextProcessingManager.wordsArray);
@@ -213,99 +211,4 @@ public class MaintenanceDataManager {
 		
 		return temp[0];
 	}
-	
-	
-	
-	
-	
-	
-	
-//	/**
-//	 * this function called when we want to update the HAC tree to get more comments of the article
-//	 * @param articleId- by this article id we will get data from the DB about all we done with this article
-//	 * @throws SQLException 
-//	 * @throws FileNotFoundException 
-//	 */
-//	public static ArrayList<CommentEntityDS> gettingCommentsForMaintenance(String urlString, String articleId, int newNumOfComments, int lastComment, ArrayList<String> htmlArr) throws SQLException{
-//	
-//	int amountOfComments = newNumOfComments - lastComment;
-//	commentsArray = new CommentEntityDS[amountOfComments];
-//	int numOfThreads = HelperFunctions.getNumOfThreads(newNumOfComments, lastComment);
-//	commentsString = new String[numOfThreads];
-//	ArrayList<ArrayList<Double>> commentsVectors = new ArrayList<ArrayList<Double>>();
-//	ArrayList<CommentEntityDS> arrayListOfComments = new ArrayList<CommentEntityDS>();
-//			
-//	DatabaseOperations.setArticleNumOfComments(articleId, newNumOfComments);
-//
-//	try {
-//		URL url = new URL(urlString);
-//		HelperFunctions.buildThreads(url, newNumOfComments, numOfThreads, lastComment, null, new MaintenanceDataManager());
-//	} catch (MalformedURLException e) {
-//		e.printStackTrace();
-//	}
-//	StringBuilder finalString = new StringBuilder();
-//	if(htmlArr != null){
-//		CommentsDownloadManager cdm = new CommentsDownloadManager();
-//		int htmlArrSize = htmlArr.size();
-//		for(int i=0; i<htmlArrSize; i++)
-//			finalString.append(cdm.prepareCommentToTextProcessing(MarkupUtility.getCommentBodyFromMarkup(htmlArr.get(i))) + " ");
-//
-//	}
-//	for(int i=0; i<numOfThreads; i++)
-//		finalString.append(commentsString[i]);
-//
-//	if(htmlArr != null){
-//		TextProcessingManager cst = new TextProcessingManager();
-//		StatisticData[][] sd = cst.getTextResult(finalString.toString(),newNumOfComments);
-//		Double[][] wordCommentsMatrix = cst.buildWordCommentMatrix(sd, newNumOfComments);
-//		commentsVectors = cst.buildCommentsVector(wordCommentsMatrix, newNumOfComments);
-//		
-//		ArrayList<ArrayList<Double>> oldCommentsVectors = new ArrayList<ArrayList<Double>>();
-//		for(int i=0; i<lastComment;i++)
-//			oldCommentsVectors.add(commentsVectors.get(i));
-//		DatabaseOperations.replaceVectorsForComments(articleId, oldCommentsVectors);
-//		
-//		System.out.println("array: " + commentsArray.length + "numOfComments: " + amountOfComments + "  vectors: " + commentsVectors.size());
-//		for(int i=0; i<amountOfComments; i++){
-//			if(commentsArray[i] != null){
-//				commentsArray[i].setVector(commentsVectors.get(i + lastComment));
-//				arrayListOfComments.add(commentsArray[i]);
-//			}
-//			else 
-//				System.out.println("null");
-//		}
-//		//ArrayList<String> a = DatabaseOperations.getArticleWords(articleId);
-//		
-//		DatabaseOperations.setArticleWords(articleId, TextProcessingManager.wordsArray);
-////		System.out.println(a);
-////		System.out.println(TextProcessingManager.wordsArray);
-//		
-////		for(int i=0; i<a.size();i++)
-////			if(!(a.get(i).equals(TextProcessingManager.wordsArray.get(i))))
-////				System.out.println("not equals");
-//				
-//	}
-//	else{
-//		TextProcessingManager cst = new TextProcessingManager();
-//		StatisticData[][] sd = cst.getTextResult(finalString.toString(),newNumOfComments - lastComment);
-//		ArrayList<String> newWordsArray = TextProcessingManager.wordsArray;
-//		commentsVectors = cst.vectorsCompletionForMaintenance(newWordsArray, sd, (newNumOfComments - lastComment), articleId);
-//		
-//		System.out.println("array: " + commentsArray.length + "numOfComments: " + amountOfComments + "  vectors: " + commentsVectors.size());
-//		for(int i=0; i<amountOfComments; i++){
-//			if(commentsArray[i] != null){
-//				commentsArray[i].setVector(commentsVectors.get(i));
-//				arrayListOfComments.add(commentsArray[i]);
-//			}
-//			else 
-//				System.out.println("null");
-//		}
-//		
-//		//the words saved in the data base in the method vectorsCompletionForMaintenance
-//	}
-//	
-//	//TODO check hoe to save the new num of comments
-//	return arrayListOfComments;
-//}
-	
 }

@@ -50,7 +50,8 @@ public class UrlHelper {
 		System.out.println(url);
 		return url;
 	}
-		 /** this function build a format of URL
+	
+	/** this function build a format of URL
 	 * @param url, getting from boris
 	 * @return a format of url that contain 3 parameter that need to be replaced
 	 */
@@ -61,9 +62,7 @@ public class UrlHelper {
    
         qry = qry.replaceAll("count=[0-9]+&", placeholders[0]);
         qry = qry.replaceAll("pageNumber=[0-9]+", placeholders[1]);
-        //qry = qry.replaceAll("exprKey=Ascending%3A[a-zA-Z0-9-%]+&", placeholders[2]);
         qry = qry.replaceAll("%3A[a-zA-Z0-9-%]+&", placeholders[2]);
-
 
         try {
             URL fix = new URL("http://news.yahoo.com" + pathUrl + "?" + qry);
@@ -77,18 +76,16 @@ public class UrlHelper {
 	}
 
 	/**
-	 * this function set a URL with count of comment we asking from yahoo = 100 by the offset that tell us from witch comment
-	 * we start to ask the comments
+	 * this function set a URL with count of comment we asking from yahoo
 	 * @param url (the format url return from the buildUrl func)
-	 * @param offset, the number that the comments we ask start from
+	 * @param paginationKey
 	 * @return a fix URL that ready to send to yahoo
 	 */
-	public synchronized URL getFixUrlForMaintenance(URL url, String paginationKey, int pageNumber){
+	public synchronized URL getFixUrlForMaintenance(URL url, String paginationKey){
         String pathUrl = url.getPath();
         String qry = url.getQuery();
         qry = qry.replace("{{COUNT_ARG}}", "count=100&");
-        qry = qry.replace("{{PAGE_NUM_ARG}}", "pageNumber=" + pageNumber);
-        //qry = qry.replace("{{PAGINATION_KEY_ARG}}","exprKey=Ascending" + paginationKey );
+        qry = qry.replace("{{PAGE_NUM_ARG}}", "pageNumber=1");
         qry = qry.replace("{{PAGINATION_KEY_ARG}}", paginationKey );
 
         try {
