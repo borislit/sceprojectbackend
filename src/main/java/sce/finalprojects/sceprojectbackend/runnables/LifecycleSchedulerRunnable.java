@@ -67,8 +67,6 @@ public class LifecycleSchedulerRunnable implements Callable<Set<ClusterRepresent
 		try{
 			if(runsCounter == 0){
 				System.out.println("LIFECYCLE: Initial Run Article:"+this.articleID);
-//				System.out.println(this.intialAmountOfComments);
-//				System.out.println(MarkupUtility.getLatestCommentAmount(this.commentsAmountURL));
 				DatabaseOperations.addNewArticle(this.articleID, this.articleUrl, MarkupUtility.getLatestCommentAmount(this.commentsAmountURL), this.commentsAmountURL,this.maintenanceURL);
 				ArrayOfCommentsFactory commentFactory = new ArrayOfCommentsFactory();
 				ArrayOfCommentsDO articleCommentsArray = commentFactory.get(this.articleID);

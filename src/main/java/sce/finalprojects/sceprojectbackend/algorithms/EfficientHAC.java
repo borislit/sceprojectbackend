@@ -98,7 +98,7 @@ public class EfficientHAC {
 		}
 		a = new ArrayList<Acell>();
 		initiated = true;
-		System.out.println("FINISHNG initiateEfficientHACForUse AT: "+System.currentTimeMillis());
+		System.out.println("FINISH initiateEfficientHACForUse AT: "+System.currentTimeMillis());
 	}
 	
 	/**
@@ -122,13 +122,9 @@ public class EfficientHAC {
 		for(int f = 0 ; f < (numberOfElements-1) ; f++ )
 		{
 			k1 = getArgMax();
-			
-			//System.out.print(f+" "+k1+" ");
-			
+						
 			k2 = p.get(k1).peek().index;
-			
-			//System.out.println(k2);
-			
+						
 			a.add(new Acell(clustersArray.get(k1).cluster_id,clustersArray.get(k2).cluster_id,p.get(k1).peek().sim));
 			
 			clustersArray.get(k1).mergeWithCluster(clustersArray.get(k2));
