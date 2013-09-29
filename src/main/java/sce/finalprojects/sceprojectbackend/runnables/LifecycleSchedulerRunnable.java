@@ -73,7 +73,7 @@ public class LifecycleSchedulerRunnable implements Callable<Set<ClusterRepresent
 				commentFactory.save(articleCommentsArray);
 				EfficientHAC effHAC = new EfficientHAC(articleCommentsArray.arrayOfComment, articleCommentsArray.vect);
 				effHAC.runAlgorithm();
-				xmlGenerator xmlGen = new xmlGenerator(this.articleID, effHAC.a, this.intialAmountOfComments);
+				xmlGenerator xmlGen = new xmlGenerator(this.articleID, effHAC.a, DatabaseOperations.getArticleNumOfComments(this.articleID));
 				Maintenance maintenance = new Maintenance();
 				maintenance.mapXmlHacToClusters(this.articleID);
 				
