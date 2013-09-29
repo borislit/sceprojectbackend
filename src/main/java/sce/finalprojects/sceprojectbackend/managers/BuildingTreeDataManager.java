@@ -24,6 +24,7 @@ public class BuildingTreeDataManager {
 	 */
 	public static ArrayList<CommentEntityDS> gettingCommentsForTheFirstTime(String urlString, String articleId, int numOfComments){
 
+		System.out.println("num of comments: " + numOfComments);
 		commentsArray = new CommentEntityDS[numOfComments];
 		int numOfThreads = HelperFunctions.getNumOfThreads(numOfComments, 0);
 		commentsString = new String[numOfThreads];
