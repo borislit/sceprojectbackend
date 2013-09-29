@@ -66,8 +66,10 @@ public class LifecycleSchedulerRunnable implements Callable<Set<ClusterRepresent
 	public Set<ClusterRepresentationDO> call() throws Exception {
 		try{
 			if(runsCounter == 0){
-				System.out.println("LIFECYCLE: Initial Run");
-				DatabaseOperations.addNewArticle(this.articleID, this.articleUrl, this.intialAmountOfComments, this.commentsAmountURL,this.maintenanceURL);
+				System.out.println("LIFECYCLE: Initial Run Article:"+this.articleID);
+//				System.out.println(this.intialAmountOfComments);
+//				System.out.println(MarkupUtility.getLatestCommentAmount(this.commentsAmountURL));
+				DatabaseOperations.addNewArticle(this.articleID, this.articleUrl, MarkupUtility.getLatestCommentAmount(this.commentsAmountURL), this.commentsAmountURL,this.maintenanceURL);
 				ArrayOfCommentsFactory commentFactory = new ArrayOfCommentsFactory();
 				ArrayOfCommentsDO articleCommentsArray = commentFactory.get(this.articleID);
 				commentFactory.save(articleCommentsArray);
@@ -88,20 +90,19 @@ public class LifecycleSchedulerRunnable implements Callable<Set<ClusterRepresent
 				int currentAmountOfComments = DatabaseOperations.getArticleNumOfComments(articleID);
 				
 				if(currentAmountOfComments >= newNumOfComments){
-					System.out.println("LIFECYCLE: No new comments. Nothing to do");
+					System.out.println("LIFECYCLE: No new comments. Nothing to do Article:"+this.articleID);
 					return null;
 				}
 				
 				this.runsCounter++;
 				
 				if(runsCounter%3 == 0){
-					System.out.println("LIFECYCLE: Rebuild run");
+					System.out.println("LIFECYCLE: Rebuild run Article:"+this.articleID);
 				
 					
 					//String articleUrl = DatabaseOperations.getUrl(this.articleID);
 					ArrayList<String> articleCommentsMarkup = DatabaseOperations.getAllArticleCommentsHtml(this.articleID);
 					String maintenanceUrl = DatabaseOperations.getMaintenanceUrl(this.articleID);
-
 					//1.Retrieve only the new comments + replace the old vectors + set the new words (SARIT)
 					ArrayList<CommentEntityDS> updatedArticleComments =  MaintenanceDataManager.gettingCommentsForReBuilding(maintenanceUrl, articleID, newNumOfComments, currentAmountOfComments, articleCommentsMarkup);
 					//2.save to DB the new comments
@@ -121,7 +122,7 @@ public class LifecycleSchedulerRunnable implements Callable<Set<ClusterRepresent
 					maintenance.mapXmlHacToClusters(this.articleID);
 					
 				}else{
-					System.out.println("LIFECYCLE: Maintenance run");
+					System.out.println("LIFECYCLE: Maintenance run Article:"+this.articleID);
 					Maintenance maint = new Maintenance();
 					maint.addNewElementsToHAC(MaintenanceDataManager.gettingCommentsForMaintenance(DatabaseOperations.getMaintenanceUrl(articleID), articleID, newNumOfComments, currentAmountOfComments), articleID);
 					
