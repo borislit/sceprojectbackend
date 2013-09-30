@@ -1,4 +1,4 @@
-package sce.finalprojects.sceprojectbackend.algorithms;
+/*package sce.finalprojects.sceprojectbackend.algorithms;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
@@ -68,3 +68,4 @@ public class generatorTest {
 	
 
 }
+*/

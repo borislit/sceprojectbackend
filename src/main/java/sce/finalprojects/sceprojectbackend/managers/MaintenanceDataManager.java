@@ -6,13 +6,20 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+import DataTypes.StatisticData;
+=======
+>>>>>>> 843f2a88802ebaf246869df41aeedaf8deaf2517
+>>>>>>> origin/Packaging-changes
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
 import sce.finalprojects.sceprojectbackend.utils.HelperFunctions;
 import sce.finalprojects.sceprojectbackend.utils.MarkupUtility;
 import sce.finalprojects.sceprojectbackend.utils.UrlHelper;
 import sce.finalprojects.sceprojectbackend.textProcessing.TextProcessingManager;
-import DataTypes.StatisticData;
+
 
 public class MaintenanceDataManager {
 	
