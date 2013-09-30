@@ -5,13 +5,18 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+<<<<<<< HEAD
+import DataTypes.StatisticData;
+=======
+>>>>>>> 843f2a88802ebaf246869df41aeedaf8deaf2517
 import sce.finalprojects.sceprojectbackend.database.DatabaseOperations;
 import sce.finalprojects.sceprojectbackend.datatypes.CommentEntityDS;
 import sce.finalprojects.sceprojectbackend.utils.HelperFunctions;
 import sce.finalprojects.sceprojectbackend.utils.MarkupUtility;
 import sce.finalprojects.sceprojectbackend.utils.UrlHelper;
 import sce.finalprojects.sceprojectbackend.textProcessing.TextProcessingManager;
-import DataTypes.StatisticData;
+
 
 public class MaintenanceDataManager {
 	
@@ -26,6 +31,8 @@ public class MaintenanceDataManager {
 	 * @throws FileNotFoundException 
 	 */
 	public static ArrayList<CommentEntityDS> gettingCommentsForMaintenance(String urlString, String articleId, int newNumOfComments, int lastComment) throws SQLException, FileNotFoundException{
+
+		System.out.println("num of comments: " + newNumOfComments + "last comment: " + lastComment);
 
 		int amountOfComments = newNumOfComments - lastComment;
 		commentsArray = new CommentEntityDS[amountOfComments];
@@ -114,6 +121,8 @@ public class MaintenanceDataManager {
 	 */
 	public static ArrayList<CommentEntityDS> gettingCommentsForReBuilding(String urlString, String articleId, int newNumOfComments, int lastComment, ArrayList<String> htmlArr) throws SQLException, FileNotFoundException{
 
+		System.out.println("num of comments: " + newNumOfComments + "last comment: " + lastComment);
+		
 		int amountOfComments = newNumOfComments - lastComment;
 		commentsArray = new CommentEntityDS[amountOfComments];
 		int numOfThreads = HelperFunctions.getNumOfThreads(newNumOfComments, lastComment);

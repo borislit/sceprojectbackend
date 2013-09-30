@@ -47,7 +47,6 @@ public class UrlHelper {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
-		System.out.println(url);
 		return url;
 	}
 	
@@ -66,7 +65,6 @@ public class UrlHelper {
 
         try {
             URL fix = new URL("http://news.yahoo.com" + pathUrl + "?" + qry);
-            System.out.println(fix);
 
             return fix;
         } catch (MalformedURLException e) {
@@ -90,7 +88,6 @@ public class UrlHelper {
 
         try {
                 URL fixUrl = new URL("http://news.yahoo.com" + pathUrl + "?" + qry);
-                System.out.println(fixUrl);
 
                 return fixUrl;
         } catch (MalformedURLException e) {

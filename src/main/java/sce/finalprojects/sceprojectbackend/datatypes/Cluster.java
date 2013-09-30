@@ -93,16 +93,16 @@ public double GAAC(Cluster c1, Cluster c2, double[] vector) throws Exception{
 	///sum all the vectors into one vector 
 	for (Comment com : c1.innerComments) {
 		//System.out.println(com.vector.toString());
-		for(int i = 0 ; i < com.vector.size(); i++)
-
+		for(int i = 0 ; i < com.vector.size(); i++){
 			vector[i] += com.vector.get(i);
+		}
 	}
 
 	for (Comment com : c2.innerComments) {
 		//System.out.println(com.vector.toString());
-		for(int i = 0 ; i < com.vector.size() ; i++)
-
+		for(int i = 0 ; i < com.vector.size() ; i++){
 			vector[i] += com.vector.get(i);
+		}
 
 	}
 	

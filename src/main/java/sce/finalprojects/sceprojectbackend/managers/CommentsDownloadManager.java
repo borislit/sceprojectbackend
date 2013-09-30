@@ -73,12 +73,13 @@ public class CommentsDownloadManager {
 		CommentEntityDS result;
 		int htmlArraySize = htmlArr.length;
 		for(int i = beginningComment; i < htmlArraySize && i < (numOfComments-lastComment) + beginningComment; i++){
-		//for(int i = (htmlArraySize - beginningComment + 1); i < htmlArraySize; i++){
+		//for(int i = (htmlArraySize - (numOfComments - lastComment)); i < htmlArraySize; i++){
 
 			try {
+				//result = getCommentEntityFromHtml(htmlArr[i], out, threadId, beginningComment + 10, initialOffset);
 				result = getCommentEntityFromHtml(htmlArr[i], out, threadId, i + 10, initialOffset);
-				//result = getCommentEntityFromHtml(htmlArr[i], out, threadId, i + 10, initialOffset);
 				MaintenanceDataManager.commentsArray[Integer.parseInt(result.getId()) - lastComment - 1] = result;
+				beginningComment ++;
 				
 			} catch (FileNotFoundException e) {
 						e.printStackTrace();

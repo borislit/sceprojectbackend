@@ -1,4 +1,4 @@
-package sce.finalprojects.sceprojectbackend.algorithms;
+/*package sce.finalprojects.sceprojectbackend.algorithms;
 import static org.junit.Assert.*;
 
 import java.sql.SQLException;
@@ -153,7 +153,7 @@ public class EfficientHACRegularTsts {
 		String articleUrl = DatabaseOperations.getUrl(articleID);
 		String newNumUrl = DatabaseOperations.getNewNumberOfCommentsUrl(articleID);
 		ArrayList<String> articleCommentsMarkup = DatabaseOperations.getAllArticleCommentsHtml(articleID);
-		int newNumOfComments = /*MarkupUtility.getLatestCommentAmount(newNumUrl);*/ 620;
+		int newNumOfComments = MarkupUtility.getLatestCommentAmount(newNumUrl); 620;
 		
 		//1.Retrieve only the new comments + replace the old vectors + set the new words (SARIT)
 		ArrayList<CommentEntityDS> updatedArticleComments =  MaintenanceDataManager.gettingCommentsForMaintenance(articleUrl, articleID, newNumOfComments, DatabaseOperations.getArticleNumOfComments(articleID), articleCommentsMarkup);
@@ -178,7 +178,7 @@ public class EfficientHACRegularTsts {
 	@Test
 	public void testMaintenanceFlow() throws Exception {
 		String articleID = "123";
-		int newNumOfComments = /*getLatestNumberOfCommentsInTheArticle()*/ 420;
+		int newNumOfComments = getLatestNumberOfCommentsInTheArticle() 420;
 		//1. get the new comments
 		//2. get the old comments
 		//3.get the mapping that existing
@@ -206,3 +206,4 @@ public class EfficientHACRegularTsts {
 	}
 
 }
+*/
