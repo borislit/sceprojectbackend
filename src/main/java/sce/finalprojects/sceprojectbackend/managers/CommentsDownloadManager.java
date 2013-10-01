@@ -57,6 +57,7 @@ public class CommentsDownloadManager {
 	 * @throws FileNotFoundException
 	 */
 	public void getCommentsByUrlForMaintenance(URL url, int numOfComments, int threadId, int lastComment, String key) throws FileNotFoundException{	
+		
 		this.commentString = new StringBuilder();
 		String htmlArr[];
 		PrintWriter out = new PrintWriter("C:\\\\commentsMaint" + lastComment + ".txt"); ////TODO delete after testing
@@ -79,7 +80,7 @@ public class CommentsDownloadManager {
 				//result = getCommentEntityFromHtml(htmlArr[i], out, threadId, beginningComment + 10, initialOffset);
 				result = getCommentEntityFromHtml(htmlArr[i], out, threadId, i + 10, initialOffset);
 				MaintenanceDataManager.commentsArray[Integer.parseInt(result.getId()) - lastComment - 1] = result;
-				beginningComment ++;
+				
 				
 			} catch (FileNotFoundException e) {
 						e.printStackTrace();
@@ -132,6 +133,7 @@ public class CommentsDownloadManager {
 	    String result;
 	    String[] htmlComments = null;
 	    try{
+	    	System.out.println(url.toString());
 	    	urlConn = url.openConnection();
 	        inStream = new InputStreamReader(urlConn.getInputStream());
 	        buff = new BufferedReader(inStream);

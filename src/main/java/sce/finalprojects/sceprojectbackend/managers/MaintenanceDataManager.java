@@ -62,7 +62,7 @@ public class MaintenanceDataManager {
 				int num = newNumOfComments - lastComment;
 				for(int i = 0; i < numOfThreads; i++){
 					if(i == 0){
-						int temp = ((lastComment/100) + 1) * 100;
+						int temp = ((lastComment/100) + 1) * 100 + 10;
 						cdm.getCommentsByUrlForMaintenance(url, (temp - lastComment), i+1, lastComment, arrayOfKeys[i]);
 						commentsString[i] = cdm.getCommentString();
 						num -= (temp - lastComment);
@@ -152,7 +152,7 @@ public class MaintenanceDataManager {
 				int num = newNumOfComments - lastComment;
 				for(int i = 0; i < numOfThreads; i++){
 					if(i == 0){
-						int temp = ((lastComment/100) + 1) * 100;
+						int temp = ((lastComment/100) + 1) * 100 + 10;
 						cdm.getCommentsByUrlForMaintenance(url, (temp - lastComment), i+1, lastComment, arrayOfKeys[i]);
 						commentsString[i] = cdm.getCommentString();
 						num -= (temp - lastComment);

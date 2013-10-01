@@ -511,7 +511,7 @@ public class DatabaseOperations {
 			ResultSet rs  = qry.executeQuery();
 
 			rs.last();
-
+			
 			return rs.getRow();
 
 		} catch (SQLException e) {e.printStackTrace();}
