@@ -18,7 +18,7 @@ public class DatabaseObjectCacheImpl {
 
 	public static CacheToken save(Cachable obj, CacheToken token){
 		Connection conn;
-		String QUERY = "INSERT INTO POJOCache(cid, cachedContent) VALUES(?,?)";
+		String QUERY = "INSERT INTO POJOCache(cid, cachedContent) VALUES(?,?) ON DUPLICATE KEY UPDATE cachedContent = ?";
 		
 		try {
 			conn = DatabaseManager.getInstance().getConnection();
@@ -29,6 +29,7 @@ public class DatabaseObjectCacheImpl {
 		
 			pstmt.setString(1, token.getCacheID());
 	    	pstmt.setBytes(2, serializedObject);
+	    	pstmt.setBytes(3, serializedObject);
 	    	
 		     int affectedRows = pstmt.executeUpdate();
 		     

@@ -43,10 +43,9 @@ public class Cachable implements Serializable{
 
 
 	public long getAge() {
-		 long age = (new Date().getTime() - this.creationDate);
+		 long age = (System.currentTimeMillis() - this.creationDate);
 		
-		// return (age/60000)/60; //TODO uncomment this when going to production
-		 return (age/10000); //TODO TEST
+		 return (age/1000);
 	}
 
 	public CacheManager.ObjectType getType() {
