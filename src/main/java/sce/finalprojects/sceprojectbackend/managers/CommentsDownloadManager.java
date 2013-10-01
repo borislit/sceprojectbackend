@@ -26,8 +26,7 @@ public class CommentsDownloadManager {
 	 */
 	public void getCommentsByUrlForBuilding(URL url, int threadId, int numOfComments) throws FileNotFoundException{	
 		String htmlArr[];
-		PrintWriter out = new PrintWriter("C:\\\\comments" + threadId + ".txt"); ////TODO delete after testing
-	
+		
 		do{
 			htmlArr = getHtmlCommentsFromYahoo(uh.getFixUrl(uh.buildUrl(url), (threadId-1) * 100), null, 0);			
 		}while(htmlArr == null);
@@ -36,14 +35,13 @@ public class CommentsDownloadManager {
 		int htmlArraySize = htmlArr.length;
 		for(int i = 0; i < htmlArraySize && i < numOfComments; i++){
 			try {
-				result = getCommentEntityFromHtml(htmlArr[i], out, threadId, i, 0);
+				result = getCommentEntityFromHtml(htmlArr[i], threadId, i, 0);
 				BuildingTreeDataManager.commentsArray[Integer.parseInt(result.getId()) - 1] = result;
 				
 			} catch (FileNotFoundException e) {
 						e.printStackTrace();
 			}	
 		}
-		out.close(); //TODO delete after testing
 	}
 	
 	/**
@@ -78,7 +76,7 @@ public class CommentsDownloadManager {
 
 			try {
 				//result = getCommentEntityFromHtml(htmlArr[i], out, threadId, beginningComment + 10, initialOffset);
-				result = getCommentEntityFromHtml(htmlArr[i], out, threadId, i + 10, initialOffset);
+				result = getCommentEntityFromHtml(htmlArr[i], threadId, i + 10, initialOffset);
 				MaintenanceDataManager.commentsArray[Integer.parseInt(result.getId()) - lastComment - 1] = result;
 				
 				
@@ -174,12 +172,11 @@ public class CommentsDownloadManager {
 	  * into text processing
 	  * 
 	  */
-    public CommentEntityDS getCommentEntityFromHtml(String html, PrintWriter out, int i, int j, int initialOffset) throws FileNotFoundException{
+    public CommentEntityDS getCommentEntityFromHtml(String html, int i, int j, int initialOffset) throws FileNotFoundException{
   	  	CommentEntityDS result = new CommentEntityDS();
   	  	result.setId("" + ((i-1) * 100 + initialOffset + j + 1));//set the id of the comment(Serial number)
 		result.setCommentHTML(html); //set the htmlComment from the array  
 		String clearComment = cleanTheCommentFromTheHtml(html);
-		writeCommentInFile(out, clearComment, i, j, initialOffset);//TODO delete
 		addCommentToString(clearComment);
 	
 		return result;
@@ -249,10 +246,4 @@ public class CommentsDownloadManager {
 		return this.commentString.toString();
 	}
 
-	//TODO delete after testing
-	public void writeCommentInFile(PrintWriter out , String comment, int i, int j, int initialOffset) throws FileNotFoundException{
-    	int id = (i-1) * 100 + initialOffset + j + 1 ;
-		out.println(id + "  " + comment);
-    }
-	
 }
